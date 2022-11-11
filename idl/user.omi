@@ -1,6 +1,10 @@
 struct User {
+  int UserId;
+
   string Username;
   string Password;
+
+  optional string AvatarUrl;
 }
 
 service UserService {

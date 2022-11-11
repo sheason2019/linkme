@@ -1,10 +1,19 @@
+import React, { FC, PropsWithChildren } from "react";
 import { Card } from "@mui/material";
-import { FC, PropsWithChildren } from "react";
 import CenterBox from "../../../../common/components/center-box";
 import { useCheckMobile } from "../../../../common/hooks/use-check-mobile";
 
-export const FormContainer: FC<PropsWithChildren> = ({ children }) => {
+interface Props extends PropsWithChildren {
+  onSubmit: () => any;
+}
+
+export const FormContainer: FC<Props> = ({ children, onSubmit }) => {
   const { isMobile } = useCheckMobile();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit();
+  };
 
   return (
     <CenterBox sx={{ background: "#E0E0E0" }}>
@@ -15,7 +24,7 @@ export const FormContainer: FC<PropsWithChildren> = ({ children }) => {
           marginX: isMobile ? 2 : 0,
         }}
       >
-        {children}
+        <form onSubmit={handleSubmit}>{children}</form>
       </Card>
     </CenterBox>
   );
