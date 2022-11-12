@@ -20,6 +20,8 @@ func main() {
 
 	// 使用自定义的Recover中间件
 	r.Use(middleware.PanicMiddleware)
+	// 使用获取用户身份的中间件
+	r.Use(middleware.UserMiddleware)
 
 	accountController.BindAccountController(r)
 

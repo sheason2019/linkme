@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
+import useUserInfo from "../../../common/hooks/use-user-info";
 import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateRegist } from "../common/validate";
 
 const useRegist = () => {
+  const { setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword } = useCryptoInfo();
 
   const { setAppBar } = useAppBar();
@@ -48,7 +50,7 @@ const useRegist = () => {
       throw err;
     }
 
-    console.log(res);
+    setJwt(res);
   };
 
   return {

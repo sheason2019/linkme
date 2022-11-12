@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/sheason2019/linkme/dao/userDao"
-	accountService "github.com/sheason2019/linkme/serivces/account"
+	accountService "github.com/sheason2019/linkme/services/account"
 )
 
 func TestJwt(t *testing.T) {

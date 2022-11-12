@@ -2,6 +2,7 @@ package userDao
 
 import (
 	"github.com/sheason2019/linkme/omi/account"
+	"github.com/sheason2019/linkme/utils"
 	"gorm.io/gorm"
 )
 
@@ -22,4 +23,14 @@ func GenerateUserDaoFromIdl(user account.User) UserDao {
 	userDao.Avatar = user.AvatarUrl
 
 	return userDao
+}
+
+func (model UserDao) ToIdl() account.User {
+	user := account.User{}
+	user.UserId = utils.ConvertUintToIntPtr(model.ID)
+	user.Username = &model.Username
+	user.Password = &model.Password
+	user.AvatarUrl = model.Avatar
+
+	return user
 }

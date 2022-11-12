@@ -3,7 +3,7 @@ package accountService_test
 import (
 	"testing"
 
-	accountService "github.com/sheason2019/linkme/serivces/account"
+	accountService "github.com/sheason2019/linkme/services/account"
 )
 
 func TestValidateSalt(t *testing.T) {

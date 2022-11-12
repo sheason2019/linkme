@@ -35,9 +35,6 @@ func DecryptPassword(user *account.User, saltId int) error {
 	realPassword := RemoveSaltFromSource(password, *salt)
 	user.Password = &realPassword
 
-	// 成功获取到用户的完整注册信息后，删除指定的Salt
-	RemoveSalt(saltId)
-
 	return nil
 }
 

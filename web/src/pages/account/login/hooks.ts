@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { getAccountClient } from "../../../api-client";
+import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
+import useUserInfo from "../../../common/hooks/use-user-info";
+import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateLogin } from "../common/validate";
 
 const useLogin = () => {
+  const { setJwt } = useUserInfo();
+  const { cryptoInfo, encryptPassword } = useCryptoInfo();
   // 设置标题
   const { setAppBar } = useAppBar();
 
@@ -26,6 +31,17 @@ const useLogin = () => {
     }
 
     const client = getAccountClient();
+    const user: User = {
+      UserId: 0,
+      Username: form.username,
+      Password: encryptPassword(form.password),
+    };
+
+    const [err, res] = await client.Login(user, cryptoInfo.SaltId);
+    if (err) {
+      throw err;
+    }
+    setJwt(res);
   };
 
   const handleChange = (
