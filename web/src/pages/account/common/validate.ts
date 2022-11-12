@@ -20,7 +20,7 @@ export const validateRegist = ({
     err.username = "用户名长度不能小于4位或大于16位";
   }
   if (password.length < 6 || password.length > 64) {
-    err.password = "用户密码长度不能小于4位或大于16位";
+    err.password = "用户密码长度不能小于6位或大于64位";
   }
   if (repassword !== password) {
     err.repassword = "两次输入密码内容不一致";

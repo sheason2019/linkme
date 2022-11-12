@@ -1,42 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomLink from "../../../common/components/custom-link";
 import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
 import { REGIST_PAGE_URL } from "../../../router";
 import FormContainer from "../common/form-container";
-import { RegistInfo, validateLogin } from "../common/validate";
 import RedColorSpan from "../../../common/components/red-color-span";
+import useLogin from "./hooks";
 
 const Login = () => {
+  const { form, err, handleSubmit, handleChange } = useLogin();
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
 
   const handleToRegist = () => {
     navigate(REGIST_PAGE_URL);
-  };
-
-  const [form, setForm] = useState({
-    username: "",
-    password: "",
-  });
-  const [err, setErr] = useState<Partial<RegistInfo>>({});
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setErr((prev) => ({ ...prev, [e.target.name]: undefined }));
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = () => {
-    const validate = validateLogin(form);
-    if (Object.keys(validate).length > 0) {
-      setErr(validate);
-      return;
-    }
-
-    console.log("LOGIN!");
   };
 
   return (

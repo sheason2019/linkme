@@ -13,6 +13,7 @@ specifiers:
   '@types/react-loadable': ^5.5.6
   '@vitejs/plugin-react': ^2.2.0
   axios: 0.27.2
+  jsencrypt: ^3.3.1
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.4.3
@@ -29,6 +30,7 @@ dependencies:
   '@omi-stack/omi-client': 0.4.0_cbe7ovvae6zqfnmtgctpgpys54
   '@types/node': 18.11.9
   axios: 0.27.2
+  jsencrypt: 3.3.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.4.3_biqbaboplfbrettd7655fr4n2y
@@ -1254,6 +1256,10 @@ packages:
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+
+  /jsencrypt/3.3.1:
+    resolution: {integrity: sha512-dVvV54GdFuJgmEKn+oBiaifDMen4p6o6j/lJh0OVMcouME8sST0bJ7bldIgKBQk4za0zyGn0/pm4vOznR25mLw==}
+    dev: false
 
   /jsesc/2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}

@@ -1,0 +1,25 @@
+struct User {
+  int UserId;
+
+  string Username;
+  string Password;
+
+  optional string AvatarUrl;
+}
+
+struct GetCryptoInfoResponse {
+  string RsaPubKey;
+  string Salt;
+  int SaltId;
+}
+
+service Account {
+  // 获取登录所需的秘钥信息
+  GetCryptoInfoResponse GetCryptoInfo();
+  // 接受登录信息，返回jwt
+  string Login(User user, int saltId);
+  // 同Login
+  string Regist(User user, int saltId);
+  // 使用请求头中的JWT获取当前的用户信息
+  User GetCurrentUser();
+}

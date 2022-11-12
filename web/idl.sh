@@ -1,1 +1,1 @@
-omi-codegen -o src/api-lib -l ts -t client ../idl/user.omi
+omi-codegen -o src/api-lib -l ts -t client ../idl

@@ -1,10 +1,25 @@
 package userDao
 
-import "gorm.io/gorm"
+import (
+	"github.com/sheason2019/linkme/omi/account"
+	"gorm.io/gorm"
+)
 
 type UserDao struct {
 	gorm.Model
-	Username string
+	Username string `gorm:"uniqueIndex"`
 	Password string
-	Avatar   *string
+	Salt     string
+
+	Avatar *string
+}
+
+func GenerateUserDaoFromIdl(user account.User) UserDao {
+	userDao := UserDao{}
+	userDao.ID = uint(*user.UserId)
+	userDao.Username = *user.Username
+	userDao.Password = *user.Password
+	userDao.Avatar = user.AvatarUrl
+
+	return userDao
 }
