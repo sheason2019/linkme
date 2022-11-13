@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
+import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { CURRENT_USER_PAGE_URL } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
 import { LoginInfo, validateLogin } from "../common/validate";
 
 const useLogin = () => {
+  const { handler } = useErrorHandler();
+
   const navigate = useNavigate();
 
   const { setJwt, preLogin } = useUserInfo();
@@ -51,7 +54,7 @@ const useLogin = () => {
     const user: User = {
       UserId: 0,
       Username: form.username,
-      Password: encryptPassword(form.password),
+      Password: encryptPassword(form.password)!,
     };
 
     setLoading(true);
@@ -59,7 +62,8 @@ const useLogin = () => {
     setLoading(false);
 
     if (err) {
-      throw err;
+      handler(err);
+      return;
     }
     await setJwt(res, form.useLocal ? "local" : "session");
     navigate(CURRENT_USER_PAGE_URL);

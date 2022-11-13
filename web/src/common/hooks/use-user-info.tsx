@@ -4,6 +4,7 @@ import { getAccountClient } from "../../api-client";
 import { User } from "../../api-lib/account-client";
 import { LOGIN_PAGE_URL } from "../../router";
 import JwtProxy from "../utils/jwt";
+import useErrorHandler from "./use-error-handler";
 
 interface UserInfo {
   isLogin: boolean;
@@ -19,6 +20,7 @@ const userInfoState = atom<UserInfo>({
 
 const useUserInfo = () => {
   const navigate = useNavigate();
+  const { handler } = useErrorHandler();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const getCurrentUser = async () => {
@@ -29,7 +31,8 @@ const useUserInfo = () => {
 
     const [err, res] = await client.GetCurrentUser();
     if (err) {
-      throw err;
+      handler(err);
+      return;
     }
 
     setUserInfo((prev) => ({ ...prev, user: res }));

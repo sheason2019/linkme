@@ -4,6 +4,7 @@ import { getAccountClient } from "../../../api-client";
 import JSEncrypt from "jsencrypt";
 
 import type { GetCryptoInfoResponse } from "../../../api-lib/account-client";
+import useErrorHandler from "../../../common/hooks/use-error-handler";
 
 const cryptoInfoState = atom<GetCryptoInfoResponse>({
   key: "account/salt",
@@ -15,6 +16,8 @@ const cryptoInfoState = atom<GetCryptoInfoResponse>({
 });
 
 const useCryptoInfo = () => {
+  const { handler, strHandler } = useErrorHandler();
+
   const [loading, setLoading] = useState(false);
   const [cryptoInfo, setCryptoInfo] = useRecoilState(cryptoInfoState);
 
@@ -24,7 +27,8 @@ const useCryptoInfo = () => {
     const [err, res] = await client.GetCryptoInfo();
     setLoading(false);
     if (err) {
-      throw err;
+      handler(err);
+      return;
     }
 
     setCryptoInfo(res);
@@ -39,7 +43,8 @@ const useCryptoInfo = () => {
     encrypter.setPublicKey(cryptoInfo.RsaPubKey);
     const encrypted = encrypter.encrypt(password + cryptoInfo.Salt);
     if (!encrypted) {
-      throw new Error("加密过程出现未知错误");
+      strHandler("加密过程出现位置错误");
+      return null;
     }
 
     return encrypted;

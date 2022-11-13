@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
+import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { CURRENT_USER_PAGE_URL } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateRegist } from "../common/validate";
 
 const useRegist = () => {
+  const { handler } = useErrorHandler();
+
   const navigate = useNavigate();
   // 登录注册相关的Hook
   const { setJwt } = useUserInfo();
@@ -43,19 +46,18 @@ const useRegist = () => {
       return;
     }
 
-    const password = encryptPassword(form.password);
-
     const user: User = {
       UserId: 0,
       Username: form.username,
-      Password: password,
+      Password: encryptPassword(form.password)!,
     };
     const client = getAccountClient();
     setLoading(true);
     const [err, res] = await client.Regist(user, cryptoInfo.SaltId);
     setLoading(false);
     if (err) {
-      throw err;
+      handler(err);
+      return;
     }
 
     setJwt(res);
