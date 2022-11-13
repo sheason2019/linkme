@@ -2,3 +2,5 @@ docker-compose.override.yml
 
 # 屏蔽一下生产环境的Database Profile信息
 /server/db/profile_product.go
+
+/server/dist
