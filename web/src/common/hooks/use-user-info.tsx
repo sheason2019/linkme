@@ -31,21 +31,34 @@ const useUserInfo = () => {
     }
 
     setUserInfo((prev) => ({ ...prev, user: res }));
+
+    return res;
   };
 
+  // 设置Jwt，并返回根据Jwt拿到的用户数据
   const setJwt = (jwt: string) => {
     setUserInfo({
       isLogin: true,
       jwt,
     });
     JwtProxy.setJwt(jwt, "session");
-    getCurrentUser();
+    return getCurrentUser();
+  };
+
+  // 利用持久化数据进行预登陆操作，若登录成功返回true，否则返回false
+  const preLogin = async () => {
+    const jwt = JwtProxy.getJWT();
+    if (!jwt) return false;
+
+    const user = await setJwt(jwt);
+    return !!user;
   };
 
   return {
     userInfo,
     setUserInfo,
     setJwt,
+    preLogin,
   };
 };
 

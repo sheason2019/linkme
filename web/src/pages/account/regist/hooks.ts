@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useUserInfo from "../../../common/hooks/use-user-info";
+import { CURRENT_USER_PAGE_URL } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateRegist } from "../common/validate";
 
 const useRegist = () => {
+  const navigate = useNavigate();
   // 登录注册相关的Hook
   const { setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
@@ -56,6 +59,7 @@ const useRegist = () => {
     }
 
     setJwt(res);
+    navigate(CURRENT_USER_PAGE_URL);
   };
 
   return {
