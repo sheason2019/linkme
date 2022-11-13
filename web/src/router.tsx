@@ -7,6 +7,8 @@ const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
 
+const Chat = lazy(() => import("./pages/chat"));
+
 const Suspenser = (
   Comp: React.LazyExoticComponent<() => JSX.Element | null>
 ) => {
@@ -41,6 +43,10 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "/chat",
+        element: Suspenser(Chat),
+      },
     ],
   },
 ]);
@@ -48,3 +54,5 @@ export const router = createBrowserRouter([
 export const LOGIN_PAGE_URL = "/account/login";
 export const REGIST_PAGE_URL = "/account/regist";
 export const CURRENT_USER_PAGE_URL = "/account/current-user";
+
+export const CHAT_URL = "/chat";

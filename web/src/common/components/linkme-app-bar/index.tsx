@@ -13,9 +13,12 @@ import { useMemo } from "react";
 import useUserInfo from "../../hooks/use-user-info";
 import { useNavigate } from "react-router-dom";
 import { CURRENT_USER_PAGE_URL, LOGIN_PAGE_URL } from "../../../router";
+import NavigateDrawer, { useNavigateDrawer } from "../navigate-drawer";
 
 const LinkmeAppBar = () => {
   const navigate = useNavigate();
+
+  const { handleOpenDrawer } = useNavigateDrawer();
 
   const { appBar } = useAppBar();
 
@@ -56,6 +59,7 @@ const LinkmeAppBar = () => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={handleOpenDrawer}
           >
             <MenuIcon />
           </IconButton>
@@ -66,6 +70,7 @@ const LinkmeAppBar = () => {
         </Toolbar>
       </AppBar>
       <Toolbar />
+      <NavigateDrawer />
     </>
   );
 };
