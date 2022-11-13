@@ -16,7 +16,7 @@ export const FormContainer: FC<Props> = ({ children, onSubmit, loading }) => {
     onSubmit && onSubmit();
   };
 
-  const render = () => {
+  const render = useMemo(() => {
     if (!loading) {
       return <form onSubmit={handleSubmit}>{children}</form>;
     }
@@ -26,7 +26,7 @@ export const FormContainer: FC<Props> = ({ children, onSubmit, loading }) => {
         <div>登录信息加载中</div>
       </Stack>
     );
-  };
+  }, [isMobile, handleSubmit]);
 
   return (
     <CenterBox sx={{ background: "#E0E0E0" }}>
@@ -37,7 +37,7 @@ export const FormContainer: FC<Props> = ({ children, onSubmit, loading }) => {
           marginX: isMobile ? 2 : 0,
         }}
       >
-        {render()}
+        {render}
       </Card>
     </CenterBox>
   );

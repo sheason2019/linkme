@@ -1,7 +1,7 @@
 package accountService
 
 import (
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -9,7 +9,8 @@ import (
 	"github.com/sheason2019/linkme/utils"
 )
 
-var jwt_secret_file = "dist/jwt_secret"
+var jwt_secret_file = "jwt_secret"
+var jwt_secret_path = secret_path + "/" + jwt_secret_file
 
 var jwtSecret = GenerateJwtSecret()
 
@@ -48,7 +49,7 @@ func ParseJwt(tokenString string) (*JwtClaims, error) {
 // 生成Jwt的加密秘钥
 func GenerateJwtSecret() []byte {
 	// 首先尝试从文件系统中获取
-	jwtSecret, err := ioutil.ReadFile(jwt_secret_file)
+	jwtSecret, err := os.ReadFile(jwt_secret_file)
 	if err == nil && len(jwtSecret) > 0 {
 		return jwtSecret
 	}
@@ -56,7 +57,7 @@ func GenerateJwtSecret() []byte {
 	// 否则以64位随机字符串作为jwt的加密秘钥
 	jwtSecret = []byte(utils.RandomString(64))
 	// 并存入文件系统
-	err = ioutil.WriteFile(jwt_secret_file, jwtSecret, 0777)
+	err = utils.WriteInfoFile(secret_path, jwt_secret_file, jwtSecret)
 	if err != nil {
 		panic(err)
 	}

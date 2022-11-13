@@ -57,10 +57,9 @@ const useUserInfo = () => {
       return false;
     }
 
-    try {
-      !!(await setJwt(jwt));
+    if (await setJwt(jwt)) {
       return true;
-    } catch (_) {
+    } else {
       JwtProxy.clearJwt();
       return false;
     }

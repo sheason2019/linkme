@@ -5,8 +5,9 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"io/ioutil"
 	"os"
+
+	"github.com/sheason2019/linkme/utils"
 )
 
 // 参考：https://www.jianshu.com/p/f666412a9a35
@@ -110,8 +111,10 @@ type RsaKeyPair struct {
 }
 
 const secret_path = "dist"
-const pri_file = secret_path + "/rsa_key"
-const pub_file = secret_path + "/rsa_key_pub"
+const pri_file = "rsa_key"
+const pri_file_path = secret_path + "/" + pri_file
+const pub_file = "rsa_key_pub"
+const pub_file_path = secret_path + "/" + pub_file
 
 func writeRsaKeyIntoFile(pubKey, priKey string) error {
 	// 判断目录是否存在
@@ -121,12 +124,12 @@ func writeRsaKeyIntoFile(pubKey, priKey string) error {
 		os.Mkdir(secret_path, 0777)
 	}
 
-	err = ioutil.WriteFile(pri_file, []byte(priKey), 0777)
+	err = utils.WriteInfoFile(secret_path, pri_file, []byte(priKey))
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(pub_file, []byte(pubKey), 0777)
+	err = utils.WriteInfoFile(secret_path, pub_file, []byte(pubKey))
 	if err != nil {
 		return err
 	}
@@ -136,13 +139,13 @@ func writeRsaKeyIntoFile(pubKey, priKey string) error {
 
 func readRsaKeyFromFile() (keyPair *RsaKeyPair, err error) {
 	keyPair = &RsaKeyPair{}
-	priContent, err := ioutil.ReadFile(pri_file)
+	priContent, err := os.ReadFile(pri_file_path)
 	if err != nil {
 		return nil, err
 	}
 	keyPair.PriKey = string(priContent)
 
-	pubContent, err := ioutil.ReadFile(pub_file)
+	pubContent, err := os.ReadFile(pub_file_path)
 	if err != nil {
 		return nil, err
 	}
