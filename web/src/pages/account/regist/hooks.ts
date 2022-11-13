@@ -7,20 +7,24 @@ import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateRegist } from "../common/validate";
 
 const useRegist = () => {
+  // 登录注册相关的Hook
   const { setJwt } = useUserInfo();
-  const { cryptoInfo, encryptPassword } = useCryptoInfo();
+  const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
 
+  // 修改AppBar标题内容
   const { setAppBar } = useAppBar();
   useEffect(() => {
     setAppBar((prev) => ({ ...prev, title: "用户注册" }));
   }, []);
 
+  // 表单内容
   const [form, setForm] = useState<RegistInfo>({
     username: "",
     password: "",
     repassword: "",
   });
   const [err, setErr] = useState<Partial<RegistInfo>>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,8 +48,9 @@ const useRegist = () => {
       Password: password,
     };
     const client = getAccountClient();
-
+    setLoading(true);
     const [err, res] = await client.Regist(user, cryptoInfo.SaltId);
+    setLoading(false);
     if (err) {
       throw err;
     }
@@ -60,6 +65,8 @@ const useRegist = () => {
     setErr,
     handleSubmit,
     handleChange,
+    loadingCryptoInfo,
+    loading,
   };
 };
 

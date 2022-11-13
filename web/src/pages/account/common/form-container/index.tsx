@@ -1,18 +1,31 @@
-import React, { FC, PropsWithChildren } from "react";
-import { Card } from "@mui/material";
+import React, { FC, PropsWithChildren, useMemo } from "react";
+import { Card, CircularProgress, Stack } from "@mui/material";
 import CenterBox from "../../../../common/components/center-box";
 import { useCheckMobile } from "../../../../common/hooks/use-check-mobile";
 
 interface Props extends PropsWithChildren {
   onSubmit: () => any;
+  loading?: boolean;
 }
 
-export const FormContainer: FC<Props> = ({ children, onSubmit }) => {
+export const FormContainer: FC<Props> = ({ children, onSubmit, loading }) => {
   const { isMobile } = useCheckMobile();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
+  };
+
+  const render = () => {
+    if (!loading) {
+      return <form onSubmit={handleSubmit}>{children}</form>;
+    }
+    return (
+      <Stack sx={{ py: 8, alignItems: "center" }} spacing={2}>
+        <CircularProgress />
+        <div>登录信息加载中</div>
+      </Stack>
+    );
   };
 
   return (
@@ -24,7 +37,7 @@ export const FormContainer: FC<Props> = ({ children, onSubmit }) => {
           marginX: isMobile ? 2 : 0,
         }}
       >
-        <form onSubmit={handleSubmit}>{children}</form>
+        {render()}
       </Card>
     </CenterBox>
   );

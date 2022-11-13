@@ -8,7 +8,7 @@ import { RegistInfo, validateLogin } from "../common/validate";
 
 const useLogin = () => {
   const { setJwt } = useUserInfo();
-  const { cryptoInfo, encryptPassword } = useCryptoInfo();
+  const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
   // 设置标题
   const { setAppBar } = useAppBar();
 
@@ -17,6 +17,7 @@ const useLogin = () => {
   }, []);
 
   // 表单内容
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -37,7 +38,10 @@ const useLogin = () => {
       Password: encryptPassword(form.password),
     };
 
+    setLoading(true);
     const [err, res] = await client.Login(user, cryptoInfo.SaltId);
+    setLoading(false);
+
     if (err) {
       throw err;
     }
@@ -58,6 +62,8 @@ const useLogin = () => {
     setErr,
     handleSubmit,
     handleChange,
+    loading,
+    loadingCryptoInfo,
   };
 };
 

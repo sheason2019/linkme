@@ -1,4 +1,5 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack, TextField, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import CustomLink from "../../../common/components/custom-link";
 import RedColorSpan from "../../../common/components/red-color-span";
@@ -8,7 +9,8 @@ import FormContainer from "../common/form-container";
 import useRegist from "./hooks";
 
 const Regist = () => {
-  const { form, err, handleSubmit, handleChange } = useRegist();
+  const { form, err, handleSubmit, handleChange, loading, loadingCryptoInfo } =
+    useRegist();
 
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const Regist = () => {
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <FormContainer onSubmit={handleSubmit} loading={loadingCryptoInfo}>
       <Stack
         spacing={1}
         sx={{ alignItems: "center", px: isMobile ? 2 : 8, py: 2 }}
@@ -58,9 +60,15 @@ const Regist = () => {
         />
       </Stack>
       <Box sx={{ mx: 8, mb: 2 }}>
-        <Button type="submit" fullWidth variant="contained">
+        <LoadingButton
+          loading={loading}
+          loadingIndicator="正在注册"
+          type="submit"
+          fullWidth
+          variant="contained"
+        >
           注册
-        </Button>
+        </LoadingButton>
       </Box>
       <Box sx={{ mt: 2, fontSize: "0.8rem", textAlign: "center" }}>
         已有账号？<CustomLink onClick={handleToLogin}>点击登录</CustomLink>

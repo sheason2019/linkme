@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getAccountClient } from "../../../api-client";
 import JSEncrypt from "jsencrypt";
@@ -15,11 +15,14 @@ const cryptoInfoState = atom<GetCryptoInfoResponse>({
 });
 
 const useCryptoInfo = () => {
+  const [loading, setLoading] = useState(false);
   const [cryptoInfo, setCryptoInfo] = useRecoilState(cryptoInfoState);
 
   const fetchCryptoInfo = async () => {
+    setLoading(true);
     const client = getAccountClient();
     const [err, res] = await client.GetCryptoInfo();
+    setLoading(false);
     if (err) {
       throw err;
     }
@@ -46,6 +49,7 @@ const useCryptoInfo = () => {
     cryptoInfo,
     fetchCryptoInfo,
     encryptPassword,
+    loadingCryptoInfo: loading,
   };
 };
 

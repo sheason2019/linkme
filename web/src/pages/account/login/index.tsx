@@ -7,9 +7,11 @@ import { REGIST_PAGE_URL } from "../../../router";
 import FormContainer from "../common/form-container";
 import RedColorSpan from "../../../common/components/red-color-span";
 import useLogin from "./hooks";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Login = () => {
-  const { form, err, handleSubmit, handleChange } = useLogin();
+  const { form, err, handleSubmit, handleChange, loading, loadingCryptoInfo } =
+    useLogin();
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
 
@@ -18,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <FormContainer onSubmit={handleSubmit} loading={loadingCryptoInfo}>
       <Stack
         spacing={2}
         sx={{ alignItems: "center", px: isMobile ? 2 : 8, py: 2 }}
@@ -47,9 +49,16 @@ const Login = () => {
         />
       </Stack>
       <Box sx={{ mx: 8, mb: 2 }}>
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          variant="contained"
+          loading={loading}
+          loadingIndicator="正在登录"
+          sx={{ mt: 2 }}
+        >
           登录
-        </Button>
+        </LoadingButton>
       </Box>
       <Box sx={{ mt: 2, fontSize: "0.8rem", textAlign: "center" }}>
         没有账号？<CustomLink onClick={handleToRegist}>点击注册</CustomLink>
