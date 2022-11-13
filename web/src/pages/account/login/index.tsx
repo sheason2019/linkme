@@ -1,4 +1,12 @@
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomLink from "../../../common/components/custom-link";
 import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
@@ -9,8 +17,15 @@ import useLogin from "./hooks";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const Login = () => {
-  const { form, err, handleSubmit, handleChange, loading, loadingCryptoInfo } =
-    useLogin();
+  const {
+    form,
+    setForm,
+    err,
+    handleSubmit,
+    handleChange,
+    loading,
+    loadingCryptoInfo,
+  } = useLogin();
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
 
@@ -20,32 +35,43 @@ const Login = () => {
 
   return (
     <FormContainer onSubmit={handleSubmit} loading={loadingCryptoInfo}>
-      <Stack
-        spacing={2}
-        sx={{ alignItems: "center", px: isMobile ? 2 : 8, py: 2 }}
-      >
+      <Stack sx={{ alignItems: "center", px: isMobile ? 2 : 8, pt: 2 }}>
         <Typography variant="h5">用户登录</Typography>
-        <TextField
-          fullWidth
-          size="small"
-          variant="outlined"
-          placeholder="请输入用户名"
-          value={form.username}
-          onChange={handleChange}
-          name="username"
-          helperText={<RedColorSpan>{err.username}</RedColorSpan>}
-        />
-        <TextField
-          fullWidth
-          size="small"
-          variant="outlined"
-          placeholder="请输入密码"
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          name="password"
-          helperText={<RedColorSpan>{err.password}</RedColorSpan>}
-        />
+        <FormGroup sx={{ width: "100%", marginTop: 2 }}>
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="请输入用户名"
+            value={form.username}
+            onChange={handleChange}
+            name="username"
+            helperText={<RedColorSpan>{err.username}</RedColorSpan>}
+          />
+        </FormGroup>
+        <FormGroup sx={{ width: "100%", marginTop: 0.5 }}>
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="请输入密码"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            name="password"
+            helperText={<RedColorSpan>{err.password}</RedColorSpan>}
+          />
+        </FormGroup>
+        <FormGroup sx={{ padding: 0 }}>
+          <FormControlLabel
+            control={<Checkbox size="small" />}
+            label="7日内自动登录"
+            checked={form.useLocal}
+            onChange={(_, value) =>
+              setForm((prev) => ({ ...prev, useLocal: value }))
+            }
+          />
+        </FormGroup>
       </Stack>
       <Box sx={{ mx: 8, mb: 2 }}>
         <LoadingButton
@@ -54,7 +80,6 @@ const Login = () => {
           variant="contained"
           loading={loading}
           loadingIndicator="正在登录"
-          sx={{ mt: 2 }}
         >
           登录
         </LoadingButton>

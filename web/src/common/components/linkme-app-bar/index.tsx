@@ -1,10 +1,22 @@
-import { Button, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAppBar } from "../../hooks/use-app-bar";
 import { useMemo } from "react";
+import useUserInfo from "../../hooks/use-user-info";
+import { useNavigate } from "react-router-dom";
+import { CURRENT_USER_PAGE_URL, LOGIN_PAGE_URL } from "../../../router";
 
 const LinkmeAppBar = () => {
+  const navigate = useNavigate();
+
   const { appBar } = useAppBar();
 
   const appBarTitle = useMemo(() => {
@@ -13,6 +25,26 @@ const LinkmeAppBar = () => {
     }
     return "Linkme";
   }, [appBar]);
+
+  const { userInfo } = useUserInfo();
+
+  const actionButton = useMemo(() => {
+    if (userInfo.isLogin) {
+      return (
+        <Box
+          sx={{ cursor: "pointer" }}
+          onClick={() => navigate(CURRENT_USER_PAGE_URL)}
+        >
+          <Avatar />
+        </Box>
+      );
+    }
+    return (
+      <Button color="inherit" onClick={() => navigate(LOGIN_PAGE_URL)}>
+        Login
+      </Button>
+    );
+  }, [userInfo]);
 
   return (
     <>
@@ -30,7 +62,7 @@ const LinkmeAppBar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {appBarTitle}
           </Typography>
-          <Button color="inherit">Login</Button>
+          {actionButton}
         </Toolbar>
       </AppBar>
       <Toolbar />

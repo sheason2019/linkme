@@ -6,7 +6,7 @@ import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { CURRENT_USER_PAGE_URL } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
-import { RegistInfo, validateLogin } from "../common/validate";
+import { LoginInfo, validateLogin } from "../common/validate";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -33,11 +33,12 @@ const useLogin = () => {
 
   // 表单内容
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<LoginInfo>({
     username: "",
     password: "",
+    useLocal: false,
   });
-  const [err, setErr] = useState<Partial<RegistInfo>>({});
+  const [err, setErr] = useState<Partial<LoginInfo>>({});
 
   const handleSubmit = async () => {
     const validate = validateLogin(form);
@@ -60,7 +61,7 @@ const useLogin = () => {
     if (err) {
       throw err;
     }
-    await setJwt(res);
+    await setJwt(res, form.useLocal ? "local" : "session");
     navigate(CURRENT_USER_PAGE_URL);
   };
 

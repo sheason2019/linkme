@@ -121,29 +121,15 @@ func writeRsaKeyIntoFile(pubKey, priKey string) error {
 		os.Mkdir(secret_path, 0777)
 	}
 
-	priFile, err := os.OpenFile(pri_file, os.O_CREATE|os.O_RDWR, 0777)
+	err = ioutil.WriteFile(pri_file, []byte(priKey), 0777)
 	if err != nil {
 		return err
 	}
 
-	_, err = priFile.WriteString(priKey)
+	err = ioutil.WriteFile(pub_file, []byte(pubKey), 0777)
 	if err != nil {
 		return err
 	}
-
-	defer priFile.Close()
-
-	pubFile, err := os.OpenFile(pub_file, os.O_CREATE|os.O_RDWR, 0777)
-	if err != nil {
-		return err
-	}
-
-	_, err = pubFile.WriteString(pubKey)
-	if err != nil {
-		return err
-	}
-
-	defer pubFile.Close()
 
 	return nil
 }

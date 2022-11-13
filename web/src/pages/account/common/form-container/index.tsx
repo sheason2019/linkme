@@ -4,7 +4,7 @@ import CenterBox from "../../../../common/components/center-box";
 import { useCheckMobile } from "../../../../common/hooks/use-check-mobile";
 
 interface Props extends PropsWithChildren {
-  onSubmit: () => any;
+  onSubmit?: () => any;
   loading?: boolean;
 }
 
@@ -13,7 +13,7 @@ export const FormContainer: FC<Props> = ({ children, onSubmit, loading }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit();
+    onSubmit && onSubmit();
   };
 
   const render = () => {

@@ -7,6 +7,7 @@ export interface RegistInfo {
 export interface LoginInfo {
   username: string;
   password: string;
+  useLocal: boolean;
 }
 
 export const validateRegist = ({

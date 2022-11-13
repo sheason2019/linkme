@@ -1,12 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { getAccountClient } from "../../api-client";
 import { User } from "../../api-lib/account-client";
+import { LOGIN_PAGE_URL } from "../../router";
 import JwtProxy from "../utils/jwt";
 
 interface UserInfo {
   isLogin: boolean;
   user?: User;
-  jwt?: string;
 }
 
 const userInfoState = atom<UserInfo>({
@@ -17,6 +18,7 @@ const userInfoState = atom<UserInfo>({
 });
 
 const useUserInfo = () => {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const getCurrentUser = async () => {
@@ -36,22 +38,41 @@ const useUserInfo = () => {
   };
 
   // 设置Jwt，并返回根据Jwt拿到的用户数据
-  const setJwt = (jwt: string) => {
+  const setJwt = (jwt: string, target: "session" | "local" = "session") => {
     setUserInfo({
       isLogin: true,
-      jwt,
     });
-    JwtProxy.setJwt(jwt, "session");
+    JwtProxy.setJwt(jwt, target);
     return getCurrentUser();
   };
 
   // 利用持久化数据进行预登陆操作，若登录成功返回true，否则返回false
   const preLogin = async () => {
     const jwt = JwtProxy.getJWT();
-    if (!jwt) return false;
+    if (!jwt) {
+      JwtProxy.clearJwt();
+      return false;
+    }
 
-    const user = await setJwt(jwt);
-    return !!user;
+    try {
+      !!(await setJwt(jwt));
+      return true;
+    } catch (_) {
+      JwtProxy.clearJwt();
+      return false;
+    }
+  };
+
+  // 退出登录功能
+  const logout = () => {
+    // 清除内存中的用户信息
+    setUserInfo({
+      isLogin: false,
+    });
+    // 清除持久化存储的Jwt信息
+    JwtProxy.clearJwt();
+    // 跳转到登录页面
+    navigate(LOGIN_PAGE_URL);
   };
 
   return {
@@ -59,6 +80,7 @@ const useUserInfo = () => {
     setUserInfo,
     setJwt,
     preLogin,
+    logout,
   };
 };
 
