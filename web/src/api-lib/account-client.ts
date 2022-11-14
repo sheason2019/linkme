@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月12日 22:0:28.
+ * 生成时间：2022年11月14日 23:34:5.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -16,6 +16,12 @@ export interface GetCryptoInfoResponse {
   RsaPubKey: string;
   Salt: string;
   SaltId: number;
+}
+export interface GetUsersByUsernameResponse {
+  // 拉取的用户信息
+  Users: User[];
+  // 是否存有更多用户
+  HasMore: boolean;
 }
 export class AccountClient extends OmiClientBase {
   // 获取登录所需的秘钥信息
@@ -41,5 +47,14 @@ export class AccountClient extends OmiClientBase {
     const url = "Account.CurrentUser";
     const method = "Get";
     return this.request<User>(url, method, {});
+  }
+  // 根据用户名搜索用户信息，一次最多拉取25条
+  GetUsersByUsername(username: string, offset: number) {
+    const url = "Account.UsersByUsername";
+    const method = "Get";
+    return this.request<GetUsersByUsernameResponse>(url, method, {
+      username,
+      offset,
+    });
   }
 }

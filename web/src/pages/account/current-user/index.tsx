@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserInfo from "../../../common/hooks/use-user-info";
-import { LOGIN_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import FormContainer from "../common/form-container";
 import LogoutConfirmDialog, {
   useConfirmDialog,
@@ -18,7 +18,7 @@ const CurrentUser = () => {
   useEffect(() => {
     // 如果找不到当前用户信息则前往登录页面
     if (!user) {
-      navigate(LOGIN_PAGE_URL);
+      navigate(APP_URLS.LOGIN_PAGE_URL);
     }
   }, [user]);
 

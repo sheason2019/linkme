@@ -13,6 +13,13 @@ struct GetCryptoInfoResponse {
   int SaltId;
 }
 
+struct GetUsersByUsernameResponse {
+  // 拉取的用户信息
+  repeated User Users;
+  // 是否存有更多用户
+  boolean HasMore;
+}
+
 service Account {
   // 获取登录所需的秘钥信息
   GetCryptoInfoResponse GetCryptoInfo();
@@ -22,4 +29,6 @@ service Account {
   string Regist(User user, int saltId);
   // 使用请求头中的JWT获取当前的用户信息
   User GetCurrentUser();
+  // 根据用户名搜索用户信息，一次最多拉取25条
+  GetUsersByUsernameResponse GetUsersByUsername(string username, int offset);
 }

@@ -5,7 +5,7 @@ import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
-import { CURRENT_USER_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
 import { RegistInfo, validateRegist } from "../common/validate";
 
@@ -61,7 +61,7 @@ const useRegist = () => {
     }
 
     setJwt(res);
-    navigate(CURRENT_USER_PAGE_URL);
+    navigate(APP_URLS.CURRENT_USER_PAGE_URL);
   };
 
   return {

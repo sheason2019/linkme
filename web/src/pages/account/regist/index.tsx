@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import CustomLink from "../../../common/components/custom-link";
 import RedColorSpan from "../../../common/components/red-color-span";
 import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
-import { LOGIN_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import FormContainer from "../common/form-container";
 import useRegist from "./hooks";
 
@@ -16,7 +16,7 @@ const Regist = () => {
   const navigate = useNavigate();
 
   const handleToLogin = () => {
-    navigate(LOGIN_PAGE_URL);
+    navigate(APP_URLS.LOGIN_PAGE_URL);
   };
 
   return (

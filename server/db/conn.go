@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/dao/userDao"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -45,5 +46,10 @@ func GetConn() *gorm.DB {
 func AutoMigrate() {
 	connSingleton.AutoMigrate(
 		&userDao.UserDao{},
+		&chatDao.ConversationDao{},
+		&chatDao.MemberDao{},
+		&chatDao.MessageDao{},
+		&chatDao.MessageReciver{},
+		&chatDao.SequenceItemDao{},
 	)
 }

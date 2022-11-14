@@ -12,6 +12,8 @@ var controller account.Account = accountImpl{}
 func BindAccountController(r *gin.Engine) {
 	attachGetCryptoInfo(r)
 	attachGetCurrentUser(r)
+	attachGetUsersByUsername(r)
+
 	attachLogin(r)
 	attachRegist(r)
 }

@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import { atom, useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+import { APP_URLS } from "../../../router";
 
 export interface INavigateDrawer {
   open: boolean;
@@ -40,6 +42,12 @@ export const useNavigateDrawer = () => {
 };
 
 const NavigateDrawer = () => {
+  const navigate = useNavigate();
+  const handleToPage = (url: string) => {
+    navigate(url);
+    handleCloseDrawer();
+  };
+
   const { drawer, handleCloseDrawer } = useNavigateDrawer();
 
   return (
@@ -51,7 +59,10 @@ const NavigateDrawer = () => {
             <ListItemIcon>
               <ChatIcon />
             </ListItemIcon>
-            <ListItemText primary="即时通讯" />
+            <ListItemText
+              onClick={() => handleToPage(APP_URLS.CHAT_URL)}
+              primary="即时通讯"
+            />
           </ListItemButton>
         </List>
       </List>

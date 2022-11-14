@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { getAccountClient } from "../../api-client";
 import { User } from "../../api-lib/account-client";
-import { LOGIN_PAGE_URL } from "../../router";
+import { APP_URLS } from "../../router";
 import JwtProxy from "../utils/jwt";
 import useErrorHandler from "./use-error-handler";
 
@@ -31,11 +31,12 @@ const useUserInfo = () => {
 
     const [err, res] = await client.GetCurrentUser();
     if (err) {
+      setUserInfo({ isLogin: false });
       handler(err);
       return;
     }
 
-    setUserInfo((prev) => ({ ...prev, user: res }));
+    setUserInfo((prev) => ({ ...prev, isLogin: true, user: res }));
 
     return res;
   };
@@ -74,7 +75,7 @@ const useUserInfo = () => {
     // 清除持久化存储的Jwt信息
     JwtProxy.clearJwt();
     // 跳转到登录页面
-    navigate(LOGIN_PAGE_URL);
+    navigate(APP_URLS.LOGIN_PAGE_URL);
   };
 
   return {

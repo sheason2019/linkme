@@ -51,8 +51,10 @@ export const router = createBrowserRouter([
   },
 ]);
 
-export const LOGIN_PAGE_URL = "/account/login";
-export const REGIST_PAGE_URL = "/account/regist";
-export const CURRENT_USER_PAGE_URL = "/account/current-user";
+export enum APP_URLS {
+  LOGIN_PAGE_URL = "/account/login",
+  REGIST_PAGE_URL = "/account/regist",
+  CURRENT_USER_PAGE_URL = "/account/current-user",
 
-export const CHAT_URL = "/chat";
+  CHAT_URL = "/chat",
+}

@@ -5,7 +5,7 @@ import { User } from "../../../api-lib/account-client";
 import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
-import { CURRENT_USER_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import useCryptoInfo from "../common/crypto-info";
 import { LoginInfo, validateLogin } from "../common/validate";
 
@@ -14,7 +14,7 @@ const useLogin = () => {
 
   const navigate = useNavigate();
 
-  const { setJwt, preLogin } = useUserInfo();
+  const { userInfo, setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
   // 设置标题
   const { setAppBar } = useAppBar();
@@ -25,13 +25,9 @@ const useLogin = () => {
 
   // 预登陆逻辑
   useEffect(() => {
-    const handlePreLogin = async () => {
-      const success = await preLogin();
-      if (success) {
-        navigate(CURRENT_USER_PAGE_URL);
-      }
-    };
-    handlePreLogin();
+    if (userInfo.isLogin) {
+      navigate(APP_URLS.CURRENT_USER_PAGE_URL);
+    }
   }, []);
 
   // 表单内容
@@ -66,7 +62,7 @@ const useLogin = () => {
       return;
     }
     await setJwt(res, form.useLocal ? "local" : "session");
-    navigate(CURRENT_USER_PAGE_URL);
+    navigate(APP_URLS.CURRENT_USER_PAGE_URL);
   };
 
   const handleChange = (

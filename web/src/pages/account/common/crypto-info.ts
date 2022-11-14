@@ -43,7 +43,7 @@ const useCryptoInfo = () => {
     encrypter.setPublicKey(cryptoInfo.RsaPubKey);
     const encrypted = encrypter.encrypt(password + cryptoInfo.Salt);
     if (!encrypted) {
-      strHandler("加密过程出现位置错误");
+      strHandler("加密过程出现未知错误");
       return null;
     }
 

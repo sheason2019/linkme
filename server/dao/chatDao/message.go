@@ -11,5 +11,5 @@ type MessageDao struct {
 	Member   MemberDao `gorm:"foreignKey:MemberId"`
 	MemberId uint
 
-	MessageRecivers []MessageReciver
+	MessageRecivers []MessageReciver `gorm:"foreignKey:MessageId"`
 }

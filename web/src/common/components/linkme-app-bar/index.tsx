@@ -12,13 +12,16 @@ import { useAppBar } from "../../hooks/use-app-bar";
 import { useMemo } from "react";
 import useUserInfo from "../../hooks/use-user-info";
 import { useNavigate } from "react-router-dom";
-import { CURRENT_USER_PAGE_URL, LOGIN_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import NavigateDrawer, { useNavigateDrawer } from "../navigate-drawer";
+import SearchIcon from "@mui/icons-material/Search";
+import SearchDialog, { useSearchDialog } from "./components/search-dialog";
 
 const LinkmeAppBar = () => {
   const navigate = useNavigate();
 
   const { handleOpenDrawer } = useNavigateDrawer();
+  const { handleOpen } = useSearchDialog();
 
   const { appBar } = useAppBar();
 
@@ -36,14 +39,14 @@ const LinkmeAppBar = () => {
       return (
         <Box
           sx={{ cursor: "pointer" }}
-          onClick={() => navigate(CURRENT_USER_PAGE_URL)}
+          onClick={() => navigate(APP_URLS.CURRENT_USER_PAGE_URL)}
         >
           <Avatar />
         </Box>
       );
     }
     return (
-      <Button color="inherit" onClick={() => navigate(LOGIN_PAGE_URL)}>
+      <Button color="inherit" onClick={() => navigate(APP_URLS.LOGIN_PAGE_URL)}>
         Login
       </Button>
     );
@@ -52,7 +55,7 @@ const LinkmeAppBar = () => {
   return (
     <>
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar sx={{ position: "relative" }}>
           <IconButton
             size="large"
             edge="start"
@@ -66,11 +69,15 @@ const LinkmeAppBar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {appBarTitle}
           </Typography>
+          <IconButton onClick={handleOpen} sx={{ mr: 2 }}>
+            <SearchIcon sx={{ color: "#FFF" }} />
+          </IconButton>
           {actionButton}
         </Toolbar>
       </AppBar>
       <Toolbar />
       <NavigateDrawer />
+      <SearchDialog />
     </>
   );
 };

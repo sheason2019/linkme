@@ -10,7 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import CustomLink from "../../../common/components/custom-link";
 import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
-import { REGIST_PAGE_URL } from "../../../router";
+import { APP_URLS } from "../../../router";
 import FormContainer from "../common/form-container";
 import RedColorSpan from "../../../common/components/red-color-span";
 import useLogin from "./hooks";
@@ -30,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleToRegist = () => {
-    navigate(REGIST_PAGE_URL);
+    navigate(APP_URLS.REGIST_PAGE_URL);
   };
 
   return (

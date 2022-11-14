@@ -49,7 +49,7 @@ func ParseJwt(tokenString string) (*JwtClaims, error) {
 // 生成Jwt的加密秘钥
 func GenerateJwtSecret() []byte {
 	// 首先尝试从文件系统中获取
-	jwtSecret, err := os.ReadFile(jwt_secret_file)
+	jwtSecret, err := os.ReadFile(jwt_secret_path)
 	if err == nil && len(jwtSecret) > 0 {
 		return jwtSecret
 	}
