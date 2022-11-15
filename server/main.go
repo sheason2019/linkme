@@ -29,6 +29,7 @@ func main() {
 
 	accountController.BindAccountController(r)
 	chatController.BindChatController(r)
+	chatController.BindChatRpcController(r)
 
 	r.Run()
 }

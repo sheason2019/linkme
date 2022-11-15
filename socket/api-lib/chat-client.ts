@@ -1,9 +1,9 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月15日 23:46:13.
+ * 生成时间：2022年11月15日 23:18:16.
  */
 
-import { OmiClientBase } from "@omi-stack/omi-client";
+import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
 import { AxiosRequestConfig } from "axios";
 
 // 聊天服务 IDL 定义

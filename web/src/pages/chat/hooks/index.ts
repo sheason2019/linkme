@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
 import { APP_URLS } from "../../../router";
+import { SequenceItem } from "../../../api-lib/chat-client";
 
 interface IChatState {
   currentConvId?: number;
+  sequence?: SequenceItem[];
 }
 
 const chatState = atom<IChatState>({
@@ -22,9 +24,14 @@ const useChat = () => {
     navigate(APP_URLS.CHAT_URL);
   };
 
+  const handleSetSequence = (sequence: SequenceItem[]) => {
+    setChat((prev) => ({ ...prev, sequence }));
+  };
+
   return {
     chat,
     setChat,
+    handleSetSequence,
     handleToConversation,
   };
 };

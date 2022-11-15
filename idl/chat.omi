@@ -1,6 +1,45 @@
 // 聊天服务 IDL 定义
+struct SequenceItem {
+  int ConversationId;
+  string Name;
+  string LastMessage;
+
+  optional string AvatarUrl;
+}
+
+struct Conversation {
+  int Id;
+  string Name;
+
+  string Type;
+}
+
+struct Message {
+  int Id;
+  string Type;
+
+  string Content;
+  int TimeStamp;
+}
+
+struct MessageResponse {
+  repeated Message Messages;
+  boolean HasMoreEarlierMessage;
+  boolean HasMoreLaterMessage;
+}
 
 service Chat {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
   int CreatePrivateConversation(int userId);
+  // 获取会话信息
+  Conversation GetConversationById(int convId);
+}
+
+service ChatRpc {
+  // 获取消息列表信息
+  repeated SequenceItem GetSequenceItem();
+  // 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
+  MessageResponse GetDefaultMessage(int convId);
+  // 获取指定的会话信息, vector: earlier or later，返回40条信息
+  MessageResponse GetSpecifiedMessage(int messageId, string vector);
 }

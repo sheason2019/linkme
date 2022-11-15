@@ -11,4 +11,5 @@ var controller chat.Chat = chatImpl{}
 
 func BindChatController(r *gin.Engine) {
 	attachCreatePrivateConversation(r)
+	attachGetConversationById(r)
 }

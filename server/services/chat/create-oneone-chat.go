@@ -11,13 +11,17 @@ import (
 func CreatePrivateConversation(userA, userB userDao.UserDao) (*chatDao.ConversationDao, error) {
 	// 检查指定的用户私聊会话是否已经存在
 	existConv, err := FindPrivateConversation(userA, userB)
-	if err == nil {
-		return existConv, err
+	if err != nil {
+		return nil, err
+	} else if existConv != nil {
+		return existConv, nil
 	}
 
 	existConv, err = FindPrivateConversation(userB, userA)
-	if err == nil {
-		return existConv, err
+	if err != nil {
+		return nil, err
+	} else if existConv != nil {
+		return existConv, nil
 	}
 
 	// 不存在则创建会话
@@ -29,7 +33,7 @@ func CreatePrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversat
 	}
 
 	conn := db.GetConn()
-	conn.Transaction(func(tx *gorm.DB) error {
+	err = conn.Transaction(func(tx *gorm.DB) error {
 		err := tx.Create(&conv).Error
 		if err != nil {
 			return err
@@ -54,6 +58,10 @@ func CreatePrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversat
 		return nil
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	// 返回会话信息
 	return &conv, nil
 }
@@ -68,7 +76,16 @@ func FindPrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversatio
 		Type:                 chatDao.ConversationType_Private,
 	}
 
-	err := conn.Where(&conv).Limit(1).Find(&conv).Error
+	var count int64
+	err := conn.Model(&conv).Where(&conv).Count(&count).Error
+	if err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return nil, nil
+	}
+
+	err = conn.Where(&conv).Limit(1).Find(&conv).Error
 	if err != nil {
 		return nil, err
 	}
