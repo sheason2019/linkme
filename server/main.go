@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	accountController "github.com/sheason2019/linkme/controller/account"
+	chatController "github.com/sheason2019/linkme/controller/chat"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
 	accountService "github.com/sheason2019/linkme/services/account"
@@ -24,6 +25,7 @@ func main() {
 	r.Use(middleware.UserMiddleware)
 
 	accountController.BindAccountController(r)
+	chatController.BindChatController(r)
 
 	r.Run()
 }

@@ -1,0 +1,6 @@
+// 聊天服务 IDL 定义
+
+service Chat {
+  // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
+  int CreatePrivateConversation(int userId);
+}

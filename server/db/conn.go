@@ -50,6 +50,6 @@ func AutoMigrate() {
 		&chatDao.MemberDao{},
 		&chatDao.MessageDao{},
 		&chatDao.MessageReciver{},
-		&chatDao.SequenceItemDao{},
+		&chatDao.SequenceDao{},
 	)
 }

@@ -8,8 +8,11 @@ import {
   Toolbar,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import useChat from "../../hooks";
 
 const Main = () => {
+  const { chat } = useChat();
+
   return (
     <Stack
       flex={1}
@@ -21,7 +24,7 @@ const Main = () => {
         <List sx={{ width: "100%", flex: 1, overflowY: "auto" }}></List>
       </Stack>
       <Stack flex={1} alignItems="stretch">
-        <Toolbar>会话标题</Toolbar>
+        <Toolbar>会话ID - {chat.currentConvId}</Toolbar>
         <Divider />
         <Box sx={{ flex: 1 }} />
         <Divider />
