@@ -20,6 +20,16 @@ struct Message {
 
   string Content;
   int TimeStamp;
+
+  // 发送该消息的会话成员信息
+  int MemberId;
+}
+
+struct MessageMember {
+  int MemberId;
+
+  string Name;
+  string AvatarUrl;
 }
 
 struct MessageResponse {

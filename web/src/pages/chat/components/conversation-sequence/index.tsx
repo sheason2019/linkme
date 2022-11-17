@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import useChat from "../../hooks";
 
-const MessageSequence = () => {
+const ConversationSequence = () => {
   const { chat } = useChat();
 
   return (
@@ -25,4 +25,4 @@ const MessageSequence = () => {
   );
 };
 
-export default MessageSequence;
+export default ConversationSequence;

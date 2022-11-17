@@ -2,17 +2,28 @@ import {
   Box,
   Button,
   Divider,
-  List,
   ListSubheader,
   Stack,
   Toolbar,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import useChat from "../../hooks";
-import MessageSequence from "../message-sequence";
+import ConversationSequence from "../conversation-sequence";
+import Editor from "../editor";
+import useEditor from "../../hooks/use-editor";
+import Messages from "../messages";
 
 const Main = () => {
-  const { chat } = useChat();
+  const { chat, handlePostMessage } = useChat();
+  const { handleClearContent, handleGetContent } = useEditor();
+
+  const handleSend = () => {
+    const content = handleGetContent();
+    console.log(content);
+    handlePostMessage(content);
+
+    handleClearContent();
+  };
 
   return (
     <Stack
@@ -20,20 +31,24 @@ const Main = () => {
       flexDirection="row"
       divider={<Divider orientation="vertical" flexItem />}
     >
-      <Stack sx={{ width: 300 }}>
+      <Stack sx={{ width: 300, flexShrink: 0 }}>
         <ListSubheader>消息列表</ListSubheader>
-        <MessageSequence />
+        <ConversationSequence />
       </Stack>
       <Stack flex={1} alignItems="stretch">
         <Toolbar>会话ID - {chat.currentConvId}</Toolbar>
         <Divider />
-        <Box sx={{ flex: 1 }} />
+        <Messages />
         <Divider />
         <Stack sx={{ height: 280 }} divider={<Divider flexItem />}>
           <Box sx={{ height: 36 }} />
-          <Box sx={{ flex: 1 }} />
+          <Editor />
           <Box sx={{ py: 1, px: 2, textAlign: "right" }}>
-            <Button variant="contained" endIcon={<SendIcon />}>
+            <Button
+              onClick={handleSend}
+              variant="contained"
+              endIcon={<SendIcon />}
+            >
               发送
             </Button>
           </Box>
