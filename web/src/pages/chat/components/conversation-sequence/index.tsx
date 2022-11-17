@@ -9,9 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import useChat from "../../hooks/use-chat";
+import useSocket from "../../hooks/use-socket";
 
 const ConversationSequence = () => {
-  const { chat, handleToConversation } = useChat();
+  const { chat } = useChat();
+  const { handleToConversation } = useSocket();
 
   return (
     <List sx={{ width: "100%", flex: 1, overflowY: "auto" }}>

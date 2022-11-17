@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月15日 22:2:27.
+* 生成时间：2022年11月17日 16:40:25.
  */
 package chat
 
@@ -21,6 +21,13 @@ type Message struct {
 	Type      *string
 	Content   *string
 	TimeStamp *int
+	// 发送该消息的会话成员信息
+	MemberId *int
+}
+type MessageMember struct {
+	MemberId  *int
+	Name      *string
+	AvatarUrl *string
 }
 type MessageResponse struct {
 	Messages              *[]Message
@@ -40,4 +47,8 @@ type GetDefaultMessageRequest struct {
 type GetSpecifiedMessageRequest struct {
 	MessageId int    `form:"messageId"`
 	Vector    string `form:"vector"`
+}
+type GetUserEnterConversationLimitRequest struct {
+	UserId int `form:"userId"`
+	ConvId int `form:"convId"`
 }

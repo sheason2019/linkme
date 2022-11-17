@@ -8,10 +8,15 @@ import {
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import JwtProxy from "../../../common/utils/jwt";
 import randomString from "../../../common/utils/random-string";
+import { useNavigate } from "react-router-dom";
+import { getChatClient } from "../../../api-client";
+import { APP_URLS } from "../../../router";
 
 const useSocket = () => {
+  const navigate = useNavigate();
+
   const { handleSetSequence, handleSetLoadingSequence, setChat } = useChat();
-  const { strHandler } = useErrorHandler();
+  const { handler, strHandler } = useErrorHandler();
 
   const socketRef =
     useRef<Socket<ServerToClientEvents, ClientToServerEvents>>();
@@ -61,12 +66,27 @@ const useSocket = () => {
     socket.emit("postMessage", message.Content, convId, message.Mark!);
   };
 
+  const handleToConversation = async (convId: number) => {
+    navigate(APP_URLS.CHAT_URL);
+    const client = getChatClient();
+    const [err, res] = await client.GetConversationById(convId);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    setChat((prev) => ({ ...prev, currentConv: res }));
+    socketRef.current?.emit("enterConversation", res.Id);
+  };
+
   useEffect(() => {
     if (!socketRef.current) initSocket();
   }, []);
 
   return {
+    socket: socketRef.current,
     handlePostMessage,
+    handleToConversation,
   };
 };
 

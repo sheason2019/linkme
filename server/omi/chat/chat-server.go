@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月15日 22:2:27.
+* 生成时间：2022年11月17日 16:40:25.
  */
 package chat
 
@@ -32,15 +32,19 @@ type ChatRpc interface {
 	GetDefaultMessage(ctx *gin.Context, convId int) MessageResponse
 	// 获取指定的会话信息, vector: earlier or later，返回40条信息
 	GetSpecifiedMessage(ctx *gin.Context, messageId int, vector string) MessageResponse
+	// 获取用户进入会话的权限
+	GetUserEnterConversationLimit(ctx *gin.Context, userId int, convId int) bool
 }
 type typeChatRpcDefinition struct {
-	GET_SEQUENCE_ITEM_PATH     string
-	GET_DEFAULT_MESSAGE_PATH   string
-	GET_SPECIFIED_MESSAGE_PATH string
+	GET_SEQUENCE_ITEM_PATH                 string
+	GET_DEFAULT_MESSAGE_PATH               string
+	GET_SPECIFIED_MESSAGE_PATH             string
+	GET_USER_ENTER_CONVERSATION_LIMIT_PATH string
 }
 
 var ChatRpcDefinition = &typeChatRpcDefinition{
-	GET_SEQUENCE_ITEM_PATH:     "/ChatRpc.SequenceItem",
-	GET_DEFAULT_MESSAGE_PATH:   "/ChatRpc.DefaultMessage",
-	GET_SPECIFIED_MESSAGE_PATH: "/ChatRpc.SpecifiedMessage",
+	GET_SEQUENCE_ITEM_PATH:                 "/ChatRpc.SequenceItem",
+	GET_DEFAULT_MESSAGE_PATH:               "/ChatRpc.DefaultMessage",
+	GET_SPECIFIED_MESSAGE_PATH:             "/ChatRpc.SpecifiedMessage",
+	GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "/ChatRpc.UserEnterConversationLimit",
 }

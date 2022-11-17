@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月15日 23:18:16.
+ * 生成时间：2022年11月17日 16:44:58.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -23,6 +23,13 @@ export interface Message {
   Type: string;
   Content: string;
   TimeStamp: number;
+  // 发送该消息的会话成员信息
+  MemberId: number;
+}
+export interface MessageMember {
+  MemberId: number;
+  Name: string;
+  AvatarUrl: string;
 }
 export interface MessageResponse {
   Messages: Message[];
@@ -61,5 +68,11 @@ export class ChatRpcClient extends OmiClientBase {
     const url = "ChatRpc.SpecifiedMessage";
     const method = "Get";
     return this.request<MessageResponse>(url, method, { messageId, vector });
+  }
+  // 获取用户进入会话的权限
+  GetUserEnterConversationLimit(userId: number, convId: number) {
+    const url = "ChatRpc.UserEnterConversationLimit";
+    const method = "Get";
+    return this.request<boolean>(url, method, { userId, convId });
   }
 }

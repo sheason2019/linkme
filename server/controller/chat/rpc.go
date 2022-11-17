@@ -11,4 +11,5 @@ var rpcController chat.ChatRpc = chatRpcImpl{}
 
 func BindChatRpcController(r *gin.Engine) {
 	attachGetSequenceItem(r)
+	attachGetUserEnterConversationLimit(r)
 }

@@ -59,4 +59,33 @@ io.on("connection", (socket) => {
 
     socket.emit("sequenceItem", res);
   });
+  // 进入指定会话
+  socket.on("enterConversation", async (convId) => {
+    const user = UserSocketsMap.getUserBySocketId(socket.id);
+    if (!user) {
+      socket.emit("error", "当前用户尚未登录");
+      return;
+    }
+
+    const client = getChatRpcClient();
+    // 校验用户是否为指定会话的成员
+    const [err, res] = await client.GetUserEnterConversationLimit(
+      user.UserId,
+      convId
+    );
+
+    if (err) {
+      socket.emit("error", err.message);
+      console.error(err);
+      return;
+    }
+
+    if (!res) {
+      socket.emit("error", "用户不是指定会话的成员");
+      return;
+    }
+
+    // 将该Socket加入指定的Room
+    socket.join("conv::" + convId);
+  });
 });

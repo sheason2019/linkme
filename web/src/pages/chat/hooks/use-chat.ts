@@ -1,14 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { atom, useRecoilState } from "recoil";
-import { APP_URLS } from "../../../router";
 import {
   Conversation,
   Message,
   SequenceItem,
 } from "../../../api-lib/chat-client";
 import randomString from "../../../common/utils/random-string";
-import { getChatClient } from "../../../api-client";
-import useErrorHandler from "../../../common/hooks/use-error-handler";
 
 // View层的消息需要比Message额外添加一些属性
 export interface ViewMessage extends Message {
@@ -34,22 +30,7 @@ const chatState = atom<IChatState>({
 });
 
 const useChat = () => {
-  const { handler } = useErrorHandler();
-
-  const navigate = useNavigate();
   const [chat, setChat] = useRecoilState(chatState);
-
-  const handleToConversation = async (convId: number) => {
-    navigate(APP_URLS.CHAT_URL);
-    const client = getChatClient();
-    const [err, res] = await client.GetConversationById(convId);
-    if (err) {
-      handler(err);
-      return;
-    }
-
-    setChat((prev) => ({ ...prev, currentConv: res }));
-  };
 
   const handleSetLoadingSequence = (loading: boolean) => {
     setChat((prev) => ({ ...prev, loadingSequence: loading }));
@@ -79,7 +60,6 @@ const useChat = () => {
     setChat,
     handleSetSequence,
     handlePostMessage,
-    handleToConversation,
     handleSetLoadingSequence,
   };
 };

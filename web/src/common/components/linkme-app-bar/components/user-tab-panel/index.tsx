@@ -14,7 +14,7 @@ import useErrorHandler from "../../../../hooks/use-error-handler";
 import EmptyResult from "../empty-result";
 import { SearchTabs, useSearchDialog } from "../search-dialog";
 import ChatIcon from "@mui/icons-material/Chat";
-import useChat from "../../../../../pages/chat/hooks/use-chat";
+import useSocket from "../../../../../pages/chat/hooks/use-socket";
 
 interface IUserTabPanel {
   users: User[];
@@ -48,7 +48,7 @@ interface IUserListItem {
 const UserListItem: FC<IUserListItem> = ({ user }) => {
   const { handler } = useErrorHandler();
   const { handleClose } = useSearchDialog();
-  const { handleToConversation } = useChat();
+  const { handleToConversation } = useSocket();
 
   const handleCreatePrivateConversation = async () => {
     const client = getChatClient();
