@@ -7,11 +7,10 @@ import {
 } from "../../../../../socket/shared/socket";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import JwtProxy from "../../../common/utils/jwt";
-import md5 from "js-md5";
 import randomString from "../../../common/utils/random-string";
 
 const useSocket = () => {
-  const { handleSetSequence } = useChat();
+  const { handleSetSequence, handleSetLoadingSequence } = useChat();
   const { strHandler } = useErrorHandler();
 
   const socketRef =
@@ -31,21 +30,23 @@ const useSocket = () => {
       // 登录
       socket.emit("login", jwt);
     });
+    // 完成登录后，执行下列初始化行为
     socket.on("login", (success) => {
       if (success) {
+        handleSetLoadingSequence(true);
         socket.emit("sequenceItem");
       } else {
         socket.close();
       }
     });
     socket.on("sequenceItem", (sequence) => {
-      console.log(sequence);
+      handleSetLoadingSequence(false);
       handleSetSequence(sequence);
     });
     socket.on("error", (err) => {
       strHandler(err);
     });
-    socket.on("postMessage", (contentMd5) => {});
+    socket.on("postMessage", (mark) => {});
 
     socket.connect();
 

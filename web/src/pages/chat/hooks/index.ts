@@ -12,6 +12,7 @@ export interface ViewMessage extends Message {
 
 interface IChatState {
   currentConvId: number | undefined;
+  loadingSequence: boolean;
   sequence: SequenceItem[];
   messages: ViewMessage[];
 }
@@ -20,6 +21,7 @@ const chatState = atom<IChatState>({
   key: "chat/common",
   default: {
     currentConvId: undefined,
+    loadingSequence: false,
     sequence: [],
     messages: [],
   },
@@ -30,12 +32,17 @@ const useChat = () => {
   const [chat, setChat] = useRecoilState(chatState);
 
   const handleToConversation = (convId: number) => {
-    setChat({
+    setChat((prev) => ({
+      ...prev,
       currentConvId: convId,
       sequence: [],
       messages: [],
-    });
+    }));
     navigate(APP_URLS.CHAT_URL);
+  };
+
+  const handleSetLoadingSequence = (loading: boolean) => {
+    setChat((prev) => ({ ...prev, loadingSequence: loading }));
   };
 
   const handleSetSequence = (sequence: SequenceItem[]) => {
@@ -51,6 +58,8 @@ const useChat = () => {
       Type: "default",
       TimeStamp: 0,
       Mark: randomString(64),
+
+      MemberId: 0,
     };
     setChat((prev) => ({ ...prev, messages: [...prev.messages, message] }));
   };
@@ -59,8 +68,9 @@ const useChat = () => {
     chat,
     setChat,
     handleSetSequence,
-    handleToConversation,
     handlePostMessage,
+    handleToConversation,
+    handleSetLoadingSequence,
   };
 };
 
