@@ -12,15 +12,17 @@ import ConversationSequence from "../conversation-sequence";
 import Editor from "../editor";
 import useEditor from "../../hooks/use-editor";
 import Messages from "../messages";
+import useSocket from "../../hooks/use-socket";
 
 const Main = () => {
-  const { chat, handlePostMessage } = useChat();
+  const { chat } = useChat();
+  const { handlePostMessage } = useSocket();
   const { handleClearContent, handleGetContent } = useEditor();
 
   const handleSend = () => {
     const content = handleGetContent();
-    console.log(content);
-    handlePostMessage(content);
+
+    chat.currentConv && handlePostMessage(content, chat.currentConv.Id);
 
     handleClearContent();
   };
@@ -36,7 +38,7 @@ const Main = () => {
         <ConversationSequence />
       </Stack>
       <Stack flex={1} alignItems="stretch">
-        <Toolbar>会话ID - {chat.currentConv?.Id}</Toolbar>
+        <Toolbar>{chat.currentConv?.Name}</Toolbar>
         <Divider />
         <Messages />
         <Divider />

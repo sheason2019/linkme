@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import useChat, { ViewMessage } from "./use-chat";
 import {
@@ -12,14 +12,19 @@ import { useNavigate } from "react-router-dom";
 import { getChatClient } from "../../../api-client";
 import { APP_URLS } from "../../../router";
 
+let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
+
 const useSocket = () => {
   const navigate = useNavigate();
 
-  const { handleSetSequence, handleSetLoadingSequence, setChat } = useChat();
+  const { chat, handleSetSequence, handleSetLoadingSequence, setChat } =
+    useChat();
   const { handler, strHandler } = useErrorHandler();
 
-  const socketRef =
-    useRef<Socket<ServerToClientEvents, ClientToServerEvents>>();
+  const chatRef = useRef(chat);
+  useEffect(() => {
+    chatRef.current = chat;
+  }, [chat]);
 
   const initSocket = () => {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
@@ -51,18 +56,55 @@ const useSocket = () => {
     socket.on("error", (err) => {
       strHandler(err);
     });
-    socket.on("postMessage", (mark) => {});
+    socket.on("postMessage", (msg, convId, mark) => {
+      const chat = chatRef.current;
+      if (convId === chat.currentConv?.Id) {
+        let replaced = false;
+        // 替换状态为Loading的消息
+        const messages = chat.messages.map((item) => {
+          if (item.Mark === mark) {
+            replaced = true;
+            return msg;
+          } else {
+            return item;
+          }
+        });
+        if (replaced) {
+          setChat((prev) => ({ ...prev, messages }));
+        } else {
+          setChat((prev) => ({ ...prev, messages: [...prev.messages, msg] }));
+        }
+        console.log(messages);
+      }
+    });
 
     socket.connect();
 
-    socketRef.current = socket;
+    socketRef = socket;
   };
 
-  const handlePostMessage = (message: ViewMessage, convId: number) => {
-    const socket = socketRef.current;
+  const handlePostMessage = (content: string, convId: number) => {
+    if (!content) {
+      return;
+    }
+
+    const socket = socketRef;
     // 如果Socket实例不存在就不执行
     if (!socket) return;
 
+    // 构建本地信息
+    const message: ViewMessage = {
+      Content: content,
+      Id: 0,
+      Type: "user-message",
+      TimeStamp: 0,
+      Mark: randomString(64),
+
+      MemberId: 0,
+    };
+    setChat((prev) => ({ ...prev, messages: [...prev.messages, message] }));
+
+    // 向Socket发送信息
     socket.emit("postMessage", message.Content, convId, message.Mark!);
   };
 
@@ -76,15 +118,15 @@ const useSocket = () => {
     }
 
     setChat((prev) => ({ ...prev, currentConv: res }));
-    socketRef.current?.emit("enterConversation", res.Id);
+    socketRef?.emit("enterConversation", res.Id);
   };
 
   useEffect(() => {
-    if (!socketRef.current) initSocket();
+    if (!socketRef) initSocket();
   }, []);
 
   return {
-    socket: socketRef.current,
+    socket: socketRef,
     handlePostMessage,
     handleToConversation,
   };

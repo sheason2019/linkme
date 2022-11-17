@@ -33,7 +33,7 @@ type ConversationDao struct {
 func (model ConversationDao) ToPrivateIDL(currentUserId uint) chat.Conversation {
 	conv := chat.Conversation{}
 
-	conv.Id = utils.ConvertUintToIntPtr(model.ID)
+	conv.Id = utils.ConvertNumberToIntPtr(model.ID)
 	if currentUserId == model.OwnerId {
 		conv.Name = &model.TargetUser_InPrivate.Username
 	} else {

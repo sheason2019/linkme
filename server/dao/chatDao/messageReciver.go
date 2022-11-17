@@ -10,4 +10,6 @@ type MessageReciver struct {
 
 	MessageId uint
 	Message   MessageDao `gorm:"foreignKey:MessageId"`
+
+	Checked bool
 }

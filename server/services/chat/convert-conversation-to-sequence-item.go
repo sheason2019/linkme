@@ -9,7 +9,7 @@ import (
 func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao) chat.SequenceItem {
 	item := chat.SequenceItem{}
 
-	item.ConversationId = utils.ConvertUintToIntPtr(conv.ID)
+	item.ConversationId = utils.ConvertNumberToIntPtr(conv.ID)
 	// 如果是私聊
 	if conv.Type == chatDao.ConversationType_Private {
 		item.Name = conv.ToPrivateIDL(userId).Name

@@ -6,6 +6,7 @@ import { generateRpc } from "./lib/rpc";
 import { UserSocketsMap } from "./lib/socket";
 import { getAccountClient, getChatRpcClient } from "./lib/rpc/chat-rpc-client";
 import { ClientToServerEvents, ServerToClientEvents } from "./shared/socket";
+import { Message } from "./api-lib/chat-client";
 
 const app = new Koa();
 const server = new http.Server(app.callback());
@@ -87,5 +88,32 @@ io.on("connection", (socket) => {
 
     // 将该Socket加入指定的Room
     socket.join("conv::" + convId);
+  });
+  socket.on("postMessage", async (content, convId, mark) => {
+    const user = UserSocketsMap.getUserBySocketId(socket.id);
+    if (!user) {
+      socket.emit("error", "当前用户尚未登录");
+      return;
+    }
+
+    const message: Message = {
+      Id: 0,
+      Type: "",
+      Content: content,
+      MemberId: 0,
+      TimeStamp: 0,
+    };
+    const client = getChatRpcClient();
+    const [err, res] = await client.PostUserMessage(
+      user.UserId,
+      convId,
+      message
+    );
+    if (err) {
+      socket.emit("error", err.message);
+      return;
+    }
+
+    io.to("conv::" + convId).emit("postMessage", res, convId, mark);
   });
 });

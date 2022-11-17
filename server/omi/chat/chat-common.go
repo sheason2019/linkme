@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月17日 16:40:25.
+* 生成时间：2022年11月17日 17:15:35.
  */
 package chat
 
@@ -51,4 +51,9 @@ type GetSpecifiedMessageRequest struct {
 type GetUserEnterConversationLimitRequest struct {
 	UserId int `form:"userId"`
 	ConvId int `form:"convId"`
+}
+type PostUserMessageRequest struct {
+	UserId int     `json:"userId"`
+	ConvId int     `json:"convId"`
+	Msg    Message `json:"msg"`
 }

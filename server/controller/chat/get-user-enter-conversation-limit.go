@@ -2,25 +2,19 @@ package chatController
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sheason2019/linkme/dao/chatDao"
-	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
 	"github.com/sheason2019/linkme/omi/chat"
+	chatService "github.com/sheason2019/linkme/services/chat"
 )
 
 func (chatRpcImpl) GetUserEnterConversationLimit(ctx *gin.Context, userId, convId int) bool {
-	daoMember := chatDao.MemberDao{}
-	daoMember.UserId = uint(userId)
-	daoMember.ConversationId = uint(convId)
+	member, err := chatService.FindMember(convId, userId)
 
-	conn := db.GetConn()
-	var count int64
-	err := conn.Model(&daoMember).Where(&daoMember).Count(&count).Error
 	if err != nil {
 		panic(err)
 	}
 
-	return count != 0
+	return member != nil
 }
 
 func attachGetUserEnterConversationLimit(r *gin.Engine) {

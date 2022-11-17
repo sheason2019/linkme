@@ -54,4 +54,6 @@ service ChatRpc {
   MessageResponse GetSpecifiedMessage(int messageId, string vector);
   // 获取用户进入会话的权限
   boolean GetUserEnterConversationLimit(int userId, int convId);
+  // 用户发送消息
+  Message PostUserMessage(int userId, int convId, Message msg);
 }

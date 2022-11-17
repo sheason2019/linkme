@@ -40,26 +40,10 @@ const useChat = () => {
     setChat((prev) => ({ ...prev, sequence }));
   };
 
-  // 发送消息事件
-  const handlePostMessage = (content: string) => {
-    // 首先生成消息，并将消息写入队列
-    const message: ViewMessage = {
-      Content: content,
-      Id: 0,
-      Type: "default",
-      TimeStamp: 0,
-      Mark: randomString(64),
-
-      MemberId: 0,
-    };
-    setChat((prev) => ({ ...prev, messages: [...prev.messages, message] }));
-  };
-
   return {
     chat,
     setChat,
     handleSetSequence,
-    handlePostMessage,
     handleSetLoadingSequence,
   };
 };
