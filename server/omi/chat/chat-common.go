@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月17日 17:15:35.
+* 生成时间：2022年11月17日 19:48:39.
  */
 package chat
 
@@ -56,4 +56,9 @@ type PostUserMessageRequest struct {
 	UserId int     `json:"userId"`
 	ConvId int     `json:"convId"`
 	Msg    Message `json:"msg"`
+}
+type GetMessagesRequest struct {
+	UserId          int `form:"userId"`
+	ConvId          int `form:"convId"`
+	OriginMessageId int `form:"originMessageId"`
 }

@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月17日 17:15:35.
+* 生成时间：2022年11月17日 19:48:39.
  */
 package chat
 
@@ -36,6 +36,8 @@ type ChatRpc interface {
 	GetUserEnterConversationLimit(ctx *gin.Context, userId int, convId int) bool
 	// 用户发送消息
 	PostUserMessage(ctx *gin.Context, userId int, convId int, msg Message) Message
+	// 拉取会话消息
+	GetMessages(ctx *gin.Context, userId int, convId int, originMessageId int) []Message
 }
 type typeChatRpcDefinition struct {
 	GET_SEQUENCE_ITEM_PATH                 string
@@ -43,6 +45,7 @@ type typeChatRpcDefinition struct {
 	GET_SPECIFIED_MESSAGE_PATH             string
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH string
 	POST_USER_MESSAGE_PATH                 string
+	GET_MESSAGES_PATH                      string
 }
 
 var ChatRpcDefinition = &typeChatRpcDefinition{
@@ -51,4 +54,5 @@ var ChatRpcDefinition = &typeChatRpcDefinition{
 	GET_SPECIFIED_MESSAGE_PATH:             "/ChatRpc.SpecifiedMessage",
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "/ChatRpc.UserEnterConversationLimit",
 	POST_USER_MESSAGE_PATH:                 "/ChatRpc.UserMessage",
+	GET_MESSAGES_PATH:                      "/ChatRpc.Messages",
 }

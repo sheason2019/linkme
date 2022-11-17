@@ -74,7 +74,12 @@ const useSocket = () => {
         } else {
           setChat((prev) => ({ ...prev, messages: [...prev.messages, msg] }));
         }
-        console.log(messages);
+      }
+    });
+    socket.on("messages", (convId, messages) => {
+      const chat = chatRef.current;
+      if (convId === chat.currentConv?.Id) {
+        setChat((prev) => ({ ...prev, messages }));
       }
     });
 
@@ -108,6 +113,10 @@ const useSocket = () => {
     socket.emit("postMessage", message.Content, convId, message.Mark!);
   };
 
+  const handlePullMessage = (convId: number) => {
+    socketRef?.emit("messages", convId);
+  };
+
   const handleToConversation = async (convId: number) => {
     navigate(APP_URLS.CHAT_URL);
     const client = getChatClient();
@@ -119,6 +128,7 @@ const useSocket = () => {
 
     setChat((prev) => ({ ...prev, currentConv: res }));
     socketRef?.emit("enterConversation", res.Id);
+    handlePullMessage(res.Id);
   };
 
   useEffect(() => {
@@ -129,6 +139,7 @@ const useSocket = () => {
     socket: socketRef,
     handlePostMessage,
     handleToConversation,
+    handlePullMessage,
   };
 };
 

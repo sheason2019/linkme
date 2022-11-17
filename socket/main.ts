@@ -116,4 +116,26 @@ io.on("connection", (socket) => {
 
     io.to("conv::" + convId).emit("postMessage", res, convId, mark);
   });
+  socket.on("messages", async (convId, originMessageId) => {
+    const user = UserSocketsMap.getUserBySocketId(socket.id);
+    if (!user) {
+      socket.emit("error", "当前用户尚未登录");
+      return;
+    }
+
+    const client = getChatRpcClient();
+
+    const [err, res] = await client.GetMessages(
+      user.UserId,
+      convId,
+      originMessageId ?? 0
+    );
+
+    if (err) {
+      socket.emit("error", err.message);
+      return;
+    }
+
+    socket.emit("messages", convId, res);
+  });
 });

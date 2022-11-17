@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月17日 17:51:3.
+ * 生成时间：2022年11月18日 1:42:45.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -80,5 +80,15 @@ export class ChatRpcClient extends OmiClientBase {
     const url = "ChatRpc.UserMessage";
     const method = "Post";
     return this.request<Message>(url, method, { userId, convId, msg });
+  }
+  // 拉取会话消息
+  GetMessages(userId: number, convId: number, originMessageId: number) {
+    const url = "ChatRpc.Messages";
+    const method = "Get";
+    return this.request<Message[]>(url, method, {
+      userId,
+      convId,
+      originMessageId,
+    });
   }
 }

@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月17日 17:51:4.
+ * 生成时间：2022年11月18日 1:42:45.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";

@@ -56,4 +56,6 @@ service ChatRpc {
   boolean GetUserEnterConversationLimit(int userId, int convId);
   // 用户发送消息
   Message PostUserMessage(int userId, int convId, Message msg);
+  // 拉取会话消息
+  repeated Message GetMessages(int userId, int convId, int originMessageId);
 }
