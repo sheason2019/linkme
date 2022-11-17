@@ -7,7 +7,7 @@ import {
   Toolbar,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import useChat from "../../hooks";
+import useChat from "../../hooks/use-chat";
 import ConversationSequence from "../conversation-sequence";
 import Editor from "../editor";
 import useEditor from "../../hooks/use-editor";
@@ -36,7 +36,7 @@ const Main = () => {
         <ConversationSequence />
       </Stack>
       <Stack flex={1} alignItems="stretch">
-        <Toolbar>会话ID - {chat.currentConvId}</Toolbar>
+        <Toolbar>会话ID - {chat.currentConv?.Id}</Toolbar>
         <Divider />
         <Messages />
         <Divider />

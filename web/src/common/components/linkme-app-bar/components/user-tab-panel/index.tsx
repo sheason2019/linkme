@@ -14,7 +14,7 @@ import useErrorHandler from "../../../../hooks/use-error-handler";
 import EmptyResult from "../empty-result";
 import { SearchTabs, useSearchDialog } from "../search-dialog";
 import ChatIcon from "@mui/icons-material/Chat";
-import useChat from "../../../../../pages/chat/hooks";
+import useChat from "../../../../../pages/chat/hooks/use-chat";
 
 interface IUserTabPanel {
   users: User[];

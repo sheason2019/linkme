@@ -8,10 +8,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import useChat from "../../hooks";
+import useChat from "../../hooks/use-chat";
 
 const ConversationSequence = () => {
-  const { chat } = useChat();
+  const { chat, handleToConversation } = useChat();
 
   return (
     <List sx={{ width: "100%", flex: 1, overflowY: "auto" }}>
@@ -22,7 +22,10 @@ const ConversationSequence = () => {
         </Stack>
       ) : (
         chat.sequence.map((item) => (
-          <ListItemButton key={item.ConversationId}>
+          <ListItemButton
+            key={item.ConversationId}
+            onClick={() => handleToConversation(item.ConversationId)}
+          >
             <ListItemAvatar>
               <Avatar />
             </ListItemAvatar>

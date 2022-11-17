@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import useChat, { ViewMessage } from ".";
+import useChat, { ViewMessage } from "./use-chat";
 import {
   ServerToClientEvents,
   ClientToServerEvents,
@@ -10,7 +10,7 @@ import JwtProxy from "../../../common/utils/jwt";
 import randomString from "../../../common/utils/random-string";
 
 const useSocket = () => {
-  const { handleSetSequence, handleSetLoadingSequence } = useChat();
+  const { handleSetSequence, handleSetLoadingSequence, setChat } = useChat();
   const { strHandler } = useErrorHandler();
 
   const socketRef =

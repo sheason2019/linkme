@@ -1,6 +1,6 @@
 import { Avatar, Box, Stack } from "@mui/material";
 import { FC } from "react";
-import { ViewMessage } from "../../hooks";
+import { ViewMessage } from "../../hooks/use-chat";
 import StatusCircle from "../status-circle";
 
 interface IMessage {

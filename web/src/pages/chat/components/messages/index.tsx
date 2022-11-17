@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import useChat from "../../hooks";
+import useChat from "../../hooks/use-chat";
 import Message from "../message";
 
 const Messages = () => {
