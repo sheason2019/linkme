@@ -3,6 +3,7 @@ package chatService
 import (
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
+	"github.com/sheason2019/linkme/utils"
 )
 
 func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, error) {
@@ -15,7 +16,6 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, error)
 		if err != nil {
 			return nil, err
 		}
-		return messages, nil
 	} else {
 		msg := chatDao.MessageDao{}
 		msg.ID = uint(originMessageId)
@@ -34,6 +34,6 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, error)
 		if err != nil {
 			return nil, err
 		}
-		return messages, nil
 	}
+	return utils.Reverse(messages), nil
 }

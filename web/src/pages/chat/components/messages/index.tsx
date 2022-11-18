@@ -7,7 +7,7 @@ const Messages = () => {
   const { chat } = useChat();
 
   return (
-    <Stack flex={1} p={1} spacing={1}>
+    <Stack flex={1} p={1} spacing={1} sx={{ overflowY: "auto" }}>
       {chat.messages.map((item, index) => (
         <Box key={item.Id ?? item.Mark}>
           {(index === 0 ||

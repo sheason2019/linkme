@@ -14,7 +14,7 @@ func PushConversationIntoSequence(conv *chatDao.ConversationDao, user *userDao.U
 	conn := db.GetConn()
 
 	sequenceDao := chatDao.SequenceDao{
-		User: *user,
+		UserId: user.ID,
 	}
 
 	err := conn.Where(&sequenceDao).Limit(1).Find(&sequenceDao).Error

@@ -31,6 +31,7 @@ const Main = () => {
     <Stack
       flex={1}
       flexDirection="row"
+      sx={{ overflowY: "hidden" }}
       divider={<Divider orientation="vertical" flexItem />}
     >
       <Stack sx={{ width: 300, flexShrink: 0 }}>

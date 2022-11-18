@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 1:42:45.
+ * 生成时间：2022年11月18日 16:48:1.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -11,6 +11,8 @@ export interface SequenceItem {
   ConversationId: number;
   Name: string;
   LastMessage: string;
+  LastUpdateTime: number;
+  UnreadCount: number;
   AvatarUrl?: string;
 }
 export interface Conversation {

@@ -29,6 +29,7 @@ func CreateUserMessage(message chat.Message, convId uint, member *chatDao.Member
 		err = tx.
 			Preload("Conversation").
 			Preload("Conversation.Members").
+			Preload("Conversation.Members.User").
 			Where(&member).
 			Find(&member).
 			Error

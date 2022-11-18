@@ -7,6 +7,7 @@ import (
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
 	"github.com/sheason2019/linkme/rpc"
+	rpcClient "github.com/sheason2019/linkme/rpc-client"
 	accountService "github.com/sheason2019/linkme/services/account"
 )
 
@@ -21,6 +22,8 @@ func main() {
 	accountService.GenRsaFile()
 	// 生成RPC TOKEN
 	rpc.GenerateRpcToken()
+	// 初始化RPC请求库
+	rpcClient.InitRpcClient()
 
 	// 使用自定义的Recover中间件
 	r.Use(middleware.PanicMiddleware)

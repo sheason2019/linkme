@@ -1,4 +1,5 @@
 import {
+  Box,
   Avatar,
   CircularProgress,
   List,
@@ -10,6 +11,8 @@ import {
 } from "@mui/material";
 import useChat from "../../hooks/use-chat";
 import useSocket from "../../hooks/use-socket";
+import TimeStamp from "../time-stamp";
+import UnreadNum from "../unread-num";
 
 const ConversationSequence = () => {
   const { chat } = useChat();
@@ -27,11 +30,29 @@ const ConversationSequence = () => {
           <ListItemButton
             key={item.ConversationId}
             onClick={() => handleToConversation(item.ConversationId)}
+            sx={{ display: "flex", alignItems: "center" }}
           >
             <ListItemAvatar>
               <Avatar />
             </ListItemAvatar>
-            <ListItemText>{item.Name}</ListItemText>
+            <ListItemText sx={{ m: 0 }}>
+              <Stack>
+                <Stack direction="row" justifyContent="space-between">
+                  <Box>{item.Name}</Box>
+                  <Box sx={{ color: "gray" }}>
+                    <TimeStamp timeStamp={item.LastUpdateTime} />
+                  </Box>
+                </Stack>
+                <Stack
+                  sx={{ height: "24px" }}
+                  direction="row"
+                  justifyContent="space-between"
+                >
+                  <Box sx={{ color: "gray" }}>{item.LastMessage}</Box>
+                  <UnreadNum num={item.UnreadCount} />
+                </Stack>
+              </Stack>
+            </ListItemText>
           </ListItemButton>
         ))
       )}

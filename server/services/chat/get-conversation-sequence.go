@@ -2,7 +2,6 @@ package chatService
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
@@ -31,18 +30,20 @@ func GetConversationSequence(userId uint) ([]chatDao.ConversationDao, error) {
 		return nil, err
 	}
 
+	// 获取会话队列信息，其值为一个uint类型的数组
 	convSequence := make([]uint, 0)
 	err = json.Unmarshal([]byte(sequenceDao.Sequence), &convSequence)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(convSequence)
 
+	// 根据会话队列获取指定的会话信息
 	convDaos := make([]chatDao.ConversationDao, 0)
 	err = conn.
 		Model(&chatDao.ConversationDao{}).
 		Where("id in ?", convSequence).
 		Preload("Owner").
+		Preload("Messages").
 		Preload("TargetUser_InPrivate").
 		Find(&convDaos).
 		Error

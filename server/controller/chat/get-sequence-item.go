@@ -13,15 +13,9 @@ func (chatRpcImpl) GetSequenceItem(ctx *gin.Context) []chat.SequenceItem {
 		panic("当前用户尚未登录")
 	}
 
-	convDaos, err := chatService.GetConversationSequence(currentUser.ID)
-	// 如果产生了错误
+	sequence, err := chatService.GetSequenceItem(int(currentUser.ID))
 	if err != nil {
 		panic(err)
-	}
-
-	sequence := make([]chat.SequenceItem, len(convDaos))
-	for i, v := range convDaos {
-		sequence[i] = chatService.ConvertConversationToSequenceItem(currentUser.ID, v)
 	}
 
 	return sequence

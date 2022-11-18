@@ -71,9 +71,9 @@ func FindPrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversatio
 	conn := db.GetConn()
 
 	conv := chatDao.ConversationDao{
-		Owner:                userA,
-		TargetUser_InPrivate: userB,
-		Type:                 chatDao.ConversationType_Private,
+		OwnerId:                userA.ID,
+		TargetUserId_InPrivate: userB.ID,
+		Type:                   chatDao.ConversationType_Private,
 	}
 
 	var count int64
