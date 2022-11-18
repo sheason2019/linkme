@@ -1,12 +1,13 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 18:34:37.
+* 生成时间：2022年11月18日 20:31:24.
  */
 package socket
 
 import (
 	"github.com/imroc/req/v3"
 )
+import chat "github.com/sheason2019/linkme/omi/chat"
 
 type ChatSocketClient struct {
 	Request *req.Client
@@ -26,6 +27,18 @@ func (definition ChatSocketClient) GetRequestClient() *req.Client {
 func (definition ChatSocketClient) PostUserSequence(userSequence []UserConversationSequence) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetBody(&PostUserSequenceRequest{UserSequence: userSequence}).Post(definition.HOST + "/ChatSocket.UserSequence")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatSocketClient) PostMessages(convId int, messages []chat.Message) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PostMessagesRequest{ConvId: convId, Messages: messages}).SetBody(&PostMessagesRequest{ConvId: convId, Messages: messages}).Post(definition.HOST + "/ChatSocket.Messages")
 	if err != nil {
 		panic(err)
 	}

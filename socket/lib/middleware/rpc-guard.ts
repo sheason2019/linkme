@@ -5,7 +5,6 @@ const rpcGuard: Koa.Middleware = async (ctx, next) => {
   const rpcToken = ctx.headers["rpc-token"];
   const rpcMap = getRpcMap();
   const allow = Object.values(rpcMap).some((token) => rpcToken === token);
-  console.log("rpc-token::", rpcToken, ctx.headers, allow);
   if (allow) {
     next();
   } else {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import useChat, { ViewMessage } from "./use-chat";
 import {
@@ -11,6 +11,7 @@ import randomString from "../../../common/utils/random-string";
 import { useNavigate } from "react-router-dom";
 import { getChatClient } from "../../../api-client";
 import { APP_URLS } from "../../../router";
+import useMessageUpdater from "./use-message-updater";
 
 let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 
@@ -20,6 +21,12 @@ const useSocket = () => {
   const { chat, handleSetSequence, handleSetLoadingSequence, setChat } =
     useChat();
   const { handler, strHandler } = useErrorHandler();
+  const {
+    handleUpdateMessage,
+    handleGetMessages,
+    handleClearMessages,
+    handleClearMarkMessage,
+  } = useMessageUpdater();
 
   const chatRef = useRef(chat);
   useEffect(() => {
@@ -58,28 +65,22 @@ const useSocket = () => {
     });
     socket.on("postMessage", (msg, convId, mark) => {
       const chat = chatRef.current;
+      // 清除带有标记的Message
+      // 添加返回的Message
       if (convId === chat.currentConv?.Id) {
-        let replaced = false;
-        // 替换状态为Loading的消息
-        const messages = chat.messages.map((item) => {
-          if (item.Mark === mark) {
-            replaced = true;
-            return msg;
-          } else {
-            return item;
-          }
-        });
-        if (replaced) {
-          setChat((prev) => ({ ...prev, messages }));
-        } else {
-          setChat((prev) => ({ ...prev, messages: [...prev.messages, msg] }));
-        }
+        handleClearMarkMessage(mark);
+        handleUpdateMessage([msg]);
+        setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
       }
     });
     socket.on("messages", (convId, messages) => {
       const chat = chatRef.current;
+      console.log(convId, chat.currentConv);
       if (convId === chat.currentConv?.Id) {
-        setChat((prev) => ({ ...prev, messages }));
+        handleUpdateMessage(messages);
+        setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
+        socket.emit("checkedMessage", convId);
+        console.log("emit check message");
       }
     });
 
@@ -102,12 +103,17 @@ const useSocket = () => {
       Content: content,
       Id: 0,
       Type: "user-message",
-      TimeStamp: 0,
+      TimeStamp: Math.floor(new Date().getTime() / 1000),
       Mark: randomString(64),
 
-      MemberId: 0,
+      CurrentCheckedCount: 0,
+      TargetCheckedCount: 0,
+
+      MemberId: chat.currentMemberId ?? 0,
     };
-    setChat((prev) => ({ ...prev, messages: [...prev.messages, message] }));
+    handleUpdateMessage([message]);
+    console.log(handleGetMessages());
+    setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
     // 向Socket发送信息
     socket.emit("postMessage", message.Content, convId, message.Mark!);
@@ -120,6 +126,11 @@ const useSocket = () => {
   const handleToConversation = async (convId: number) => {
     navigate(APP_URLS.CHAT_URL);
     const client = getChatClient();
+    socketRef?.emit("enterConversation", convId);
+    handleClearMessages();
+    handlePullMessage(convId);
+    setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
+
     const [err, res] = await client.GetConversationById(convId);
     if (err) {
       handler(err);
@@ -127,8 +138,6 @@ const useSocket = () => {
     }
 
     setChat((prev) => ({ ...prev, currentConv: res }));
-    socketRef?.emit("enterConversation", res.Id);
-    handlePullMessage(res.Id);
   };
 
   useEffect(() => {

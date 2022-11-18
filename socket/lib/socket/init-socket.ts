@@ -84,6 +84,8 @@ const initSocket = (
       Content: content,
       MemberId: 0,
       TimeStamp: 0,
+      TargetCheckedCount: 0,
+      CurrentCheckedCount: 0,
     };
     const client = getChatRpcClient();
     const [err, res] = await client.PostUserMessage(
@@ -96,7 +98,8 @@ const initSocket = (
       return;
     }
 
-    io.to("conv::" + convId).emit("postMessage", res, convId, mark);
+    socket.emit("postMessage", res, convId, mark);
+    socket.broadcast.to("conv::" + convId).emit("messages", convId, [res]);
   });
   socket.on("messages", async (convId, originMessageId) => {
     const user = UserSocketsMap.getUserBySocketId(socket.id);
@@ -119,6 +122,39 @@ const initSocket = (
     }
 
     socket.emit("messages", convId, res);
+  });
+  socket.on("checkedMessage", async (convId) => {
+    const user = UserSocketsMap.getUserBySocketId(socket.id);
+    if (!user) {
+      socket.emit("error", "当前用户尚未登录");
+      return;
+    }
+
+    const client = getChatRpcClient();
+    // 校验用户是否为指定会话的成员
+    const [err, res] = await client.GetUserEnterConversationLimit(
+      user.UserId,
+      convId
+    );
+
+    if (err) {
+      socket.emit("error", err.message);
+      console.error(err);
+      return;
+    }
+
+    if (!res) {
+      socket.emit("error", "用户不是指定会话的成员");
+      return;
+    }
+
+    // 向服务端发送消息查看信息
+    const [checkErr, _] = await client.CheckMessage(user.UserId, convId);
+    if (checkErr) {
+      socket.emit("error", checkErr.message);
+      console.error(err);
+      return;
+    }
   });
 };
 

@@ -10,7 +10,9 @@ const logger: Koa.Middleware = async (ctx, next) => {
   };
 
   await next();
-  console.log(`${ctx.method} ${ctx.URL} ${ctx.status}\nprops :: ${props()}`);
+  console.log(
+    `${ctx.method} ${ctx.URL} ${ctx.status}\n\nprops :: ${props()} \n\n`
+  );
 };
 
 export default logger;

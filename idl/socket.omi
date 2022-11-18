@@ -1,4 +1,4 @@
-import { SequenceItem } from "./chat.omi";
+import { SequenceItem, Message } from "./chat.omi";
 
 struct UserConversationSequence {
   int UserId;
@@ -7,4 +7,5 @@ struct UserConversationSequence {
 
 service ChatSocket {
   void PostUserSequence(repeated UserConversationSequence userSequence);
+  void PostMessages(int convId, repeated Message messages);
 }

@@ -49,7 +49,13 @@ const ConversationSequence = () => {
                   justifyContent="space-between"
                 >
                   <Box sx={{ color: "gray" }}>{item.LastMessage}</Box>
-                  <UnreadNum num={item.UnreadCount} />
+                  <UnreadNum
+                    num={
+                      chat.currentConv?.Id === item.ConversationId
+                        ? 0
+                        : item.UnreadCount
+                    }
+                  />
                 </Stack>
               </Stack>
             </ListItemText>

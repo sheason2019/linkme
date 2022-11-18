@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 18:34:37.
+* 生成时间：2022年11月18日 20:31:24.
  */
 package chat
 
@@ -38,6 +38,11 @@ type ChatRpc interface {
 	PostUserMessage(ctx *gin.Context, userId int, convId int, msg Message) Message
 	// 拉取会话消息
 	GetMessages(ctx *gin.Context, userId int, convId int, originMessageId int) []Message
+	// 消息已读功能，为了保证上线速度，这里略微偷个懒
+	// 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
+	// 随后服务端会将用户在指定会话中的已读信息全部置为已读
+	// 并且使用全量更新向用户推送经过变化的消息列表信息
+	CheckMessage(ctx *gin.Context, userId int, convId int)
 }
 type typeChatRpcDefinition struct {
 	GET_SEQUENCE_ITEM_PATH                 string
@@ -46,6 +51,7 @@ type typeChatRpcDefinition struct {
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH string
 	POST_USER_MESSAGE_PATH                 string
 	GET_MESSAGES_PATH                      string
+	CHECK_MESSAGE_PATH                     string
 }
 
 var ChatRpcDefinition = &typeChatRpcDefinition{
@@ -55,4 +61,5 @@ var ChatRpcDefinition = &typeChatRpcDefinition{
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "/ChatRpc.UserEnterConversationLimit",
 	POST_USER_MESSAGE_PATH:                 "/ChatRpc.UserMessage",
 	GET_MESSAGES_PATH:                      "/ChatRpc.Messages",
+	CHECK_MESSAGE_PATH:                     "/ChatRpc.CheckMessage",
 }

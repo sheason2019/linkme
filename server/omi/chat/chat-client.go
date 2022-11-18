@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 18:34:37.
+* 生成时间：2022年11月18日 20:31:24.
  */
 package chat
 
@@ -128,6 +128,18 @@ func (definition ChatRpcClient) PostUserMessage(userId int, convId int, msg Mess
 func (definition ChatRpcClient) GetMessages(userId int, convId int, originMessageId int) (result []Message) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetQueryParam("userId", fmt.Sprint(userId)).SetQueryParam("convId", fmt.Sprint(convId)).SetQueryParam("originMessageId", fmt.Sprint(originMessageId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.Messages")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatRpcClient) CheckMessage(userId int, convId int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&CheckMessageRequest{UserId: userId, ConvId: convId}).SetBody(&CheckMessageRequest{UserId: userId, ConvId: convId}).Post(definition.HOST + "/ChatRpc.CheckMessage")
 	if err != nil {
 		panic(err)
 	}

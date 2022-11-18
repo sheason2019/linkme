@@ -14,4 +14,5 @@ func BindChatRpcController(r *gin.Engine) {
 	attachGetUserEnterConversationLimit(r)
 	attachPostUserMessage(r)
 	attachGetMessages(r)
+	attachCheckMessage(r)
 }

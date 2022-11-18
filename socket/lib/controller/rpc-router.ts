@@ -19,6 +19,14 @@ const initRpcRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
       next();
     }
   );
+  rpcRouter.post(
+    ChatSocketControllerDefinition.POST_MESSAGES_PATH,
+    (ctx, next) => {
+      chatSocketController.PostMessages(ctx.request.body as any);
+      ctx.status = 200;
+      next();
+    }
+  );
 
   app.use(rpcRouter.routes());
   app.use(rpcRouter.allowedMethods());

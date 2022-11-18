@@ -66,4 +66,9 @@ service ChatRpc {
   Message PostUserMessage(int userId, int convId, Message msg);
   // 拉取会话消息
   repeated Message GetMessages(int userId, int convId, int originMessageId);
+  // 消息已读功能，为了保证上线速度，这里略微偷个懒
+  // 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
+  // 随后服务端会将用户在指定会话中的已读信息全部置为已读
+  // 并且使用全量更新向用户推送经过变化的消息列表信息
+  void CheckMessage(int userId, int convId);
 }

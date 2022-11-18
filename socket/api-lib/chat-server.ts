@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 16:48:1.
+ * 生成时间：2022年11月18日 20:32:4.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -15,6 +15,7 @@ export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  Members: MessageMember[];
 }
 export interface Message {
   Id: number;
@@ -23,9 +24,13 @@ export interface Message {
   TimeStamp: number;
   // 发送该消息的会话成员信息
   MemberId: number;
+  // 已读信息的人数统计
+  TargetCheckedCount: number;
+  CurrentCheckedCount: number;
 }
 export interface MessageMember {
   MemberId: number;
+  UserId: number;
   Name: string;
   AvatarUrl: string;
 }
@@ -73,6 +78,11 @@ export interface UnimpledChatRpcController {
   PostUserMessage(payload: PostUserMessageRequest): Promise<Message> | Message;
   // 拉取会话消息
   GetMessages(payload: GetMessagesRequest): Promise<Message[]> | Message[];
+  // 消息已读功能，为了保证上线速度，这里略微偷个懒
+  // 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
+  // 随后服务端会将用户在指定会话中的已读信息全部置为已读
+  // 并且使用全量更新向用户推送经过变化的消息列表信息
+  CheckMessage(payload: CheckMessageRequest): Promise<void> | void;
 }
 export const ChatRpcControllerDefinition = {
   GET_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
@@ -81,6 +91,7 @@ export const ChatRpcControllerDefinition = {
   GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "ChatRpc.UserEnterConversationLimit",
   POST_USER_MESSAGE_PATH: "ChatRpc.UserMessage",
   GET_MESSAGES_PATH: "ChatRpc.Messages",
+  CHECK_MESSAGE_PATH: "ChatRpc.CheckMessage",
 } as const;
 
 export interface GetDefaultMessageRequest {
@@ -103,4 +114,8 @@ export interface GetMessagesRequest {
   userId: number;
   convId: number;
   originMessageId: number;
+}
+export interface CheckMessageRequest {
+  userId: number;
+  convId: number;
 }

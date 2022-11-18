@@ -24,6 +24,7 @@ type MessageDao struct {
 	MessageRecivers []MessageReciver `gorm:"foreignKey:MessageId"`
 }
 
+// 需要Preload MessageRecivers
 func (model MessageDao) ToIDL() chat.Message {
 	message := chat.Message{}
 

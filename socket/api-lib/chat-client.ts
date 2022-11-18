@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 16:48:1.
+ * 生成时间：2022年11月18日 20:32:4.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -19,6 +19,7 @@ export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  Members: MessageMember[];
 }
 export interface Message {
   Id: number;
@@ -27,9 +28,13 @@ export interface Message {
   TimeStamp: number;
   // 发送该消息的会话成员信息
   MemberId: number;
+  // 已读信息的人数统计
+  TargetCheckedCount: number;
+  CurrentCheckedCount: number;
 }
 export interface MessageMember {
   MemberId: number;
+  UserId: number;
   Name: string;
   AvatarUrl: string;
 }
@@ -92,5 +97,14 @@ export class ChatRpcClient extends OmiClientBase {
       convId,
       originMessageId,
     });
+  }
+  // 消息已读功能，为了保证上线速度，这里略微偷个懒
+  // 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
+  // 随后服务端会将用户在指定会话中的已读信息全部置为已读
+  // 并且使用全量更新向用户推送经过变化的消息列表信息
+  CheckMessage(userId: number, convId: number) {
+    const url = "ChatRpc.CheckMessage";
+    const method = "Post";
+    return this.request<void>(url, method, { userId, convId });
   }
 }

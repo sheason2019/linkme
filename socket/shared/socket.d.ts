@@ -14,4 +14,5 @@ export interface ClientToServerEvents {
   postMessage: (content: string, convId: number, mark: string) => void;
   messages: (convId: number, originMessageId?: number) => void;
   enterConversation: (convId: number) => void;
+  checkedMessage: (convId: number) => void;
 }
