@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 15:30:17.
+ * 生成时间：2022年11月18日 18:24:54.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -27,6 +27,9 @@ export interface Message {
   TimeStamp: number;
   // 发送该消息的会话成员信息
   MemberId: number;
+  // 已读信息的人数统计
+  TargetCheckedCount: number;
+  CurrentCheckedCount: number;
 }
 export interface MessageMember {
   MemberId: number;

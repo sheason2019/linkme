@@ -62,6 +62,8 @@ func CreateUserMessage(message chat.Message, convId uint, member *chatDao.Member
 			return err
 		}
 
+		daoMessage.MessageRecivers = reciverMembers
+
 		return nil
 	})
 

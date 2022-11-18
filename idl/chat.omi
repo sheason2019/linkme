@@ -25,6 +25,9 @@ struct Message {
 
   // 发送该消息的会话成员信息
   int MemberId;
+  // 已读信息的人数统计
+  int TargetCheckedCount;
+  int CurrentCheckedCount;
 }
 
 struct MessageMember {

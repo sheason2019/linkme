@@ -11,7 +11,11 @@ const Message: FC<IMessage> = ({ message }) => {
   return (
     <Stack direction="row" justifyContent="end" alignItems="center">
       <Box sx={{ alignSelf: "end" }}>
-        <StatusCircle loading={!!message.Mark} target={1} current={1} />
+        <StatusCircle
+          loading={!!message.Mark}
+          target={message.TargetCheckedCount}
+          current={message.CurrentCheckedCount}
+        />
       </Box>
       <Stack alignItems="end" sx={{ mr: 1, ml: 0.5 }}>
         <Stack

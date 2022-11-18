@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 16:21:42.
+* 生成时间：2022年11月18日 18:20:28.
  */
 package chat
 
@@ -25,6 +25,9 @@ type Message struct {
 	TimeStamp *int
 	// 发送该消息的会话成员信息
 	MemberId *int
+	// 已读信息的人数统计
+	TargetCheckedCount  *int
+	CurrentCheckedCount *int
 }
 type MessageMember struct {
 	MemberId  *int

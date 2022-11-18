@@ -12,7 +12,13 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, error)
 
 	if originMessageId == 0 {
 		// 等于0时拉取最新的50条消息
-		err := conn.Where("conversation_id = ?", convId).Limit(50).Order("created_at desc").Find(&messages).Error
+		err := conn.
+			Where("conversation_id = ?", convId).
+			Preload("MessageRecivers").
+			Limit(50).
+			Order("created_at desc").
+			Find(&messages).
+			Error
 		if err != nil {
 			return nil, err
 		}
@@ -26,6 +32,7 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, error)
 		// 否则以originMessageId所指代的消息为原点，拉取50条更早的消息
 		err = conn.
 			Where("conversation_id = ? and created_at < ?", convId, msg.CreatedAt).
+			Preload("MessageRecivers").
 			Limit(50).
 			Order("created_at desc").
 			Find(&messages).

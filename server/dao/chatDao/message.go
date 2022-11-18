@@ -34,5 +34,14 @@ func (model MessageDao) ToIDL() chat.Message {
 	message.Type = &model.Type
 	message.Content = &model.Content
 
+	var currentCheckedNum = 0
+	for _, v := range model.MessageRecivers {
+		if v.Checked {
+			currentCheckedNum++
+		}
+	}
+	message.TargetCheckedCount = utils.ConvertNumberToIntPtr(len(model.MessageRecivers))
+	message.CurrentCheckedCount = &currentCheckedNum
+
 	return message
 }
