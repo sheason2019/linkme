@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 18:24:54.
+ * 生成时间：2022年11月18日 18:38:29.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -19,6 +19,7 @@ export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  Members: MessageMember[];
 }
 export interface Message {
   Id: number;
@@ -33,6 +34,7 @@ export interface Message {
 }
 export interface MessageMember {
   MemberId: number;
+  UserId: number;
   Name: string;
   AvatarUrl: string;
 }

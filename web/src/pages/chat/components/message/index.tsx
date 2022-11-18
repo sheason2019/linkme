@@ -1,6 +1,6 @@
 import { Avatar, Box, Stack } from "@mui/material";
 import { FC } from "react";
-import { ViewMessage } from "../../hooks/use-chat";
+import useChat, { ViewMessage } from "../../hooks/use-chat";
 import StatusCircle from "../status-circle";
 
 interface IMessage {
@@ -8,8 +8,16 @@ interface IMessage {
 }
 
 const Message: FC<IMessage> = ({ message }) => {
+  const { chat } = useChat();
+
+  const isSelfMsg = message.MemberId === chat.currentMemberId;
+
   return (
-    <Stack direction="row" justifyContent="end" alignItems="center">
+    <Stack
+      direction={isSelfMsg ? "row" : "row-reverse"}
+      justifyContent={isSelfMsg ? "end" : "start"}
+      alignItems="center"
+    >
       <Box sx={{ alignSelf: "end" }}>
         <StatusCircle
           loading={!!message.Mark}

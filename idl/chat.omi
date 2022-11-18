@@ -14,6 +14,8 @@ struct Conversation {
   string Name;
 
   string Type;
+
+  repeated MessageMember Members;
 }
 
 struct Message {
@@ -32,6 +34,7 @@ struct Message {
 
 struct MessageMember {
   int MemberId;
+  int UserId;
 
   string Name;
   string AvatarUrl;

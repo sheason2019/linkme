@@ -41,5 +41,15 @@ func (model ConversationDao) ToPrivateIDL(currentUserId uint) chat.Conversation 
 	}
 	conv.Type = &model.Type
 
+	members := make([]chat.MessageMember, len(model.Members))
+	for i, v := range model.Members {
+		member := chat.MessageMember{}
+		member.Name = &v.User.Username
+		member.MemberId = utils.ConvertNumberToIntPtr(v.ID)
+		member.UserId = utils.ConvertNumberToIntPtr(v.UserId)
+		members[i] = member
+	}
+	conv.Members = &members
+
 	return conv
 }

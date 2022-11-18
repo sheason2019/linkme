@@ -14,6 +14,8 @@ func GetConversationById(convId int) (*chatDao.ConversationDao, error) {
 	err := conn.
 		Preload("Owner").
 		Preload("TargetUser_InPrivate").
+		Preload("Members").
+		Preload("Members.User").
 		Where(&convDao).
 		Limit(1).
 		Find(&convDao).

@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 18:20:28.
+* 生成时间：2022年11月18日 18:34:37.
  */
 package chat
 
@@ -14,9 +14,10 @@ type SequenceItem struct {
 	AvatarUrl      *string
 }
 type Conversation struct {
-	Id   *int
-	Name *string
-	Type *string
+	Id      *int
+	Name    *string
+	Type    *string
+	Members *[]MessageMember
 }
 type Message struct {
 	Id        *int
@@ -31,6 +32,7 @@ type Message struct {
 }
 type MessageMember struct {
 	MemberId  *int
+	UserId    *int
 	Name      *string
 	AvatarUrl *string
 }
