@@ -15,7 +15,10 @@ func (accountImpl) Regist(ctx *gin.Context, user account.User, saltId int) strin
 	// 使用SHA256 + Salt将用户密码加密
 	accountService.EncryptPassword(&userModel)
 	// 创建用户信息
-	accountService.CreateUser(&userModel)
+	err := accountService.CreateUser(&userModel)
+	if err != nil {
+		panic(err)
+	}
 	// 返回JWT
 	tokenString, err := accountService.GenerateJwt(&userModel)
 

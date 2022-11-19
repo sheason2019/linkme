@@ -9,6 +9,9 @@ import (
 // 用户发送的消息
 const MessageType_UserMessage = "user-message"
 
+// 邀请用户加入群聊
+const MessageType_GroupInvite = "group-invite"
+
 type MessageDao struct {
 	gorm.Model
 

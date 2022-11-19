@@ -1,18 +1,13 @@
-import {
-  Box,
-  Button,
-  Divider,
-  ListSubheader,
-  Stack,
-  Toolbar,
-} from "@mui/material";
+import { Box, Button, Divider, Stack, Toolbar } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+
 import useChat from "../../hooks/use-chat";
 import ConversationSequence from "../conversation-sequence";
 import Editor from "../editor";
 import useEditor from "../../hooks/use-editor";
 import Messages from "../messages";
 import useSocket from "../../hooks/use-socket";
+import ConversationSequenceToolbar from "../conversation-sequence-toolbar";
 
 const Main = () => {
   const { chat } = useChat();
@@ -35,7 +30,7 @@ const Main = () => {
       divider={<Divider orientation="vertical" flexItem />}
     >
       <Stack sx={{ width: 300, flexShrink: 0 }}>
-        <ListSubheader>消息列表</ListSubheader>
+        <ConversationSequenceToolbar />
         <ConversationSequence />
       </Stack>
       <Stack flex={1} alignItems="stretch">

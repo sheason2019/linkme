@@ -49,6 +49,8 @@ struct MessageResponse {
 service Chat {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
   int CreatePrivateConversation(int userId);
+  // 创建群组会话，返回会话ID
+  int CreateGroupConversation(repeated int userIds, string groupName);
   // 获取会话信息
   Conversation GetConversationById(int convId);
 }
@@ -58,8 +60,8 @@ service ChatRpc {
   repeated SequenceItem GetSequenceItem();
   // 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
   MessageResponse GetDefaultMessage(int convId);
-  // 获取指定的会话信息, vector: earlier or later，返回40条信息
-  MessageResponse GetSpecifiedMessage(int messageId, string vector);
+  // 以指定消息为原点，获取会话中的消息
+  MessageResponse GetSpecifiedMessage(int messageId);
   // 获取用户进入会话的权限
   boolean GetUserEnterConversationLimit(int userId, int convId);
   // 用户发送消息

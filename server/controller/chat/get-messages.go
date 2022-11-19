@@ -22,6 +22,7 @@ func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessa
 	}
 
 	messages := make([]chat.Message, len(daoMessages))
+
 	for i, v := range daoMessages {
 		messages[i] = v.ToIDL()
 	}

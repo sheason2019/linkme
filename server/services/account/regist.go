@@ -26,7 +26,7 @@ func CreateUser(user *userDao.UserDao) error {
 	conn := db.GetConn()
 	// 若发现重复用户名需要向上抛出错误
 	var count int64
-	err := conn.Model(user).Where(user).Count(&count).Error
+	err := conn.Model(user).Where("username = ?", user.Username).Count(&count).Error
 	if err != nil {
 		return err
 	}

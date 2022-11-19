@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 20:31:24.
+* 生成时间：2022年11月19日 13:42:37.
  */
 package chat
 
@@ -44,6 +44,10 @@ type MessageResponse struct {
 type CreatePrivateConversationRequest struct {
 	UserId int `json:"userId"`
 }
+type CreateGroupConversationRequest struct {
+	UserIds   []int  `json:"userIds"[]`
+	GroupName string `json:"groupName"`
+}
 type GetConversationByIdRequest struct {
 	ConvId int `form:"convId"`
 }
@@ -52,8 +56,7 @@ type GetDefaultMessageRequest struct {
 	ConvId int `form:"convId"`
 }
 type GetSpecifiedMessageRequest struct {
-	MessageId int    `form:"messageId"`
-	Vector    string `form:"vector"`
+	MessageId int `form:"messageId"`
 }
 type GetUserEnterConversationLimitRequest struct {
 	UserId int `form:"userId"`

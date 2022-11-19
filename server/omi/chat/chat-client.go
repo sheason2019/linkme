@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月18日 20:31:24.
+* 生成时间：2022年11月19日 13:42:37.
  */
 package chat
 
@@ -29,6 +29,18 @@ func (definition ChatClient) GetRequestClient() *req.Client {
 func (definition ChatClient) CreatePrivateConversation(userId int) (result int) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetBody(&CreatePrivateConversationRequest{UserId: userId}).SetResult(&result).Post(definition.HOST + "/Chat.CreatePrivateConversation")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) CreateGroupConversation(userIds []int, groupName string) (result int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&CreateGroupConversationRequest{UserIds: userIds, GroupName: groupName}).SetBody(&CreateGroupConversationRequest{UserIds: userIds, GroupName: groupName}).SetResult(&result).Post(definition.HOST + "/Chat.CreateGroupConversation")
 	if err != nil {
 		panic(err)
 	}
@@ -89,9 +101,9 @@ func (definition ChatRpcClient) GetDefaultMessage(convId int) (result MessageRes
 	return
 }
 
-func (definition ChatRpcClient) GetSpecifiedMessage(messageId int, vector string) (result MessageResponse) {
+func (definition ChatRpcClient) GetSpecifiedMessage(messageId int) (result MessageResponse) {
 	client := definition.GetRequestClient()
-	resp, err := client.R().SetQueryParam("messageId", fmt.Sprint(messageId)).SetQueryParam("vector", fmt.Sprint(vector)).SetResult(&result).Get(definition.HOST + "/ChatRpc.SpecifiedMessage")
+	resp, err := client.R().SetQueryParam("messageId", fmt.Sprint(messageId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.SpecifiedMessage")
 	if err != nil {
 		panic(err)
 	}

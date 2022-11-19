@@ -5,6 +5,6 @@ import (
 	"github.com/sheason2019/linkme/omi/chat"
 )
 
-func (chatRpcImpl) GetSpecifiedMessage(ctx *gin.Context, messageId int, vector string) chat.MessageResponse {
+func (chatRpcImpl) GetSpecifiedMessage(ctx *gin.Context, messageId int) chat.MessageResponse {
 	return chat.MessageResponse{}
 }
