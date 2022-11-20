@@ -21,6 +21,7 @@ interface IChatState {
   sequence: SequenceItem[];
   messages: ViewMessage[];
   memberMap: Map<number, MessageMember>;
+  hasMoreMessage: boolean;
 }
 
 const chatState = atom<IChatState>({
@@ -31,6 +32,7 @@ const chatState = atom<IChatState>({
     sequence: [],
     messages: [],
     memberMap: new Map(),
+    hasMoreMessage: false,
   },
 });
 

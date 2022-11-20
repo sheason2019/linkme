@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 20:32:4.
+ * 生成时间：2022年11月20日 16:57:49.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -36,13 +36,16 @@ export interface MessageMember {
 }
 export interface MessageResponse {
   Messages: Message[];
-  HasMoreEarlierMessage: boolean;
-  HasMoreLaterMessage: boolean;
+  HasMore: boolean;
 }
 export interface UnimpledChatController {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
   CreatePrivateConversation(
     payload: CreatePrivateConversationRequest
+  ): Promise<number> | number;
+  // 创建群组会话，返回会话ID
+  CreateGroupConversation(
+    payload: CreateGroupConversationRequest
   ): Promise<number> | number;
   // 获取会话信息
   GetConversationById(
@@ -51,10 +54,15 @@ export interface UnimpledChatController {
 }
 export const ChatControllerDefinition = {
   CREATE_PRIVATE_CONVERSATION_PATH: "Chat.CreatePrivateConversation",
+  CREATE_GROUP_CONVERSATION_PATH: "Chat.CreateGroupConversation",
   GET_CONVERSATION_BY_ID_PATH: "Chat.ConversationById",
 } as const;
 export interface CreatePrivateConversationRequest {
   userId: number;
+}
+export interface CreateGroupConversationRequest {
+  userIds: number[];
+  groupName: string;
 }
 export interface GetConversationByIdRequest {
   convId: number;
@@ -62,14 +70,6 @@ export interface GetConversationByIdRequest {
 export interface UnimpledChatRpcController {
   // 获取消息列表信息
   GetSequenceItem(): Promise<SequenceItem[]> | SequenceItem[];
-  // 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
-  GetDefaultMessage(
-    payload: GetDefaultMessageRequest
-  ): Promise<MessageResponse> | MessageResponse;
-  // 获取指定的会话信息, vector: earlier or later，返回40条信息
-  GetSpecifiedMessage(
-    payload: GetSpecifiedMessageRequest
-  ): Promise<MessageResponse> | MessageResponse;
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(
     payload: GetUserEnterConversationLimitRequest
@@ -77,7 +77,9 @@ export interface UnimpledChatRpcController {
   // 用户发送消息
   PostUserMessage(payload: PostUserMessageRequest): Promise<Message> | Message;
   // 拉取会话消息
-  GetMessages(payload: GetMessagesRequest): Promise<Message[]> | Message[];
+  GetMessages(
+    payload: GetMessagesRequest
+  ): Promise<MessageResponse> | MessageResponse;
   // 消息已读功能，为了保证上线速度，这里略微偷个懒
   // 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
   // 随后服务端会将用户在指定会话中的已读信息全部置为已读
@@ -86,21 +88,12 @@ export interface UnimpledChatRpcController {
 }
 export const ChatRpcControllerDefinition = {
   GET_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
-  GET_DEFAULT_MESSAGE_PATH: "ChatRpc.DefaultMessage",
-  GET_SPECIFIED_MESSAGE_PATH: "ChatRpc.SpecifiedMessage",
   GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "ChatRpc.UserEnterConversationLimit",
   POST_USER_MESSAGE_PATH: "ChatRpc.UserMessage",
   GET_MESSAGES_PATH: "ChatRpc.Messages",
   CHECK_MESSAGE_PATH: "ChatRpc.CheckMessage",
 } as const;
 
-export interface GetDefaultMessageRequest {
-  convId: number;
-}
-export interface GetSpecifiedMessageRequest {
-  messageId: number;
-  vector: string;
-}
 export interface GetUserEnterConversationLimitRequest {
   userId: number;
   convId: number;

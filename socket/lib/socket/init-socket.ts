@@ -1,7 +1,6 @@
 import { Socket } from "socket.io";
 import { UserSocketsMap } from ".";
 import { Message } from "../../api-lib/chat-client";
-import { io } from "../../main";
 import {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -121,7 +120,7 @@ const initSocket = (
       return;
     }
 
-    socket.emit("messages", convId, res);
+    socket.emit("messages", convId, res.Messages, res.HasMore);
   });
   socket.on("checkedMessage", async (convId) => {
     const user = UserSocketsMap.getUserBySocketId(socket.id);

@@ -7,7 +7,7 @@ import (
 	chatService "github.com/sheason2019/linkme/services/chat"
 )
 
-func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessageId int) []chat.Message {
+func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessageId int) chat.MessageResponse {
 	member, err := chatService.FindMember(convId, userId)
 	if err != nil {
 		panic(err)
@@ -16,7 +16,7 @@ func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessa
 		panic("用户不是指定会话的成员")
 	}
 
-	daoMessages, err := chatService.FindMessages(convId, originMessageId)
+	daoMessages, hasMore, err := chatService.FindMessages(convId, originMessageId)
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,10 @@ func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessa
 		messages[i] = v.ToIDL()
 	}
 
-	return messages
+	return chat.MessageResponse{
+		Messages: &messages,
+		HasMore:  &hasMore,
+	}
 }
 
 func attachGetMessages(r *gin.Engine) {

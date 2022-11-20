@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月20日 1:31:53.
+ * 生成时间：2022年11月20日 16:59:4.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -40,8 +40,7 @@ export interface MessageMember {
 }
 export interface MessageResponse {
   Messages: Message[];
-  HasMoreEarlierMessage: boolean;
-  HasMoreLaterMessage: boolean;
+  HasMore: boolean;
 }
 export class ChatClient extends OmiClientBase {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
@@ -70,18 +69,6 @@ export class ChatRpcClient extends OmiClientBase {
     const method = "Get";
     return this.request<SequenceItem[]>(url, method, {});
   }
-  // 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
-  GetDefaultMessage(convId: number) {
-    const url = "ChatRpc.DefaultMessage";
-    const method = "Get";
-    return this.request<MessageResponse>(url, method, { convId });
-  }
-  // 以指定消息为原点，获取会话中的消息
-  GetSpecifiedMessage(messageId: number) {
-    const url = "ChatRpc.SpecifiedMessage";
-    const method = "Get";
-    return this.request<MessageResponse>(url, method, { messageId });
-  }
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(userId: number, convId: number) {
     const url = "ChatRpc.UserEnterConversationLimit";
@@ -98,7 +85,7 @@ export class ChatRpcClient extends OmiClientBase {
   GetMessages(userId: number, convId: number, originMessageId: number) {
     const url = "ChatRpc.Messages";
     const method = "Get";
-    return this.request<Message[]>(url, method, {
+    return this.request<MessageResponse>(url, method, {
       userId,
       convId,
       originMessageId,

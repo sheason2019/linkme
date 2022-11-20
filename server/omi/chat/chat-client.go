@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月19日 13:42:37.
+* 生成时间：2022年11月20日 16:52:23.
  */
 package chat
 
@@ -89,30 +89,6 @@ func (definition ChatRpcClient) GetSequenceItem() (result []SequenceItem) {
 	return
 }
 
-func (definition ChatRpcClient) GetDefaultMessage(convId int) (result MessageResponse) {
-	client := definition.GetRequestClient()
-	resp, err := client.R().SetQueryParam("convId", fmt.Sprint(convId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.DefaultMessage")
-	if err != nil {
-		panic(err)
-	}
-	if resp.IsError() {
-		panic("远程调用错误")
-	}
-	return
-}
-
-func (definition ChatRpcClient) GetSpecifiedMessage(messageId int) (result MessageResponse) {
-	client := definition.GetRequestClient()
-	resp, err := client.R().SetQueryParam("messageId", fmt.Sprint(messageId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.SpecifiedMessage")
-	if err != nil {
-		panic(err)
-	}
-	if resp.IsError() {
-		panic("远程调用错误")
-	}
-	return
-}
-
 func (definition ChatRpcClient) GetUserEnterConversationLimit(userId int, convId int) (result bool) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetQueryParam("userId", fmt.Sprint(userId)).SetQueryParam("convId", fmt.Sprint(convId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.UserEnterConversationLimit")
@@ -137,7 +113,7 @@ func (definition ChatRpcClient) PostUserMessage(userId int, convId int, msg Mess
 	return
 }
 
-func (definition ChatRpcClient) GetMessages(userId int, convId int, originMessageId int) (result []Message) {
+func (definition ChatRpcClient) GetMessages(userId int, convId int, originMessageId int) (result MessageResponse) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetQueryParam("userId", fmt.Sprint(userId)).SetQueryParam("convId", fmt.Sprint(convId)).SetQueryParam("originMessageId", fmt.Sprint(originMessageId)).SetResult(&result).Get(definition.HOST + "/ChatRpc.Messages")
 	if err != nil {

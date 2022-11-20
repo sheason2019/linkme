@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月19日 13:42:37.
+* 生成时间：2022年11月20日 16:52:23.
  */
 package chat
 
@@ -32,16 +32,12 @@ var ChatDefinition = &typeChatDefinition{
 type ChatRpc interface {
 	// 获取消息列表信息
 	GetSequenceItem(ctx *gin.Context) []SequenceItem
-	// 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
-	GetDefaultMessage(ctx *gin.Context, convId int) MessageResponse
-	// 以指定消息为原点，获取会话中的消息
-	GetSpecifiedMessage(ctx *gin.Context, messageId int) MessageResponse
 	// 获取用户进入会话的权限
 	GetUserEnterConversationLimit(ctx *gin.Context, userId int, convId int) bool
 	// 用户发送消息
 	PostUserMessage(ctx *gin.Context, userId int, convId int, msg Message) Message
 	// 拉取会话消息
-	GetMessages(ctx *gin.Context, userId int, convId int, originMessageId int) []Message
+	GetMessages(ctx *gin.Context, userId int, convId int, originMessageId int) MessageResponse
 	// 消息已读功能，为了保证上线速度，这里略微偷个懒
 	// 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
 	// 随后服务端会将用户在指定会话中的已读信息全部置为已读
@@ -50,8 +46,6 @@ type ChatRpc interface {
 }
 type typeChatRpcDefinition struct {
 	GET_SEQUENCE_ITEM_PATH                 string
-	GET_DEFAULT_MESSAGE_PATH               string
-	GET_SPECIFIED_MESSAGE_PATH             string
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH string
 	POST_USER_MESSAGE_PATH                 string
 	GET_MESSAGES_PATH                      string
@@ -60,8 +54,6 @@ type typeChatRpcDefinition struct {
 
 var ChatRpcDefinition = &typeChatRpcDefinition{
 	GET_SEQUENCE_ITEM_PATH:                 "/ChatRpc.SequenceItem",
-	GET_DEFAULT_MESSAGE_PATH:               "/ChatRpc.DefaultMessage",
-	GET_SPECIFIED_MESSAGE_PATH:             "/ChatRpc.SpecifiedMessage",
 	GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "/ChatRpc.UserEnterConversationLimit",
 	POST_USER_MESSAGE_PATH:                 "/ChatRpc.UserMessage",
 	GET_MESSAGES_PATH:                      "/ChatRpc.Messages",

@@ -4,7 +4,7 @@ export interface ServerToClientEvents {
   login: (result: boolean) => void;
   sequenceItem: (items: SequenceItem[]) => void;
   error: (message: string) => void;
-  messages: (convId: number, messages: Message[]) => void;
+  messages: (convId: number, messages: Message[], hasMore?: boolean) => void;
   postMessage: (message: Message, convId: number, mark: string) => void;
 }
 

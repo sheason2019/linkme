@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 20:32:4.
+ * 生成时间：2022年11月20日 16:57:49.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -40,8 +40,7 @@ export interface MessageMember {
 }
 export interface MessageResponse {
   Messages: Message[];
-  HasMoreEarlierMessage: boolean;
-  HasMoreLaterMessage: boolean;
+  HasMore: boolean;
 }
 export class ChatClient extends OmiClientBase {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
@@ -49,6 +48,12 @@ export class ChatClient extends OmiClientBase {
     const url = "Chat.CreatePrivateConversation";
     const method = "Post";
     return this.request<number>(url, method, { userId });
+  }
+  // 创建群组会话，返回会话ID
+  CreateGroupConversation(userIds: number[], groupName: string) {
+    const url = "Chat.CreateGroupConversation";
+    const method = "Post";
+    return this.request<number>(url, method, { userIds, groupName });
   }
   // 获取会话信息
   GetConversationById(convId: number) {
@@ -63,18 +68,6 @@ export class ChatRpcClient extends OmiClientBase {
     const url = "ChatRpc.SequenceItem";
     const method = "Get";
     return this.request<SequenceItem[]>(url, method, {});
-  }
-  // 获取默认的会话信息，即根据已读位置实现的会话信息，更早及更晚方向各拉取20条
-  GetDefaultMessage(convId: number) {
-    const url = "ChatRpc.DefaultMessage";
-    const method = "Get";
-    return this.request<MessageResponse>(url, method, { convId });
-  }
-  // 获取指定的会话信息, vector: earlier or later，返回40条信息
-  GetSpecifiedMessage(messageId: number, vector: string) {
-    const url = "ChatRpc.SpecifiedMessage";
-    const method = "Get";
-    return this.request<MessageResponse>(url, method, { messageId, vector });
   }
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(userId: number, convId: number) {
@@ -92,7 +85,7 @@ export class ChatRpcClient extends OmiClientBase {
   GetMessages(userId: number, convId: number, originMessageId: number) {
     const url = "ChatRpc.Messages";
     const method = "Get";
-    return this.request<Message[]>(url, method, {
+    return this.request<MessageResponse>(url, method, {
       userId,
       convId,
       originMessageId,

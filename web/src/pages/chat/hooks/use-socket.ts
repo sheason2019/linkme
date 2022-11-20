@@ -73,12 +73,15 @@ const useSocket = () => {
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
       }
     });
-    socket.on("messages", (convId, messages) => {
+    socket.on("messages", (convId, messages, hasMore) => {
       const chat = chatRef.current;
       if (convId === chat.currentConv?.Id) {
         handleUpdateMessage(messages);
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
         socket.emit("checkedMessage", convId);
+        if (hasMore === true || hasMore === false) {
+          setChat((prev) => ({ ...prev, hasMoreMessage: hasMore }));
+        }
       }
     });
 
@@ -120,6 +123,9 @@ const useSocket = () => {
   const handlePullMessage = (convId: number) => {
     socketRef?.emit("messages", convId);
   };
+  const handlePullMoreMessage = () => {
+    socketRef?.emit("messages", chat.currentConv?.Id ?? 0, chat.messages[0].Id);
+  };
 
   const handleToConversation = async (convId: number) => {
     navigate(APP_URLS.CHAT_URL);
@@ -147,6 +153,7 @@ const useSocket = () => {
     handlePostMessage,
     handleToConversation,
     handlePullMessage,
+    handlePullMoreMessage,
   };
 };
 
