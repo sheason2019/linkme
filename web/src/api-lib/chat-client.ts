@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月18日 18:38:29.
+ * 生成时间：2022年11月20日 1:31:53.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -50,6 +50,12 @@ export class ChatClient extends OmiClientBase {
     const method = "Post";
     return this.request<number>(url, method, { userId });
   }
+  // 创建群组会话，返回会话ID
+  CreateGroupConversation(userIds: number[], groupName: string) {
+    const url = "Chat.CreateGroupConversation";
+    const method = "Post";
+    return this.request<number>(url, method, { userIds, groupName });
+  }
   // 获取会话信息
   GetConversationById(convId: number) {
     const url = "Chat.ConversationById";
@@ -70,11 +76,11 @@ export class ChatRpcClient extends OmiClientBase {
     const method = "Get";
     return this.request<MessageResponse>(url, method, { convId });
   }
-  // 获取指定的会话信息, vector: earlier or later，返回40条信息
-  GetSpecifiedMessage(messageId: number, vector: string) {
+  // 以指定消息为原点，获取会话中的消息
+  GetSpecifiedMessage(messageId: number) {
     const url = "ChatRpc.SpecifiedMessage";
     const method = "Get";
-    return this.request<MessageResponse>(url, method, { messageId, vector });
+    return this.request<MessageResponse>(url, method, { messageId });
   }
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(userId: number, convId: number) {
@@ -97,5 +103,14 @@ export class ChatRpcClient extends OmiClientBase {
       convId,
       originMessageId,
     });
+  }
+  // 消息已读功能，为了保证上线速度，这里略微偷个懒
+  // 在用户进入Conversation的时候，Socet端会向服务端发起一个请求
+  // 随后服务端会将用户在指定会话中的已读信息全部置为已读
+  // 并且使用全量更新向用户推送经过变化的消息列表信息
+  CheckMessage(userId: number, convId: number) {
+    const url = "ChatRpc.CheckMessage";
+    const method = "Post";
+    return this.request<void>(url, method, { userId, convId });
   }
 }

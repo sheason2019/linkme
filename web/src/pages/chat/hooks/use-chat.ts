@@ -3,6 +3,7 @@ import { atom, useRecoilState } from "recoil";
 import {
   Conversation,
   Message,
+  MessageMember,
   SequenceItem,
 } from "../../../api-lib/chat-client";
 import useUserInfo from "../../../common/hooks/use-user-info";
@@ -19,6 +20,7 @@ interface IChatState {
   loadingSequence: boolean;
   sequence: SequenceItem[];
   messages: ViewMessage[];
+  memberMap: Map<number, MessageMember>;
 }
 
 const chatState = atom<IChatState>({
@@ -28,6 +30,7 @@ const chatState = atom<IChatState>({
     loadingSequence: false,
     sequence: [],
     messages: [],
+    memberMap: new Map(),
   },
 });
 
@@ -46,6 +49,9 @@ const useChat = () => {
   const handleSetCurrentMemberId = (id?: number) => {
     setChat((prev) => ({ ...prev, currentMemberId: id }));
   };
+  const handleSetMemberMap = (map: Map<number, MessageMember>) => {
+    setChat((prev) => ({ ...prev, memberMap: map }));
+  };
 
   // 根据得到的会话信息自动设置用户在当前会话中的成员ID
   useEffect(() => {
@@ -55,13 +61,17 @@ const useChat = () => {
     }
 
     const members = chat.currentConv?.Members;
+    const memberMap = new Map<number, MessageMember>();
     let id: number | undefined = undefined;
     for (let member of members) {
+      console.log(member);
+      memberMap.set(member.MemberId, member);
       if (member.UserId === userInfo.user?.UserId) {
         id = member.MemberId;
       }
     }
     handleSetCurrentMemberId(id);
+    handleSetMemberMap(memberMap);
   }, [chat.currentConv]);
 
   return {

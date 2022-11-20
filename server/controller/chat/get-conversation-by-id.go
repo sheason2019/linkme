@@ -21,7 +21,7 @@ func (chatImpl) GetConversationById(ctx *gin.Context, convId int) chat.Conversat
 	}
 
 	// 将会话信息转换为IDL格式返回给用户
-	return convDao.ToPrivateIDL(currentUser.ID)
+	return convDao.ToIDL(currentUser.ID)
 }
 
 func attachGetConversationById(r *gin.Engine) {

@@ -29,7 +29,7 @@ func CreatePrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversat
 	conv := chatDao.ConversationDao{
 		Type:                 chatDao.ConversationType_Private,
 		Owner:                userA,
-		TargetUser_InPrivate: userB,
+		TargetUser_InPrivate: &userB,
 	}
 
 	conn := db.GetConn()

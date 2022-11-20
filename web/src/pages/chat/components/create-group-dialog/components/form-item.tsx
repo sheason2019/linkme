@@ -10,16 +10,18 @@ interface Props {
 const FormItem: FC<Props> = ({ label, error, element }) => {
   return (
     <Grid container alignItems="start">
-      <Grid xs={3}>
+      <Grid item xs={3}>
         <FormLabel
           sx={{ height: "40px", display: "flex", alignItems: "center" }}
         >
           {label}
         </FormLabel>
       </Grid>
-      <Grid xs={9}>{element}</Grid>
-      <Grid xs={3} />
-      <Grid xs={9}>
+      <Grid item xs={9}>
+        {element}
+      </Grid>
+      <Grid item xs={3} />
+      <Grid item xs={9}>
         <FormHelperText>{error}</FormHelperText>
       </Grid>
     </Grid>

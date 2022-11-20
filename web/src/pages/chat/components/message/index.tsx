@@ -1,49 +1,23 @@
-import { Avatar, Box, Stack } from "@mui/material";
 import { FC } from "react";
-import useChat, { ViewMessage } from "../../hooks/use-chat";
-import StatusCircle from "../status-circle";
+import { ViewMessage } from "../../hooks/use-chat";
+import GroupInviteMessage from "./components/group-invite-message";
+import UserMessage from "./components/user-message";
 
-interface IMessage {
+export interface IMessage {
   message: ViewMessage;
 }
 
-const Message: FC<IMessage> = ({ message }) => {
-  const { chat } = useChat();
+const MessageParser: FC<IMessage> = ({ message }) => {
+  if (message.Type === "user-message") {
+    return <UserMessage message={message} />;
+  }
 
-  const isSelfMsg = message.MemberId === chat.currentMemberId;
+  if (message.Type === "group-invite") {
+    return <GroupInviteMessage message={message} />;
+  }
 
-  return (
-    <Stack
-      direction={isSelfMsg ? "row" : "row-reverse"}
-      justifyContent={isSelfMsg ? "end" : "start"}
-      alignItems="center"
-    >
-      <Box sx={{ alignSelf: "end" }}>
-        <StatusCircle
-          loading={!!message.Mark}
-          target={message.TargetCheckedCount}
-          current={message.CurrentCheckedCount}
-        />
-      </Box>
-      <Stack alignItems="end" sx={{ mr: 1, ml: 0.5 }}>
-        <Stack
-          sx={{
-            p: 1,
-            minWidth: "1.5rem",
-            bgcolor: "skyblue",
-            borderRadius: 1,
-            whiteSpace: "pre-line",
-          }}
-          alignItems="center"
-        >
-          {message.Content}
-        </Stack>
-      </Stack>
-      <Box sx={{ alignSelf: "start" }}>
-        <Avatar />
-      </Box>
-    </Stack>
-  );
+  console.error("无法解析的消息类型");
+  return null;
 };
 
-export default Message;
+export default MessageParser;

@@ -3,3 +3,5 @@ services:
   postgres:
     image: "postgres:alpine"
     restart: always
+    volumes:
+      - /var/linkme/postgres:/var/lib/postgresql/data

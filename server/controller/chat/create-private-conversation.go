@@ -29,7 +29,7 @@ func (chatImpl) CreatePrivateConversation(ctx *gin.Context, userId int) int {
 		panic("创建会话时出现未知错误")
 	}
 
-	err = chatService.PushConversationIntoSequence(conv, currentUser)
+	err = chatService.PushConversationIntoSequence(conv.ID, currentUser)
 	if err != nil {
 		panic(err)
 	}

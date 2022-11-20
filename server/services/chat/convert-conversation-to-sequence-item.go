@@ -20,14 +20,16 @@ func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao
 		lastMessage = nil
 	}
 
-	// 如果是私聊
-	if conv.Type == chatDao.ConversationType_Private {
-		item.Name = conv.ToPrivateIDL(userId).Name
-		// 设置消息列表中消息相关的数据（最后信息、信息时间等）
-		if lastMessage != nil {
+	item.Name = conv.ToIDL(userId).Name
+	// 设置消息列表中消息相关的数据（最后信息、信息时间等）
+	if lastMessage != nil {
+		if lastMessage.Type == chatDao.MessageType_UserMessage {
 			item.LastMessage = &lastMessage.Content
-			item.LastUpdateTime = utils.ConvertNumberToIntPtr(lastMessage.CreatedAt.Unix())
+		} else if lastMessage.Type == chatDao.MessageType_GroupInvite {
+			msg := "会话成员变更"
+			item.LastMessage = &msg
 		}
+		item.LastUpdateTime = utils.ConvertNumberToIntPtr(lastMessage.CreatedAt.Unix())
 	}
 
 	// 拉取用户在指定会话的成员信息

@@ -10,7 +10,7 @@ import (
 )
 
 // 将会话写入用户的消息列表
-func PushConversationIntoSequence(conv *chatDao.ConversationDao, user *userDao.UserDao) error {
+func PushConversationIntoSequence(convId uint, user *userDao.UserDao) error {
 	conn := db.GetConn()
 
 	sequenceDao := chatDao.SequenceDao{
@@ -26,13 +26,13 @@ func PushConversationIntoSequence(conv *chatDao.ConversationDao, user *userDao.U
 	err = json.Unmarshal([]byte(sequenceDao.Sequence), &convSequence)
 	if err != nil {
 		// 解析ConversationSequence失败则表示用户尚未初始化消息列表
-		convSequence = []uint{conv.ID}
-	} else if exist, index := utils.Exist(convSequence, conv.ID); exist {
+		convSequence = []uint{convId}
+	} else if exist, index := utils.Exist(convSequence, convId); exist {
 		// 如果列表中已经存在指定的会话信息，将该信息移动到列表顶部
 		utils.ExchangeItem(convSequence, 0, index)
 	} else {
 		// 否则需要在会话列表的顶部添加指定的会话
-		convSequence = append([]uint{conv.ID}, convSequence...)
+		convSequence = append([]uint{convId}, convSequence...)
 	}
 
 	// 将修改后的conv序列化为字符串

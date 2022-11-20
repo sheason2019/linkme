@@ -75,12 +75,10 @@ const useSocket = () => {
     });
     socket.on("messages", (convId, messages) => {
       const chat = chatRef.current;
-      console.log(convId, chat.currentConv);
       if (convId === chat.currentConv?.Id) {
         handleUpdateMessage(messages);
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
         socket.emit("checkedMessage", convId);
-        console.log("emit check message");
       }
     });
 
