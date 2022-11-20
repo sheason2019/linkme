@@ -1,27 +1,10 @@
-import { Box, Button, Divider, Stack, Toolbar } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { Divider, Stack } from "@mui/material";
+import ChatBox from "../chat-box";
 
-import useChat from "../../hooks/use-chat";
 import ConversationSequence from "../conversation-sequence";
-import Editor from "../editor";
-import useEditor from "../../hooks/use-editor";
-import Messages from "../messages";
-import useSocket from "../../hooks/use-socket";
 import ConversationSequenceToolbar from "../conversation-sequence-toolbar";
 
 const Main = () => {
-  const { chat } = useChat();
-  const { handlePostMessage } = useSocket();
-  const { handleClearContent, handleGetContent } = useEditor();
-
-  const handleSend = () => {
-    const content = handleGetContent();
-
-    chat.currentConv && handlePostMessage(content, chat.currentConv.Id);
-
-    handleClearContent();
-  };
-
   return (
     <Stack
       flex={1}
@@ -33,25 +16,7 @@ const Main = () => {
         <ConversationSequenceToolbar />
         <ConversationSequence />
       </Stack>
-      <Stack flex={1} alignItems="stretch">
-        <Toolbar>{chat.currentConv?.Name}</Toolbar>
-        <Divider />
-        <Messages />
-        <Divider />
-        <Stack sx={{ height: 280 }} divider={<Divider flexItem />}>
-          <Box sx={{ height: 36 }} />
-          <Editor />
-          <Box sx={{ py: 1, px: 2, textAlign: "right" }}>
-            <Button
-              onClick={handleSend}
-              variant="contained"
-              endIcon={<SendIcon />}
-            >
-              发送
-            </Button>
-          </Box>
-        </Stack>
-      </Stack>
+      <ChatBox />
     </Stack>
   );
 };
