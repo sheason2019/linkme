@@ -11,7 +11,7 @@ import (
 const ConversationType_Private = "private"
 
 // 会话类型 群组
-const ConversationType_Group = "grou["
+const ConversationType_Group = "group"
 
 type ConversationDao struct {
 	gorm.Model

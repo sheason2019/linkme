@@ -7,13 +7,13 @@ export interface IMessage {
   message: ViewMessage;
 }
 
-const MessageParser: FC<IMessage> = ({ message }) => {
-  if (message.Type === "user-message") {
-    return <UserMessage message={message} />;
+const MessageParser: FC<IMessage> = (props) => {
+  if (props.message.Type === "user-message") {
+    return <UserMessage {...props} />;
   }
 
-  if (message.Type === "group-invite") {
-    return <GroupInviteMessage message={message} />;
+  if (props.message.Type === "group-invite") {
+    return <GroupInviteMessage {...props} />;
   }
 
   console.error("无法解析的消息类型");
