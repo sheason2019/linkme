@@ -14,12 +14,13 @@ import Messages from "../messages";
 
 import SendIcon from "@mui/icons-material/Send";
 import MenuIcon from "@mui/icons-material/Menu";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import GroupMenuDrawer, {
   useGroupMenuDrawer,
 } from "./components/group-menu-drawer";
 
 const ChatBox = () => {
-  const { chat } = useChat();
+  const { chat, handleCloseCurrentConversation } = useChat();
   const { handlePostMessage } = useSocket();
   const { handleClearContent, handleGetContent } = useEditor();
 
@@ -39,6 +40,9 @@ const ChatBox = () => {
     <>
       <Stack flex={1} alignItems="stretch">
         <Toolbar>
+          <IconButton sx={{ mr: 1 }} onClick={handleCloseCurrentConversation}>
+            <NavigateBeforeIcon />
+          </IconButton>
           <Box sx={{ flex: 1 }}>{chat.currentConv?.Name}</Box>
           {isGroup && (
             <IconButton onClick={handleOpenDrawer}>

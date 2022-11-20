@@ -1,10 +1,14 @@
 import { Divider, Stack } from "@mui/material";
+import useChat from "../../hooks/use-chat";
 import ChatBox from "../chat-box";
 
 import ConversationSequence from "../conversation-sequence";
 import ConversationSequenceToolbar from "../conversation-sequence-toolbar";
+import EmptyChatBox from "../empty-chat-box";
 
 const Main = () => {
+  const { chat } = useChat();
+
   return (
     <Stack
       flex={1}
@@ -16,7 +20,7 @@ const Main = () => {
         <ConversationSequenceToolbar />
         <ConversationSequence />
       </Stack>
-      <ChatBox />
+      {chat.currentConv ? <ChatBox /> : <EmptyChatBox />}
     </Stack>
   );
 };

@@ -74,6 +74,15 @@ const useChat = () => {
 
     setChat((prev) => ({ ...prev, currentConv: conv }));
   };
+  const handleCloseCurrentConversation = () => {
+    setChat((prev) => ({
+      ...prev,
+      currentConv: undefined,
+      messages: [],
+      memberMap: new Map(),
+      hasMoreMessage: false,
+    }));
+  };
 
   return {
     chat,
@@ -81,6 +90,7 @@ const useChat = () => {
     handleSetSequence,
     handleSetLoadingSequence,
     handleSetConversation,
+    handleCloseCurrentConversation,
   };
 };
 
