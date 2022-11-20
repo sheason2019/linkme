@@ -18,8 +18,13 @@ let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 const useSocket = () => {
   const navigate = useNavigate();
 
-  const { chat, handleSetSequence, handleSetLoadingSequence, setChat } =
-    useChat();
+  const {
+    chat,
+    handleSetSequence,
+    handleSetLoadingSequence,
+    setChat,
+    handleSetConversation,
+  } = useChat();
   const { handler, strHandler } = useErrorHandler();
   const {
     handleUpdateMessage,
@@ -113,7 +118,6 @@ const useSocket = () => {
       MemberId: chat.currentMemberId ?? 0,
     };
     handleUpdateMessage([message]);
-    console.log(handleGetMessages());
     setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
     // 向Socket发送信息
@@ -141,7 +145,7 @@ const useSocket = () => {
       return;
     }
 
-    setChat((prev) => ({ ...prev, currentConv: res }));
+    handleSetConversation(res);
   };
 
   useEffect(() => {

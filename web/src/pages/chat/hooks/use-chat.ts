@@ -54,19 +54,16 @@ const useChat = () => {
   const handleSetMemberMap = (map: Map<number, MessageMember>) => {
     setChat((prev) => ({ ...prev, memberMap: map }));
   };
-
-  // 根据得到的会话信息自动设置用户在当前会话中的成员ID
-  useEffect(() => {
-    if (!chat.currentConv) {
+  const handleSetConversation = (conv: Conversation | undefined) => {
+    if (!conv) {
       handleSetCurrentMemberId();
       return;
     }
 
-    const members = chat.currentConv?.Members;
+    const members = conv.Members;
     const memberMap = new Map<number, MessageMember>();
     let id: number | undefined = undefined;
     for (let member of members) {
-      console.log(member);
       memberMap.set(member.MemberId, member);
       if (member.UserId === userInfo.user?.UserId) {
         id = member.MemberId;
@@ -74,13 +71,16 @@ const useChat = () => {
     }
     handleSetCurrentMemberId(id);
     handleSetMemberMap(memberMap);
-  }, [chat.currentConv]);
+
+    setChat((prev) => ({ ...prev, currentConv: conv }));
+  };
 
   return {
     chat,
     setChat,
     handleSetSequence,
     handleSetLoadingSequence,
+    handleSetConversation,
   };
 };
 
