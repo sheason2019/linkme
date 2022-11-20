@@ -18,8 +18,11 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import GroupMenuDrawer, {
   useGroupMenuDrawer,
 } from "./components/group-menu-drawer";
+import { useCheckMobile } from "../../../../common/hooks/use-check-mobile";
 
 const ChatBox = () => {
+  const { isMobile } = useCheckMobile();
+
   const { chat, handleCloseCurrentConversation } = useChat();
   const { handlePostMessage } = useSocket();
   const { handleClearContent, handleGetContent } = useEditor();
@@ -38,7 +41,7 @@ const ChatBox = () => {
 
   return (
     <>
-      <Stack flex={1} alignItems="stretch">
+      <Stack flex={1} alignItems="stretch" sx={{ maxHeight: "100vh" }}>
         <Toolbar>
           <IconButton sx={{ mr: 1 }} onClick={handleCloseCurrentConversation}>
             <NavigateBeforeIcon />
@@ -53,8 +56,11 @@ const ChatBox = () => {
         <Divider />
         <Messages />
         <Divider />
-        <Stack sx={{ height: 280 }} divider={<Divider flexItem />}>
-          <Box sx={{ height: 36 }} />
+        <Stack
+          sx={{ height: isMobile ? 140 : 280 }}
+          divider={<Divider flexItem />}
+        >
+          {/* <Box sx={{ height: 36 }} /> */}
           <Editor />
           <Box sx={{ py: 1, px: 2, textAlign: "right" }}>
             <Button

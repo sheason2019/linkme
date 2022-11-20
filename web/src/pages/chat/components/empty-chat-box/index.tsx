@@ -1,4 +1,4 @@
-import { Stack, Box, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 
 const EmptyChatBox = () => {

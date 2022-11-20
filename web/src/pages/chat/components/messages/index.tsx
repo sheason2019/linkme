@@ -1,4 +1,4 @@
-import { Box, Link, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useEffect, useRef } from "react";
 import CustomLink from "../../../../common/components/custom-link";
 import useChat from "../../hooks/use-chat";
