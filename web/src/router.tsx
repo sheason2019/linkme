@@ -6,6 +6,7 @@ const Account = lazy(() => import("./pages/account"));
 const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
+const HomePage = lazy(() => import("./pages/homepage"));
 
 const Chat = lazy(() => import("./pages/chat"));
 
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
     errorElement: <div>Unknown pages</div>,
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: Suspenser(HomePage),
+      },
       {
         path: "/account",
         element: Suspenser(Account),
