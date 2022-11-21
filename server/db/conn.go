@@ -16,7 +16,9 @@ func GetConn() *gorm.DB {
 
 	dsn := "host=" + host + " user=" + user + " password=" + password + " sslmode=disable TimeZone=Asia/Shanghai"
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	if err != nil {
 		panic("数据库连接异常！")
 	}
@@ -33,7 +35,9 @@ func GetConn() *gorm.DB {
 
 	dsn = "host=" + host + " user=" + user + " password=" + password + " dbname=linkme sslmode=disable TimeZone=Asia/Shanghai"
 
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	if err != nil {
 		panic("数据库连接异常！")
 	}

@@ -72,7 +72,7 @@ func FindPrivateConversation(userA, userB userDao.UserDao) (*chatDao.Conversatio
 
 	conv := chatDao.ConversationDao{
 		OwnerId:                userA.ID,
-		TargetUserId_InPrivate: userB.ID,
+		TargetUserId_InPrivate: &userB.ID,
 		Type:                   chatDao.ConversationType_Private,
 	}
 

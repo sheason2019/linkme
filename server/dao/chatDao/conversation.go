@@ -25,7 +25,7 @@ type ConversationDao struct {
 	OwnerId uint
 	// 在私聊中，这个字段用来表示被发起私聊的用户
 	TargetUser_InPrivate   *userDao.UserDao `gorm:"foreignKey:TargetUserId_InPrivate"`
-	TargetUserId_InPrivate uint
+	TargetUserId_InPrivate *uint
 
 	Members []MemberDao `gorm:"foreignKey:ConversationId"`
 

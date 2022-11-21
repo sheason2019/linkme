@@ -110,7 +110,7 @@ type RsaKeyPair struct {
 	PriKey string
 }
 
-const secret_path = "dist"
+const secret_path = "/var/linkme/secret"
 const pri_file = "rsa_key"
 const pri_file_path = secret_path + "/" + pri_file
 const pub_file = "rsa_key_pub"

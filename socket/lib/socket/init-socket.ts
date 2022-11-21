@@ -14,7 +14,7 @@ const initSocket = (
     const client = getAccountClient(jwt);
     const [err, res] = await client.GetCurrentUser();
     if (err) {
-      console.error(err);
+      console.error("登录失败，参数：jwt::", jwt, "host:", client.host);
       // 返回登录失败
       socket.emit("login", false);
       // 若获取用户信息失败则关闭Socket连接

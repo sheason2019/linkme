@@ -5,13 +5,13 @@ import (
 )
 
 var ChatSocketClient = socket.ChatSocketClient{
-	HOST:    "http://localhost:3000",
+	HOST:    linkme_socket_host,
 	Request: RpcRequestClient,
 }
 
 func initChatSocketClient() {
 	ChatSocketClient = socket.ChatSocketClient{
-		HOST:    "http://localhost:3000",
+		HOST:    linkme_socket_host,
 		Request: RpcRequestClient,
 	}
 }

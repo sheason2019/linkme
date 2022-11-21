@@ -58,6 +58,7 @@ const useSocket = () => {
         handleSetLoadingSequence(true);
         socket.emit("sequenceItem");
       } else {
+        strHandler("登录失败");
         socket.close();
       }
     });
