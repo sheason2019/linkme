@@ -1,8 +1,17 @@
-import { Box, Drawer, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { atom, useRecoilState } from "recoil";
+import { useCheckMobile } from "../../../../../common/hooks/use-check-mobile";
 import useChat from "../../../hooks/use-chat";
 import GroupMembers from "./group-members";
 import InfoPanel from "./info-panel";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface IDrawerState {
   open: boolean;
@@ -38,10 +47,26 @@ const GroupMenuDrawer = () => {
   const { chat } = useChat();
   const { drawer, handleCloseDrawer } = useGroupMenuDrawer();
 
+  const { isMobile } = useCheckMobile();
+
   return (
-    <Drawer anchor="right" open={drawer.open} onClose={handleCloseDrawer}>
-      <Box sx={{ width: 380, p: 2 }}>
-        <Typography variant="h5">群组信息</Typography>
+    <Drawer
+      sx={{ zIndex: 10001 }}
+      anchor="right"
+      open={drawer.open}
+      onClose={handleCloseDrawer}
+    >
+      <Box
+        sx={{ width: isMobile ? "100vw" : 380, p: 2, boxSizing: "border-box" }}
+      >
+        <Stack direction="row" alignItems="center">
+          <Typography variant="h5" sx={{ flex: 1 }}>
+            群组信息
+          </Typography>
+          <IconButton onClick={handleCloseDrawer}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
         <Box sx={{ height: "8px" }} />
         <InfoPanel label="群组名称" value={chat.currentConv?.Name} />
         <Box sx={{ height: "8px" }} />

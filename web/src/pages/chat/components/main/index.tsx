@@ -47,7 +47,12 @@ const Mobile = () => {
         fullScreen
         open={!!chat.currentConv}
         TransitionComponent={Transition}
-        sx={{ height: "100vh", display: "flex", flexDirection: "column" }}
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 10000,
+        }}
       >
         <ChatBox />
       </Dialog>

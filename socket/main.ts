@@ -8,8 +8,11 @@ import { ClientToServerEvents, ServerToClientEvents } from "./shared/socket";
 import initSocket from "./lib/socket/init-socket";
 import initRpcRouter from "./lib/controller/rpc-router";
 import logger from "./lib/middleware/logger";
+import { initServerHost } from "./lib/rpc/chat-rpc-client";
 
 export const isProduct = process.argv.indexOf("-product") !== -1;
+
+initServerHost(isProduct);
 
 const app = new Koa();
 const server = new http.Server(app.callback());

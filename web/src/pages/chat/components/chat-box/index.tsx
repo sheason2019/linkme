@@ -41,7 +41,7 @@ const ChatBox = () => {
 
   return (
     <>
-      <Stack flex={1} alignItems="stretch" sx={{ maxHeight: "100vh" }}>
+      <Stack flex={1} alignItems="stretch" sx={{ height: "100%" }}>
         <Toolbar>
           <IconButton sx={{ mr: 1 }} onClick={handleCloseCurrentConversation}>
             <NavigateBeforeIcon />

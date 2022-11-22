@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Socket } from "socket.io";
 import { UserSocketsMap } from ".";
 import { Message } from "../../api-lib/chat-client";
@@ -21,7 +22,7 @@ const initSocket = (
       socket.disconnect();
       return;
     }
-
+    console.log("USER_LOGIN", res.UserId, res.Username);
     // 在Map中绑定用户和Socket的索引
     UserSocketsMap.bindSocketId(socket.id, { ...res, jwt });
     // 返回登录成功，前端在此时会结束初始化
