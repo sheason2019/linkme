@@ -30,7 +30,6 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, bool, 
 		err = conn.
 			Model(&messages).
 			Where("conversation_id = ?", convId).
-			Preload("MessageRecivers").
 			Order("created_at desc").
 			Count(&count).
 			Error
@@ -58,7 +57,6 @@ func FindMessages(convId int, originMessageId int) ([]chatDao.MessageDao, bool, 
 		err = conn.
 			Model(&messages).
 			Where("conversation_id = ? and created_at < ?", convId, msg.CreatedAt).
-			Preload("MessageRecivers").
 			Order("created_at desc").
 			Count(&count).
 			Error

@@ -23,10 +23,7 @@ func (chatRpcImpl) PostUserMessage(ctx *gin.Context, userId, convId int, message
 		panic(err)
 	}
 
-	// 拉取全部需要更新消息列表的成员
-	reciverMembers := append(member.Conversation.Members, *member)
-
-	chatService.PushUserSequence(reciverMembers, uint(convId))
+	chatService.PushUserSequence(member.Conversation.Members, uint(convId))
 
 	// 将信息转换为IDL的数据结构
 	return daoMessage.ToIDL()

@@ -22,9 +22,10 @@ func (chatRpcImpl) CheckMessage(ctx *gin.Context, userId, convId int) {
 	}
 
 	// 通过Reciver找到指定受影响的消息
-	messagesDao := utils.Map(recivers, func(item chatDao.MessageReciver, index int) chatDao.MessageDao {
-		return item.Message
-	})
+	messagesDao, err := chatService.FindMessagesByRecivers(recivers)
+	if err != nil {
+		panic(err)
+	}
 
 	// 将消息推送给Socket使在线用户能接收到消息已读的反馈
 	messages := utils.Map(messagesDao, func(item chatDao.MessageDao, index int) chat.Message {
