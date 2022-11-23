@@ -6,4 +6,5 @@ import (
 
 func BindFileController(r *gin.Engine) {
 	attachUploadFile(r)
+	attachGetSource(r)
 }

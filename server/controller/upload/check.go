@@ -17,7 +17,7 @@ func FindFileByHash(hashStr string) (*uploadDao.StoragedFile, error) {
 	}
 
 	// 若 Count == 0 则表示文件不存在
-	if !(count > 0) {
+	if count == 0 {
 		return nil, nil
 	}
 

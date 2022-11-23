@@ -16,12 +16,18 @@ func UploadImage(img image.Image, formatName, ext, fileHash string) (*uploadDao.
 
 	imageDao.Ext = ext
 	imageDao.SourceHash = fileHash
-	// 原图
-	originFile, err := StorageImage(img, ext)
+	// 原图：这里不能复用图片存储的功能，因为图片存储会破坏原有的哈希值，使去除重复上传的功能无法实现
+	originFile := uploadDao.StoragedFile{}
+	originFile.Hash = fileHash
+	originFile.Location = upload_path + fileHash + ext
+	originFile.Ext = ext
+	imaging.Save(img, originFile.Location)
+	err := conn.Create(&originFile).Error
 	if err != nil {
 		return nil, err
 	}
-	imageDao.OriginFile = originFile
+
+	imageDao.OriginFile = &originFile
 
 	// high Quality 1080P
 	highFile, err := ResizeImage(img, 1080, ext)
@@ -74,4 +80,26 @@ func ResizeImage(img image.Image, pixels int, ext string) (*uploadDao.StoragedFi
 	resizedImg := imaging.Resize(img, resizedWidth, resizedHeight, imaging.Lanczos)
 
 	return StorageImage(resizedImg, ext)
+}
+
+func FindImageByHash(hashStr string) (*uploadDao.StoragedImage, error) {
+	conn := db.GetConn()
+
+	imgDao := uploadDao.StoragedImage{}
+
+	err := conn.
+		Model(&imgDao).
+		Preload("LowQualityFile").
+		Preload("MiddleQualityFile").
+		Preload("HighQualityFile").
+		Preload("OriginFile").
+		Where("source_hash = ?", hashStr).
+		Limit(1).
+		Find(&imgDao).
+		Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &imgDao, nil
 }
