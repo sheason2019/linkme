@@ -1,6 +1,8 @@
 package accountController
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sheason2019/linkme/middleware"
 	"github.com/sheason2019/linkme/omi/account"
@@ -17,6 +19,9 @@ func (accountImpl) GetCurrentUser(ctx *gin.Context) account.User {
 	daoUser, err := accountService.FindUserByUserId(int(daoUser.ID))
 	if err != nil {
 		panic(err)
+	}
+	if daoUser == nil {
+		panic(fmt.Sprintf("没有找到指定的用户 - 用户ID %d", daoUser.ID))
 	}
 
 	user := daoUser.ToIdl()

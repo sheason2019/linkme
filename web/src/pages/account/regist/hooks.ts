@@ -17,12 +17,6 @@ const useRegist = () => {
   const { setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
 
-  // 修改AppBar标题内容
-  const { setAppBar } = useAppBar();
-  useEffect(() => {
-    setAppBar((prev) => ({ ...prev, title: "用户注册" }));
-  }, []);
-
   // 表单内容
   const [form, setForm] = useState<RegistInfo>({
     username: "",

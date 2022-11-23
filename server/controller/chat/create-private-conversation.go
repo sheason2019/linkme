@@ -21,6 +21,9 @@ func (chatImpl) CreatePrivateConversation(ctx *gin.Context, userId int) int {
 
 	targetUser, err := accountService.FindUserByUserId(userId)
 	if err != nil {
+		panic(err)
+	}
+	if targetUser == nil {
 		panic(fmt.Sprintf("没有找到指定的用户 - 用户ID %d", userId))
 	}
 

@@ -2,12 +2,17 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 
+// Account相关页面
 const Account = lazy(() => import("./pages/account"));
 const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
+const UserInfo = lazy(() => import("./pages/account/user-info"));
+
+// 首页
 const HomePage = lazy(() => import("./pages/homepage"));
 
+// 即时通讯页面
 const Chat = lazy(() => import("./pages/chat"));
 
 const Suspenser = (
@@ -35,6 +40,10 @@ export const router = createBrowserRouter([
         element: Suspenser(Account),
         children: [
           {
+            path: "",
+            element: Suspenser(UserInfo),
+          },
+          {
             path: "login",
             element: Suspenser(Login),
           },
@@ -60,6 +69,10 @@ export enum APP_URLS {
   LOGIN_PAGE_URL = "/account/login",
   REGIST_PAGE_URL = "/account/regist",
   CURRENT_USER_PAGE_URL = "/account/current-user",
+  USER_INFO_URL = "/account/user-info",
+  USER_INFO_BASE_URL = "/account/user-info/",
 
   CHAT_URL = "/chat",
+
+  HOME_URL = "/",
 }

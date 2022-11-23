@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useAppBar } from "../../hooks/use-app-bar";
 import { useMemo } from "react";
 import useUserInfo from "../../hooks/use-user-info";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +15,7 @@ import { APP_URLS } from "../../../router";
 import NavigateDrawer, { useNavigateDrawer } from "../navigate-drawer";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchDialog, { useSearchDialog } from "./components/search-dialog";
+import UserAvatarWithMenu from "./components/user-avatar-with-menu";
 
 const LinkmeAppBar = () => {
   const navigate = useNavigate();
@@ -23,27 +23,11 @@ const LinkmeAppBar = () => {
   const { handleOpenDrawer } = useNavigateDrawer();
   const { handleOpen } = useSearchDialog();
 
-  const { appBar } = useAppBar();
-
-  const appBarTitle = useMemo(() => {
-    if (appBar.title.length > 0) {
-      return `Linkme - ${appBar.title}`;
-    }
-    return "Linkme";
-  }, [appBar]);
-
   const { userInfo } = useUserInfo();
 
   const actionButton = useMemo(() => {
     if (userInfo.isLogin) {
-      return (
-        <Box
-          sx={{ cursor: "pointer" }}
-          onClick={() => navigate(APP_URLS.CURRENT_USER_PAGE_URL)}
-        >
-          <Avatar />
-        </Box>
-      );
+      return <UserAvatarWithMenu />;
     }
     return (
       <Button color="inherit" onClick={() => navigate(APP_URLS.LOGIN_PAGE_URL)}>
@@ -67,7 +51,7 @@ const LinkmeAppBar = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {appBarTitle}
+            Linkme
           </Typography>
           <IconButton onClick={handleOpen} sx={{ mr: 2 }}>
             <SearchIcon sx={{ color: "#FFF" }} />

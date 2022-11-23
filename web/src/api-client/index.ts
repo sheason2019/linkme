@@ -3,7 +3,7 @@ import { AccountClient } from "../api-lib/account-client";
 import { ChatClient } from "../api-lib/chat-client";
 import JwtProxy from "../common/utils/jwt";
 
-const getAxiosInstance = () => {
+export const getAxiosInstance = () => {
   const instance = axios.create({
     headers: {
       Authorization: JwtProxy.getJWT() ?? "",
