@@ -80,6 +80,7 @@ const useUserInfo = () => {
 
   return {
     userInfo,
+    getCurrentUser,
     setUserInfo,
     setJwt,
     preLogin,

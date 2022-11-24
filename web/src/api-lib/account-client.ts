@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月20日 16:59:4.
+ * 生成时间：2022年11月25日 0:32:29.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -56,5 +56,11 @@ export class AccountClient extends OmiClientBase {
       username,
       offset,
     });
+  }
+  // 设置自己的头像信息，需要使用本地服务器上的文件
+  PutAvatar(imageHash: string) {
+    const url = "Account.Avatar";
+    const method = "Put";
+    return this.request<void>(url, method, { imageHash });
   }
 }

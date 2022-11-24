@@ -31,4 +31,6 @@ service Account {
   User GetCurrentUser();
   // 根据用户名搜索用户信息，一次最多拉取25条
   GetUsersByUsernameResponse GetUsersByUsername(string username, int offset);
+  // 设置自己的头像信息，需要使用本地服务器上的文件
+  void PutAvatar(string imageHash);
 }

@@ -9,10 +9,7 @@ import (
 
 func (chatImpl) GetConversationById(ctx *gin.Context, convId int) chat.Conversation {
 	// 检测用户是否登录
-	currentUser := middleware.GetCurrentUser(ctx)
-	if currentUser == nil {
-		panic("当前用户尚未登录")
-	}
+	currentUser := middleware.MustGetCurrentUser(ctx)
 
 	// 获取指定的会话信息
 	convDao, err := chatService.GetConversationById(convId)

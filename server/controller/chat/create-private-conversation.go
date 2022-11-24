@@ -14,10 +14,7 @@ import (
 )
 
 func (chatImpl) CreatePrivateConversation(ctx *gin.Context, userId int) int {
-	currentUser := middleware.GetCurrentUser(ctx)
-	if currentUser == nil {
-		panic("当前用户尚未登录")
-	}
+	currentUser := middleware.MustGetCurrentUser(ctx)
 
 	targetUser, err := accountService.FindUserByUserId(userId)
 	if err != nil {

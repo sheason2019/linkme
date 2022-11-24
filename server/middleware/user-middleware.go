@@ -28,3 +28,12 @@ func GetCurrentUser(ctx *gin.Context) *userDao.UserDao {
 	}
 	return nil
 }
+
+func MustGetCurrentUser(ctx *gin.Context) *userDao.UserDao {
+	currentUser := GetCurrentUser(ctx)
+	if currentUser == nil {
+		panic("无法获取当前用户的信息")
+	}
+
+	return currentUser
+}

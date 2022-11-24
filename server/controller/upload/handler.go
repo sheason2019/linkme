@@ -9,24 +9,15 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sheason2019/linkme/middleware"
 )
 
 const upload_path = "/var/linkme/upload/"
 
 // 上传文件功能
 func UploadHandler(ctx *gin.Context) {
-	// currentUser := middleware.GetCurrentUser(ctx)
-	// if currentUser == nil {
-	// 	panic("当前用户尚未登录")
-	// }
-
-	// targetUser, err := accountService.FindUserByUserId(int(currentUser.ID))
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// if targetUser == nil {
-	// 	panic(fmt.Sprintf("没有找到指定的用户 - 用户ID %d", currentUser.ID))
-	// }
+	// 如果没有查询到当前的用户信息，则弹出错误
+	middleware.MustGetCurrentUser(ctx)
 
 	fileHeader, err := ctx.FormFile("file")
 	if err != nil {

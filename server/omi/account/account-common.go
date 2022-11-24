@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月20日 16:52:23.
+* 生成时间：2022年11月25日 0:16:35.
  */
 package account
 
@@ -34,4 +34,7 @@ type RegistRequest struct {
 type GetUsersByUsernameRequest struct {
 	Username string `form:"username"`
 	Offset   int    `form:"offset"`
+}
+type PutAvatarRequest struct {
+	ImageHash string `json:"imageHash"`
 }

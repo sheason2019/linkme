@@ -69,8 +69,7 @@ export enum APP_URLS {
   LOGIN_PAGE_URL = "/account/login",
   REGIST_PAGE_URL = "/account/regist",
   CURRENT_USER_PAGE_URL = "/account/current-user",
-  USER_INFO_URL = "/account/user-info",
-  USER_INFO_BASE_URL = "/account/user-info/",
+  USER_INFO_URL = "/account",
 
   CHAT_URL = "/chat",
 
