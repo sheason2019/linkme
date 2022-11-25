@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { APP_URLS } from "../../../../../router";
 import useUserInfo from "../../../../hooks/use-user-info";
+import LinkmeAvatar from "../../../linkme-avatar";
 
 const UserAvatarWithMenu = () => {
   const { userInfo } = useUserInfo();
@@ -19,8 +20,12 @@ const UserAvatarWithMenu = () => {
 
   return (
     <>
-      <Box sx={{ cursor: "pointer" }} onClick={() => setOpen(true)}>
-        <Avatar ref={avatarRef} />
+      <Box
+        sx={{ cursor: "pointer" }}
+        onClick={() => setOpen(true)}
+        ref={avatarRef}
+      >
+        <LinkmeAvatar sourceHash={userInfo.user?.AvatarUrl} />
       </Box>
       <Menu
         open={open}

@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 0:16:35.
+* 生成时间：2022年11月25日 15:56:17.
  */
 package account
 
@@ -19,8 +19,11 @@ type Account interface {
 	GetCurrentUser(ctx *gin.Context) User
 	// 根据用户名搜索用户信息，一次最多拉取25条
 	GetUsersByUsername(ctx *gin.Context, username string, offset int) GetUsersByUsernameResponse
+	// 下面这两接口先这样实现，如果未来用户相关的属性数量上去了，额外抽象出一个Profile结构体来整合这些数据
 	// 设置自己的头像信息，需要使用本地服务器上的文件
 	PutAvatar(ctx *gin.Context, imageHash string)
+	// 设置个性签名
+	PutSignature(ctx *gin.Context, signature string)
 }
 type typeAccountDefinition struct {
 	GET_CRYPTO_INFO_PATH       string
@@ -29,6 +32,7 @@ type typeAccountDefinition struct {
 	GET_CURRENT_USER_PATH      string
 	GET_USERS_BY_USERNAME_PATH string
 	PUT_AVATAR_PATH            string
+	PUT_SIGNATURE_PATH         string
 }
 
 var AccountDefinition = &typeAccountDefinition{
@@ -38,4 +42,5 @@ var AccountDefinition = &typeAccountDefinition{
 	GET_CURRENT_USER_PATH:      "/Account.CurrentUser",
 	GET_USERS_BY_USERNAME_PATH: "/Account.UsersByUsername",
 	PUT_AVATAR_PATH:            "/Account.Avatar",
+	PUT_SIGNATURE_PATH:         "/Account.Signature",
 }

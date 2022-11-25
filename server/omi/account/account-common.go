@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 0:16:35.
+* 生成时间：2022年11月25日 15:56:17.
  */
 package account
 
@@ -9,6 +9,7 @@ type User struct {
 	Username  *string
 	Password  *string
 	AvatarUrl *string
+	Signature *string
 }
 type GetCryptoInfoResponse struct {
 	RsaPubKey *string
@@ -37,4 +38,7 @@ type GetUsersByUsernameRequest struct {
 }
 type PutAvatarRequest struct {
 	ImageHash string `json:"imageHash"`
+}
+type PutSignatureRequest struct {
+	Signature string `json:"signature"`
 }

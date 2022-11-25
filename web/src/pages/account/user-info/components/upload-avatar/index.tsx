@@ -8,11 +8,11 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { getAccountClient } from "../../../../api-client";
-import LinkmeAvatar from "../../../../common/components/linkme-avatar";
-import useErrorHandler from "../../../../common/hooks/use-error-handler";
-import useUploadImage from "../../../../common/hooks/use-upload-image";
-import useUserInfo from "../../../../common/hooks/use-user-info";
+import { getAccountClient } from "../../../../../api-client";
+import LinkmeAvatar from "../../../../../common/components/linkme-avatar";
+import useErrorHandler from "../../../../../common/hooks/use-error-handler";
+import useUploadImage from "../../../../../common/hooks/use-upload-image";
+import useUserInfo from "../../../../../common/hooks/use-user-info";
 
 const AVATAR_SIZE = 256;
 
