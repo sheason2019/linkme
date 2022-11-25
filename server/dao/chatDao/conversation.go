@@ -62,6 +62,7 @@ func (model ConversationDao) ToIDL(currentUserId uint) chat.Conversation {
 		member.Name = &name
 		member.MemberId = utils.ConvertNumberToIntPtr(v.ID)
 		member.UserId = utils.ConvertNumberToIntPtr(v.UserId)
+		member.AvatarUrl = v.User.Avatar
 
 		if v.UserId == model.OwnerId {
 			member.Type = &MemberType_Owner
