@@ -39,6 +39,8 @@ const useSocket = () => {
   }, [chat]);
 
   const initSocket = () => {
+    if (!!socketRef) return;
+
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
     // 连接到Socket以后进行登录
     socket.on("connect", () => {

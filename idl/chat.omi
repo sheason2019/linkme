@@ -6,7 +6,7 @@ struct SequenceItem {
   int LastUpdateTime;
   int UnreadCount;
 
-  optional string AvatarUrl;
+  optional string Avatar;
 }
 
 struct Conversation {
@@ -16,6 +16,9 @@ struct Conversation {
   string Type;
 
   repeated MessageMember Members;
+  int MemberCount;
+
+  optional string Avatar;
 }
 
 struct Message {
@@ -45,6 +48,11 @@ struct MessageResponse {
   boolean HasMore;
 }
 
+struct GetGroupResponse {
+  repeated Conversation Groups;
+  boolean HasMore;
+}
+
 service Chat {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
   int CreatePrivateConversation(int userId);
@@ -52,6 +60,8 @@ service Chat {
   int CreateGroupConversation(repeated int userIds, string groupName);
   // 获取会话信息
   Conversation GetConversationById(int convId);
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroupResponse GetGroup(string searchText, int offset);
 }
 
 service ChatRpc {

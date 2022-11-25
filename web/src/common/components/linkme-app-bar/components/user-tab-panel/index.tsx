@@ -6,7 +6,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   Stack,
   Typography,
 } from "@mui/material";
@@ -15,10 +14,12 @@ import { getChatClient } from "../../../../../api-client";
 import { User } from "../../../../../api-lib/account-client";
 import useErrorHandler from "../../../../hooks/use-error-handler";
 import EmptyResult from "../empty-result";
-import { SearchTabs, useSearchDialog } from "../search-dialog";
+import { useSearchDialog } from "../search-dialog";
 import ChatIcon from "@mui/icons-material/Chat";
 import useSocket from "../../../../../pages/chat/hooks/use-socket";
 import LinkmeAvatar from "../../../linkme-avatar";
+import { useCheckMobile } from "../../../../hooks/use-check-mobile";
+import { SearchTabs } from "../../typings";
 
 interface IUserTabPanel {
   users: User[];
@@ -54,6 +55,8 @@ const UserListItem: FC<IUserListItem> = ({ user }) => {
   const { handleClose } = useSearchDialog();
   const { handleToConversation } = useSocket();
 
+  const { isMobile } = useCheckMobile();
+
   const handleCreatePrivateConversation = async () => {
     const client = getChatClient();
     const [err, res] = await client.CreatePrivateConversation(user.UserId);
@@ -77,7 +80,7 @@ const UserListItem: FC<IUserListItem> = ({ user }) => {
       <Box flex={1} height="2.5rem">
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Typography fontWeight="bold">{user.Username}</Typography>
-          {user.Signature && (
+          {!isMobile && user.Signature && (
             <Typography color="GrayText" fontSize="0.8rem">
               {user.Signature}
             </Typography>

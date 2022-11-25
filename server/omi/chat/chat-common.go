@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 15:56:17.
+* 生成时间：2022年11月25日 18:18:51.
  */
 package chat
 
@@ -11,13 +11,15 @@ type SequenceItem struct {
 	LastMessage    *string
 	LastUpdateTime *int
 	UnreadCount    *int
-	AvatarUrl      *string
+	Avatar         *string
 }
 type Conversation struct {
-	Id      *int
-	Name    *string
-	Type    *string
-	Members *[]MessageMember
+	Id          *int
+	Name        *string
+	Type        *string
+	Members     *[]MessageMember
+	MemberCount *int
+	Avatar      *string
 }
 type Message struct {
 	Id        *int
@@ -40,6 +42,10 @@ type MessageResponse struct {
 	Messages *[]Message
 	HasMore  *bool
 }
+type GetGroupResponse struct {
+	Groups  *[]Conversation
+	HasMore *bool
+}
 type CreatePrivateConversationRequest struct {
 	UserId int `json:"userId"`
 }
@@ -49,6 +55,10 @@ type CreateGroupConversationRequest struct {
 }
 type GetConversationByIdRequest struct {
 	ConvId int `form:"convId"`
+}
+type GetGroupRequest struct {
+	SearchText string `form:"searchText"`
+	Offset     int    `form:"offset"`
 }
 
 type GetUserEnterConversationLimitRequest struct {

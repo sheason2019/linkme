@@ -1,5 +1,4 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import { useState } from "react";
 import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import Signature from "./components/signature";

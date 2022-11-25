@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月25日 16:1:54.
+ * 生成时间：2022年11月25日 18:21:54.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -13,13 +13,15 @@ export interface SequenceItem {
   LastMessage: string;
   LastUpdateTime: number;
   UnreadCount: number;
-  AvatarUrl?: string;
+  Avatar?: string;
 }
 export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
   Members: MessageMember[];
+  MemberCount: number;
+  Avatar?: string;
 }
 export interface Message {
   Id: number;
@@ -42,6 +44,10 @@ export interface MessageResponse {
   Messages: Message[];
   HasMore: boolean;
 }
+export interface GetGroupResponse {
+  Groups: Conversation[];
+  HasMore: boolean;
+}
 export class ChatClient extends OmiClientBase {
   // 创建私聊会话，参数是指定的用户ID，返回的是会话ID
   CreatePrivateConversation(userId: number) {
@@ -60,6 +66,12 @@ export class ChatClient extends OmiClientBase {
     const url = "Chat.ConversationById";
     const method = "Get";
     return this.request<Conversation>(url, method, { convId });
+  }
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroup(searchText: string, offset: number) {
+    const url = "Chat.Group";
+    const method = "Get";
+    return this.request<GetGroupResponse>(url, method, { searchText, offset });
   }
 }
 export class ChatRpcClient extends OmiClientBase {
