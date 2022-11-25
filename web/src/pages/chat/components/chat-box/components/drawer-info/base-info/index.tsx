@@ -24,7 +24,7 @@ export interface WithOwner {
 const BaseInfo: FC<WithOwner> = ({ isOwner }) => {
   const { handler } = useErrorHandler();
   const { chat } = useChat();
-  const { handleGetConversationById } = useSocket();
+  const { handleGetConversationById, handlePullSequence } = useSocket();
 
   const [open, setOpen] = useState(false);
 
@@ -47,6 +47,7 @@ const BaseInfo: FC<WithOwner> = ({ isOwner }) => {
     }
 
     await handleGetConversationById(chat.currentConv?.Id!);
+    await handlePullSequence();
 
     handleClose();
   };

@@ -155,6 +155,10 @@ const useSocket = () => {
     handleSetConversation(res);
   };
 
+  const handlePullSequence = () => {
+    socketRef?.emit("sequenceItem");
+  };
+
   useEffect(() => {
     if (!socketRef) initSocket();
   }, []);
@@ -165,6 +169,7 @@ const useSocket = () => {
     handleToConversation,
     handlePullMessage,
     handlePullMoreMessage,
+    handlePullSequence,
     handleGetConversationById,
   };
 };
