@@ -1,11 +1,14 @@
 import { TabPanel } from "@mui/lab";
 import {
   Avatar,
+  Box,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { FC, useMemo } from "react";
 import { getChatClient } from "../../../../../api-client";
@@ -15,6 +18,7 @@ import EmptyResult from "../empty-result";
 import { SearchTabs, useSearchDialog } from "../search-dialog";
 import ChatIcon from "@mui/icons-material/Chat";
 import useSocket from "../../../../../pages/chat/hooks/use-socket";
+import LinkmeAvatar from "../../../linkme-avatar";
 
 interface IUserTabPanel {
   users: User[];
@@ -68,9 +72,18 @@ const UserListItem: FC<IUserListItem> = ({ user }) => {
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar />
+        <LinkmeAvatar sourceHash={user.AvatarUrl} />
       </ListItemAvatar>
-      <ListItemText>{user.Username}</ListItemText>
+      <Box flex={1} height="2.5rem">
+        <Stack direction="row" alignItems="center" spacing={1.5}>
+          <Typography fontWeight="bold">{user.Username}</Typography>
+          {user.Signature && (
+            <Typography color="GrayText" fontSize="0.8rem">
+              {user.Signature}
+            </Typography>
+          )}
+        </Stack>
+      </Box>
       <IconButton onClick={handleCreatePrivateConversation}>
         <ChatIcon />
       </IconButton>

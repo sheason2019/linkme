@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { atom, useRecoilState } from "recoil";
-import { TabContext, TabPanel } from "@mui/lab";
+import { TabContext } from "@mui/lab";
 import { useEffect, useState } from "react";
-import EmptyResult from "../empty-result";
 import _ from "lodash";
 import { User } from "../../../../../api-lib/account-client";
 import { getAccountClient } from "../../../../../api-client";

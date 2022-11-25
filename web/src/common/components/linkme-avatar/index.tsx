@@ -1,5 +1,5 @@
 import { Avatar } from "@mui/material";
-import { FC } from "react";
+import { forwardRef } from "react";
 
 interface ILinkmeAvatar {
   sourceHash?: string;
@@ -7,14 +7,18 @@ interface ILinkmeAvatar {
   onClick?: () => any;
 }
 
-const LinkmeAvatar: FC<ILinkmeAvatar> = ({ sourceHash, size, onClick }) => {
-  return (
-    <Avatar
-      src={!!sourceHash ? `/api/image/${sourceHash}` : undefined}
-      sx={{ width: size, height: size, cursor: "pointer" }}
-      onClick={onClick}
-    />
-  );
-};
+const LinkmeAvatar = forwardRef<HTMLDivElement | null, ILinkmeAvatar>(
+  (props, ref) => {
+    const { sourceHash, size, ...extra } = props;
+    return (
+      <Avatar
+        {...extra}
+        src={!!sourceHash ? `/api/image/${sourceHash}` : undefined}
+        sx={{ width: size, height: size, cursor: "pointer" }}
+        ref={ref}
+      />
+    );
+  }
+);
 
 export default LinkmeAvatar;
