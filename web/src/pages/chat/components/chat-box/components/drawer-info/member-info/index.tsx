@@ -11,7 +11,7 @@ const MemberInfo: FC<WithOwner> = ({ isOwner }) => {
         <Typography variant="h6">成员信息</Typography>
         {isOwner && <Button>邀请</Button>}
       </RowStack>
-      <GroupMembers />
+      <GroupMembers isOwner={isOwner} />
     </Box>
   );
 };
