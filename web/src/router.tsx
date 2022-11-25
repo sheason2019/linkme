@@ -7,7 +7,7 @@ const Account = lazy(() => import("./pages/account"));
 const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
-const UserInfo = lazy(() => import("./pages/account/user-info"));
+const UserSpace = lazy(() => import("./pages/account/space"));
 
 // 首页
 const HomePage = lazy(() => import("./pages/homepage"));
@@ -40,8 +40,8 @@ export const router = createBrowserRouter([
         element: Suspenser(Account),
         children: [
           {
-            path: "",
-            element: Suspenser(UserInfo),
+            path: "space",
+            element: Suspenser(UserSpace),
           },
           {
             path: "login",
@@ -69,7 +69,7 @@ export enum APP_URLS {
   LOGIN_PAGE_URL = "/account/login",
   REGIST_PAGE_URL = "/account/regist",
   CURRENT_USER_PAGE_URL = "/account/current-user",
-  USER_INFO_URL = "/account",
+  USER_SPACE_URL = "/account/space",
 
   CHAT_URL = "/chat",
 

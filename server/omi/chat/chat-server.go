@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 18:18:51.
+* 生成时间：2022年11月25日 23:39:37.
  */
 package chat
 
@@ -18,12 +18,15 @@ type Chat interface {
 	GetConversationById(ctx *gin.Context, convId int) Conversation
 	// 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
 	GetGroup(ctx *gin.Context, searchText string, offset int) GetGroupResponse
+	// 设置群组名称
+	PutGroupName(ctx *gin.Context, groupId int, name string)
 }
 type typeChatDefinition struct {
 	CREATE_PRIVATE_CONVERSATION_PATH string
 	CREATE_GROUP_CONVERSATION_PATH   string
 	GET_CONVERSATION_BY_ID_PATH      string
 	GET_GROUP_PATH                   string
+	PUT_GROUP_NAME_PATH              string
 }
 
 var ChatDefinition = &typeChatDefinition{
@@ -31,6 +34,7 @@ var ChatDefinition = &typeChatDefinition{
 	CREATE_GROUP_CONVERSATION_PATH:   "/Chat.CreateGroupConversation",
 	GET_CONVERSATION_BY_ID_PATH:      "/Chat.ConversationById",
 	GET_GROUP_PATH:                   "/Chat.Group",
+	PUT_GROUP_NAME_PATH:              "/Chat.GroupName",
 }
 
 type ChatRpc interface {

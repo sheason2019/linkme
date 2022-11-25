@@ -15,8 +15,8 @@ struct Conversation {
 
   string Type;
 
-  repeated MessageMember Members;
   int MemberCount;
+  repeated MessageMember Members;
 
   optional string Avatar;
 }
@@ -38,6 +38,8 @@ struct Message {
 struct MessageMember {
   int MemberId;
   int UserId;
+
+  string Type;
 
   string Name;
   string AvatarUrl;
@@ -62,6 +64,8 @@ service Chat {
   Conversation GetConversationById(int convId);
   // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
   GetGroupResponse GetGroup(string searchText, int offset);
+  // 设置群组名称
+  void PutGroupName(int groupId, string name);
 }
 
 service ChatRpc {

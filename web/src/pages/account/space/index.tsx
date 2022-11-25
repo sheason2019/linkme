@@ -4,7 +4,7 @@ import useUserInfo from "../../../common/hooks/use-user-info";
 import Signature from "./components/signature";
 import UploadAvatar from "./components/upload-avatar";
 
-const UserInfoPage = () => {
+const UserSpacePage = () => {
   const { userInfo } = useUserInfo();
 
   const { isMobile } = useCheckMobile();
@@ -46,4 +46,4 @@ const UserInfoPage = () => {
   );
 };
 
-export default UserInfoPage;
+export default UserSpacePage;

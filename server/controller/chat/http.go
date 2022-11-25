@@ -14,4 +14,5 @@ func BindChatController(r *gin.Engine) {
 	attachCreateGroupConversation(r)
 	attachGetConversationById(r)
 	attachGetGroup(r)
+	attachPutGroupName(r)
 }

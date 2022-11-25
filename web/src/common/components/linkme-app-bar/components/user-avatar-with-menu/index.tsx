@@ -35,7 +35,7 @@ const UserAvatarWithMenu = () => {
       >
         <MenuItem
           sx={{ fontWeight: "bold" }}
-          onClick={() => handleTo(APP_URLS.USER_INFO_URL)}
+          onClick={() => handleTo(APP_URLS.USER_SPACE_URL)}
         >
           {userInfo.user?.Username}
         </MenuItem>

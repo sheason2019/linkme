@@ -136,12 +136,16 @@ const useSocket = () => {
 
   const handleToConversation = async (convId: number) => {
     navigate(APP_URLS.CHAT_URL);
-    const client = getChatClient();
     socketRef?.emit("enterConversation", convId);
     handleClearMessages();
     handlePullMessage(convId);
     setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
+    await handleGetConversationById(convId);
+  };
+
+  const handleGetConversationById = async (convId: number) => {
+    const client = getChatClient();
     const [err, res] = await client.GetConversationById(convId);
     if (err) {
       handler(err);
@@ -161,6 +165,7 @@ const useSocket = () => {
     handleToConversation,
     handlePullMessage,
     handlePullMoreMessage,
+    handleGetConversationById,
   };
 };
 

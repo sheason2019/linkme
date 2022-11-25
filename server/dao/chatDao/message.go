@@ -1,8 +1,6 @@
 package chatDao
 
 import (
-	"fmt"
-
 	"github.com/sheason2019/linkme/omi/chat"
 	"github.com/sheason2019/linkme/utils"
 	"gorm.io/gorm"
@@ -48,8 +46,6 @@ func (model MessageDao) ToIDL() chat.Message {
 	}
 	message.TargetCheckedCount = utils.ConvertNumberToIntPtr(len(model.MessageRecivers))
 	message.CurrentCheckedCount = &currentCheckedNum
-
-	fmt.Println(*message.TargetCheckedCount, *message.CurrentCheckedCount)
 
 	return message
 }

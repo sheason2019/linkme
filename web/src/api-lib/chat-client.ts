@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月25日 18:21:54.
+ * 生成时间：2022年11月25日 23:44:38.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -19,8 +19,8 @@ export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
-  Members: MessageMember[];
   MemberCount: number;
+  Members: MessageMember[];
   Avatar?: string;
 }
 export interface Message {
@@ -37,6 +37,7 @@ export interface Message {
 export interface MessageMember {
   MemberId: number;
   UserId: number;
+  Type: string;
   Name: string;
   AvatarUrl: string;
 }
@@ -72,6 +73,12 @@ export class ChatClient extends OmiClientBase {
     const url = "Chat.Group";
     const method = "Get";
     return this.request<GetGroupResponse>(url, method, { searchText, offset });
+  }
+  // 设置群组名称
+  PutGroupName(groupId: number, name: string) {
+    const url = "Chat.GroupName";
+    const method = "Put";
+    return this.request<void>(url, method, { groupId, name });
   }
 }
 export class ChatRpcClient extends OmiClientBase {

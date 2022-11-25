@@ -5,6 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// 成员类型
+var MemberType_Normal = "normal"
+var MemberType_Owner = "owner"
+
 type MemberDao struct {
 	gorm.Model
 
@@ -13,4 +17,7 @@ type MemberDao struct {
 
 	UserId uint
 	User   userDao.UserDao `gorm:"foreignKey:UserId"`
+
+	// 标识该用户是否已被移出群聊
+	Removed bool
 }
