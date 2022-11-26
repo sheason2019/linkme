@@ -24,7 +24,8 @@ const kickoutState = atom<IKickoutState>({
 export const useKickoutDialog = () => {
   const [kickout, setKickout] = useRecoilState(kickoutState);
 
-  const handleOpen = () => setKickout((prev) => ({ ...prev, open: true }));
+  const handleOpen = (convId: number) =>
+    setKickout((prev) => ({ convId, open: true }));
   const handleClose = () => setKickout((prev) => ({ ...prev, open: false }));
 
   return {
@@ -36,11 +37,12 @@ export const useKickoutDialog = () => {
 };
 
 const KickoutDialog = () => {
-  const { handleLeaveConversation } = useSocket();
+  const { handleLeaveConversation, handleDeleteSequence } = useSocket();
   const { kickout, handleClose } = useKickoutDialog();
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     handleLeaveConversation();
+    await handleDeleteSequence(kickout.convId);
     handleClose();
   };
 

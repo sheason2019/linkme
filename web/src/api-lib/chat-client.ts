@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 19:35:2.
+ * 生成时间：2022年11月26日 21:44:33.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -86,6 +86,12 @@ export class ChatClient extends OmiClientBase {
     const url = "Chat.Members";
     const method = "Delete";
     return this.request<void>(url, method, { membersId });
+  }
+  // 移除消息列表中的项
+  DeleteSequenceItem(convId: number) {
+    const url = "Chat.SequenceItem";
+    const method = "Delete";
+    return this.request<void>(url, method, { convId });
   }
 }
 export class ChatRpcClient extends OmiClientBase {

@@ -101,10 +101,9 @@ const useSocket = () => {
     });
     socket.on("kickout", (membersId, convId, isCurrent) => {
       const chat = chatRef.current;
-      if (convId !== chat.currentConv?.Id) return;
 
       if (membersId.indexOf(chat.currentMemberId!) !== -1 || isCurrent) {
-        handleOpen();
+        handleOpen(convId);
         return;
       }
 
@@ -164,7 +163,6 @@ const useSocket = () => {
     socketRef?.emit("enterConversation", convId);
     handleClearMessages();
     handlePullMessage(convId);
-    setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
     await handleGetConversationById(convId);
   };
@@ -189,6 +187,18 @@ const useSocket = () => {
     socketRef?.emit("sequenceItem");
   };
 
+  const handleDeleteSequence = async (convId: number) => {
+    const client = getChatClient();
+    const [err] = await client.DeleteSequenceItem(convId);
+
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    handlePullSequence();
+  };
+
   useEffect(() => {
     if (!userInfo.user?.UserId) return;
 
@@ -208,6 +218,7 @@ const useSocket = () => {
     handlePullSequence,
     handleLeaveConversation,
     handleGetConversationById,
+    handleDeleteSequence,
   };
 };
 

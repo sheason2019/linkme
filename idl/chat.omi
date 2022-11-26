@@ -69,6 +69,8 @@ service Chat {
   void PutGroupName(int groupId, string name);
   // 移除群组中的成员
   void DeleteMembers(repeated int membersId);
+  // 移除消息列表中的项
+  void DeleteSequenceItem(int convId);
 }
 
 service ChatRpc {
