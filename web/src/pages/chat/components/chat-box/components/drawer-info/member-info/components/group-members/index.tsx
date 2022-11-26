@@ -61,7 +61,7 @@ const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
     <>
       <List sx={{ borderRadius: 2, background: "#ECECEC" }}>
         {memberList.map((member) => (
-          <ListItem>
+          <ListItem key={member.MemberId}>
             <ListItemAvatar>
               <LinkmeAvatar sourceHash={member.AvatarUrl} />
             </ListItemAvatar>

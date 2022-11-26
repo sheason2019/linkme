@@ -55,6 +55,10 @@ func (model ConversationDao) ToIDL(currentUserId uint) chat.Conversation {
 	}
 	conv.Type = &model.Type
 
+	model.Members = utils.Filter(model.Members, func(member MemberDao, index int) bool {
+		return !member.Removed
+	})
+
 	members := make([]chat.MessageMember, len(model.Members))
 	for i, v := range model.Members {
 		v.Conversation = model
