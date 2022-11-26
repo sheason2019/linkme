@@ -1,68 +1,60 @@
-import {
-  Box,
-  Avatar,
-  CircularProgress,
-  List,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { CircularProgress, List, Stack, Typography } from "@mui/material";
+import { useState } from "react";
 import useChat from "../../hooks/use-chat";
-import useSocket from "../../hooks/use-socket";
-import TimeStamp from "../time-stamp";
-import UnreadNum from "../unread-num";
+import SequenceItemComp from "./components/sequence-item-comp";
+import SequenceItemMenu from "./components/sequence-item-menu";
 
 const ConversationSequence = () => {
   const { chat } = useChat();
-  const { handleToConversation } = useSocket();
+
+  const [menu, setMenu] = useState({
+    open: false,
+    position: {
+      x: 0,
+      y: 0,
+    },
+    convId: 0,
+  });
+
+  const handleOpenMenu = (clientX: number, clientY: number, convId: number) => {
+    setMenu({
+      open: true,
+      position: {
+        x: clientX,
+        y: clientY,
+      },
+      convId,
+    });
+  };
+  const handleClose = () => {
+    setMenu((prev) => ({ ...prev, open: false }));
+  };
 
   return (
-    <List sx={{ width: "100%", flex: 1, overflowY: "auto" }}>
-      {chat.loadingSequence ? (
-        <Stack alignItems="center" spacing={2}>
-          <CircularProgress />
-          <Typography variant="body2">加载中…</Typography>
-        </Stack>
-      ) : (
-        chat.sequence.map((item) => (
-          <ListItemButton
-            key={item.ConversationId}
-            onClick={() => handleToConversation(item.ConversationId)}
-            sx={{ display: "flex", alignItems: "center" }}
-          >
-            <ListItemAvatar>
-              <Avatar />
-            </ListItemAvatar>
-            <ListItemText sx={{ m: 0 }}>
-              <Stack>
-                <Stack direction="row" justifyContent="space-between">
-                  <Box>{item.Name}</Box>
-                  <Box sx={{ color: "gray" }}>
-                    <TimeStamp timeStamp={item.LastUpdateTime} />
-                  </Box>
-                </Stack>
-                <Stack
-                  sx={{ height: "24px" }}
-                  direction="row"
-                  justifyContent="space-between"
-                >
-                  <Box sx={{ color: "gray" }}>{item.LastMessage}</Box>
-                  <UnreadNum
-                    num={
-                      chat.currentConv?.Id === item.ConversationId
-                        ? 0
-                        : item.UnreadCount
-                    }
-                  />
-                </Stack>
-              </Stack>
-            </ListItemText>
-          </ListItemButton>
-        ))
-      )}
-    </List>
+    <>
+      <List sx={{ width: "100%", flex: 1, overflowY: "auto" }}>
+        {chat.loadingSequence ? (
+          <Stack alignItems="center" spacing={2}>
+            <CircularProgress />
+            <Typography variant="body2">加载中…</Typography>
+          </Stack>
+        ) : (
+          chat.sequence.map((item) => (
+            <SequenceItemComp
+              key={item.ConversationId}
+              openMenu={handleOpenMenu}
+              item={item}
+            />
+          ))
+        )}
+      </List>
+      <SequenceItemMenu
+        onClose={handleClose}
+        open={menu.open}
+        position={menu.position}
+        convId={menu.convId}
+      />
+    </>
   );
 };
 
