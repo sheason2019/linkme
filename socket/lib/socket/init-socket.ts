@@ -64,7 +64,7 @@ const initSocket = (
     }
 
     if (!res) {
-      socket.emit("error", "用户不是指定会话的成员");
+      socket.emit("kickout", [], convId, true);
       return;
     }
 

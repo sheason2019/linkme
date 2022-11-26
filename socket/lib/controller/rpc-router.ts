@@ -27,6 +27,14 @@ const initRpcRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
       next();
     }
   );
+  rpcRouter.post(
+    ChatSocketControllerDefinition.KICKOUT_MEMBER_PATH,
+    (ctx, next) => {
+      chatSocketController.KickoutMember(ctx.request.body as any);
+      ctx.status = 200;
+      next();
+    }
+  );
 
   app.use(rpcRouter.routes());
   app.use(rpcRouter.allowedMethods());

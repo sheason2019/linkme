@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from "@mui/material";
 import { FC } from "react";
-import GroupMembers from "../../group-members";
+import GroupMembers from "./components/group-members";
 import RowStack from "../../row-stack";
 import { WithOwner } from "../base-info";
 

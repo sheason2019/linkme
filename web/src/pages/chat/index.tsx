@@ -1,4 +1,5 @@
 import LinkmeAppBar from "../../common/components/linkme-app-bar";
+import KickoutDialog from "./components/kickout-dialog";
 import Main from "./components/main";
 import useSocket from "./hooks/use-socket";
 
@@ -9,6 +10,7 @@ const ChatPage = () => {
     <>
       <LinkmeAppBar />
       <Main />
+      <KickoutDialog />
     </>
   );
 };

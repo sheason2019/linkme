@@ -38,6 +38,7 @@ struct Message {
 struct MessageMember {
   int MemberId;
   int UserId;
+  int ConversationId;
 
   string Type;
 
@@ -66,6 +67,8 @@ service Chat {
   GetGroupResponse GetGroup(string searchText, int offset);
   // 设置群组名称
   void PutGroupName(int groupId, string name);
+  // 移除群组中的成员
+  void DeleteMembers(repeated int membersId);
 }
 
 service ChatRpc {

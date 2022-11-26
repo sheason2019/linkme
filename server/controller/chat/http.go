@@ -15,4 +15,5 @@ func BindChatController(r *gin.Engine) {
 	attachGetConversationById(r)
 	attachGetGroup(r)
 	attachPutGroupName(r)
+	attachDeleteMembers(r)
 }

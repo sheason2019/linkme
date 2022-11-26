@@ -1,12 +1,12 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月25日 23:44:38.
+ * 生成时间：2022年11月26日 19:35:2.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
 import { AxiosRequestConfig } from "axios";
 
-import { SequenceItem, Message } from "./chat-client";
+import { SequenceItem, Message, MessageMember } from "./chat-client";
 export interface UserConversationSequence {
   UserId: number;
   Sequence: SequenceItem[];
@@ -21,5 +21,11 @@ export class ChatSocketClient extends OmiClientBase {
     const url = "ChatSocket.Messages";
     const method = "Post";
     return this.request<void>(url, method, { convId, messages });
+  }
+  // 删除成员
+  KickoutMember(members: MessageMember[]) {
+    const url = "ChatSocket.KickoutMember";
+    const method = "Post";
+    return this.request<void>(url, method, { members });
   }
 }

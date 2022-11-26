@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 23:39:37.
+* 生成时间：2022年11月26日 19:20:28.
  */
 package socket
 
@@ -16,4 +16,7 @@ type PostUserSequenceRequest struct {
 type PostMessagesRequest struct {
 	ConvId   int            `json:"convId"`
 	Messages []chat.Message `json:"messages"[]`
+}
+type KickoutMemberRequest struct {
+	Members []chat.MessageMember `json:"members"[]`
 }

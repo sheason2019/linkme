@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 23:39:37.
+* 生成时间：2022年11月26日 19:20:28.
  */
 package chat
 
@@ -77,6 +77,18 @@ func (definition ChatClient) GetGroup(searchText string, offset int) (result Get
 func (definition ChatClient) PutGroupName(groupId int, name string) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetBody(&PutGroupNameRequest{GroupId: groupId, Name: name}).SetBody(&PutGroupNameRequest{GroupId: groupId, Name: name}).Put(definition.HOST + "/Chat.GroupName")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) DeleteMembers(membersId []int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetQueryParam("membersId", fmt.Sprint(membersId)).Delete(definition.HOST + "/Chat.Members")
 	if err != nil {
 		panic(err)
 	}

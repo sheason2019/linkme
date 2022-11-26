@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月25日 16:44:31.
+ * 生成时间：2022年11月26日 19:25:24.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -9,13 +9,15 @@ export interface SequenceItem {
   LastMessage: string;
   LastUpdateTime: number;
   UnreadCount: number;
-  AvatarUrl?: string;
+  Avatar?: string;
 }
 export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  MemberCount: number;
   Members: MessageMember[];
+  Avatar?: string;
 }
 export interface Message {
   Id: number;
@@ -31,11 +33,17 @@ export interface Message {
 export interface MessageMember {
   MemberId: number;
   UserId: number;
+  ConversationId: number;
+  Type: string;
   Name: string;
   AvatarUrl: string;
 }
 export interface MessageResponse {
   Messages: Message[];
+  HasMore: boolean;
+}
+export interface GetGroupResponse {
+  Groups: Conversation[];
   HasMore: boolean;
 }
 export interface UnimpledChatController {
@@ -51,11 +59,22 @@ export interface UnimpledChatController {
   GetConversationById(
     payload: GetConversationByIdRequest
   ): Promise<Conversation> | Conversation;
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroup(
+    payload: GetGroupRequest
+  ): Promise<GetGroupResponse> | GetGroupResponse;
+  // 设置群组名称
+  PutGroupName(payload: PutGroupNameRequest): Promise<void> | void;
+  // 移除群组中的成员
+  DeleteMembers(payload: DeleteMembersRequest): Promise<void> | void;
 }
 export const ChatControllerDefinition = {
   CREATE_PRIVATE_CONVERSATION_PATH: "Chat.CreatePrivateConversation",
   CREATE_GROUP_CONVERSATION_PATH: "Chat.CreateGroupConversation",
   GET_CONVERSATION_BY_ID_PATH: "Chat.ConversationById",
+  GET_GROUP_PATH: "Chat.Group",
+  PUT_GROUP_NAME_PATH: "Chat.GroupName",
+  DELETE_MEMBERS_PATH: "Chat.Members",
 } as const;
 export interface CreatePrivateConversationRequest {
   userId: number;
@@ -66,6 +85,17 @@ export interface CreateGroupConversationRequest {
 }
 export interface GetConversationByIdRequest {
   convId: number;
+}
+export interface GetGroupRequest {
+  searchText: string;
+  offset: number;
+}
+export interface PutGroupNameRequest {
+  groupId: number;
+  name: string;
+}
+export interface DeleteMembersRequest {
+  membersId: number[];
 }
 export interface UnimpledChatRpcController {
   // 获取消息列表信息

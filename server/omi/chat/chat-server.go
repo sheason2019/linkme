@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月25日 23:39:37.
+* 生成时间：2022年11月26日 19:20:28.
  */
 package chat
 
@@ -20,6 +20,8 @@ type Chat interface {
 	GetGroup(ctx *gin.Context, searchText string, offset int) GetGroupResponse
 	// 设置群组名称
 	PutGroupName(ctx *gin.Context, groupId int, name string)
+	// 移除群组中的成员
+	DeleteMembers(ctx *gin.Context, membersId []int)
 }
 type typeChatDefinition struct {
 	CREATE_PRIVATE_CONVERSATION_PATH string
@@ -27,6 +29,7 @@ type typeChatDefinition struct {
 	GET_CONVERSATION_BY_ID_PATH      string
 	GET_GROUP_PATH                   string
 	PUT_GROUP_NAME_PATH              string
+	DELETE_MEMBERS_PATH              string
 }
 
 var ChatDefinition = &typeChatDefinition{
@@ -35,6 +38,7 @@ var ChatDefinition = &typeChatDefinition{
 	GET_CONVERSATION_BY_ID_PATH:      "/Chat.ConversationById",
 	GET_GROUP_PATH:                   "/Chat.Group",
 	PUT_GROUP_NAME_PATH:              "/Chat.GroupName",
+	DELETE_MEMBERS_PATH:              "/Chat.Members",
 }
 
 type ChatRpc interface {

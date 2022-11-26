@@ -57,20 +57,8 @@ func (model ConversationDao) ToIDL(currentUserId uint) chat.Conversation {
 
 	members := make([]chat.MessageMember, len(model.Members))
 	for i, v := range model.Members {
-		name := v.User.Username
-		member := chat.MessageMember{}
-		member.Name = &name
-		member.MemberId = utils.ConvertNumberToIntPtr(v.ID)
-		member.UserId = utils.ConvertNumberToIntPtr(v.UserId)
-		member.AvatarUrl = v.User.Avatar
-
-		if v.UserId == model.OwnerId {
-			member.Type = &MemberType_Owner
-		} else {
-			member.Type = &MemberType_Normal
-		}
-
-		members[i] = member
+		v.Conversation = model
+		members[i] = v.ToIDL()
 	}
 	conv.Members = &members
 

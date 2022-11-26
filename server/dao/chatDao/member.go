@@ -2,6 +2,8 @@ package chatDao
 
 import (
 	"github.com/sheason2019/linkme/dao/userDao"
+	"github.com/sheason2019/linkme/omi/chat"
+	"github.com/sheason2019/linkme/utils"
 	"gorm.io/gorm"
 )
 
@@ -20,4 +22,22 @@ type MemberDao struct {
 
 	// 标识该用户是否已被移出群聊
 	Removed bool
+}
+
+func (model MemberDao) ToIDL() chat.MessageMember {
+	name := model.User.Username
+	member := chat.MessageMember{}
+	member.Name = &name
+	member.MemberId = utils.ConvertNumberToIntPtr(model.ID)
+	member.UserId = utils.ConvertNumberToIntPtr(model.UserId)
+	member.AvatarUrl = model.User.Avatar
+	member.ConversationId = utils.ConvertNumberToIntPtr(model.ConversationId)
+
+	if model.UserId == model.Conversation.OwnerId {
+		member.Type = &MemberType_Owner
+	} else {
+		member.Type = &MemberType_Normal
+	}
+
+	return member
 }

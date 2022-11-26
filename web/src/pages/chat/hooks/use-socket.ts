@@ -12,12 +12,16 @@ import { useNavigate } from "react-router-dom";
 import { getChatClient } from "../../../api-client";
 import { APP_URLS } from "../../../router";
 import useMessageUpdater from "./use-message-updater";
+import { useKickoutDialog } from "../components/kickout-dialog";
+import useUserInfo from "../../../common/hooks/use-user-info";
 
 let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
+let socketUserId: number | undefined;
 
 const useSocket = () => {
   const navigate = useNavigate();
 
+  const { userInfo } = useUserInfo();
   const {
     chat,
     handleSetSequence,
@@ -32,7 +36,9 @@ const useSocket = () => {
     handleClearMessages,
     handleClearMarkMessage,
   } = useMessageUpdater();
+  const { handleOpen } = useKickoutDialog();
 
+  // 这里使用chatRef是因为React的重渲染会导致socket定义的事件无法获取到最新上下文中的chat
   const chatRef = useRef(chat);
   useEffect(() => {
     chatRef.current = chat;
@@ -92,10 +98,22 @@ const useSocket = () => {
         }
       }
     });
+    socket.on("kickout", (membersId, convId, isCurrent) => {
+      const chat = chatRef.current;
+      if (convId !== chat.currentConv?.Id) return;
+
+      if (membersId.indexOf(chat.currentMemberId!) !== -1 || isCurrent) {
+        handleOpen();
+        return;
+      }
+
+      handleGetConversationById(convId);
+    });
 
     socket.connect();
 
     socketRef = socket;
+    socketUserId = userInfo.user?.UserId;
   };
 
   const handlePostMessage = (content: string, convId: number) => {
@@ -160,8 +178,14 @@ const useSocket = () => {
   };
 
   useEffect(() => {
-    if (!socketRef) initSocket();
-  }, []);
+    if (!userInfo.user?.UserId) return;
+
+    if (!socketRef) {
+      initSocket();
+    } else if (userInfo.user.UserId !== socketUserId) {
+      initSocket();
+    }
+  }, [userInfo.user?.UserId]);
 
   return {
     socket: socketRef,
