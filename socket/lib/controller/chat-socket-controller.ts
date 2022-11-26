@@ -6,6 +6,7 @@ import {
 } from "../../api-lib/socket-server";
 import { io } from "../../main";
 import { UserSocketsMap } from "../socket";
+import { SocketConvMap } from "../socket/socket-conv-map";
 
 class ChatSocketController implements UnimpledChatSocketController {
   KickoutMember({ members }: KickoutMemberRequest): void | Promise<void> {
@@ -42,6 +43,7 @@ class ChatSocketController implements UnimpledChatSocketController {
       socketsId?.forEach((id) => {
         // 强制指定用户退出房间
         io.to(id).socketsLeave("conv::" + convId);
+        SocketConvMap.set(id, undefined);
       });
     });
   }

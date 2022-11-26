@@ -16,6 +16,7 @@ export interface ViewMessage extends Message {
 
 interface IChatState {
   currentConv: Conversation | undefined;
+  socketConvId: number | undefined;
   currentMemberId?: number;
   loadingSequence: boolean;
   sequence: SequenceItem[];
@@ -28,6 +29,7 @@ const chatState = atom<IChatState>({
   key: "chat/common",
   default: {
     currentConv: undefined,
+    socketConvId: undefined,
     loadingSequence: false,
     sequence: [],
     messages: [],

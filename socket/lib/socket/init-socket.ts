@@ -7,6 +7,7 @@ import {
   ServerToClientEvents,
 } from "../../shared/socket";
 import { getAccountClient, getChatRpcClient } from "../rpc/chat-rpc-client";
+import { SocketConvMap } from "./socket-conv-map";
 
 const initSocket = (
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
@@ -70,6 +71,8 @@ const initSocket = (
 
     // 将该Socket加入指定的Room
     socket.join("conv::" + convId);
+    socket.emit("enterConversation", convId);
+    SocketConvMap.set(socket.id, convId);
   });
   socket.on("postMessage", async (content, convId, mark) => {
     const user = UserSocketsMap.getUserBySocketId(socket.id);
@@ -155,6 +158,9 @@ const initSocket = (
       console.error(err);
       return;
     }
+  });
+  socket.on("leaveConversation", () => {
+    SocketConvMap.set(socket.id, undefined);
   });
 };
 

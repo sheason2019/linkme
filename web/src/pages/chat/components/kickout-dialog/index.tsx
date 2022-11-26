@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { atom, useRecoilState } from "recoil";
-import useChat from "../../hooks/use-chat";
+import useSocket from "../../hooks/use-socket";
 
 interface IKickoutState {
   open: boolean;
@@ -36,11 +36,11 @@ export const useKickoutDialog = () => {
 };
 
 const KickoutDialog = () => {
-  const { handleCloseCurrentConversation } = useChat();
+  const { handleLeaveConversation } = useSocket();
   const { kickout, handleClose } = useKickoutDialog();
 
   const handleOnClick = () => {
-    handleCloseCurrentConversation();
+    handleLeaveConversation();
     handleClose();
   };
 

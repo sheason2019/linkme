@@ -23,7 +23,8 @@ import { useCheckMobile } from "../../../../common/hooks/use-check-mobile";
 const ChatBox = () => {
   const { isMobile } = useCheckMobile();
 
-  const { chat, handleCloseCurrentConversation } = useChat();
+  const { chat } = useChat();
+  const { handleLeaveConversation } = useSocket();
   const { handlePostMessage } = useSocket();
   const { handleClearContent, handleGetContent } = useEditor();
 
@@ -43,7 +44,7 @@ const ChatBox = () => {
     <>
       <Stack flex={1} alignItems="stretch" sx={{ height: "100%" }}>
         <Toolbar>
-          <IconButton sx={{ mr: 1 }} onClick={handleCloseCurrentConversation}>
+          <IconButton sx={{ mr: 1 }} onClick={handleLeaveConversation}>
             <NavigateBeforeIcon />
           </IconButton>
           <Box sx={{ flex: 1 }}>{chat.currentConv?.Name}</Box>

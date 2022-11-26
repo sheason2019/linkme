@@ -8,6 +8,8 @@ export interface ServerToClientEvents {
   postMessage: (message: Message, convId: number, mark: string) => void;
   // 第一个参数表示被移出群聊的成员ID，第二个参数表示是否当前用户被移出群聊
   kickout: (membersId: number[], convId: number, isCurrent?: boolean) => void;
+  enterConversation: (convId: number) => void;
+  leaveConversation: () => void;
 }
 
 export interface ClientToServerEvents {
@@ -17,4 +19,5 @@ export interface ClientToServerEvents {
   messages: (convId: number, originMessageId?: number) => void;
   enterConversation: (convId: number) => void;
   checkedMessage: (convId: number) => void;
+  leaveConversation: () => void;
 }

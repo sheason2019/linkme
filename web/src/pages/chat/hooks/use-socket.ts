@@ -28,6 +28,7 @@ const useSocket = () => {
     handleSetLoadingSequence,
     setChat,
     handleSetConversation,
+    handleCloseCurrentConversation,
   } = useChat();
   const { handler, strHandler } = useErrorHandler();
   const {
@@ -109,6 +110,12 @@ const useSocket = () => {
 
       handleGetConversationById(convId);
     });
+    socket.on("enterConversation", (convId) => {
+      setChat((prev) => ({ ...prev, socketConvId: convId }));
+    });
+    socket.on("leaveConversation", () => {
+      setChat((prev) => ({ ...prev, socketConvId: undefined }));
+    });
 
     socket.connect();
 
@@ -173,6 +180,11 @@ const useSocket = () => {
     handleSetConversation(res);
   };
 
+  const handleLeaveConversation = () => {
+    socketRef?.emit("leaveConversation");
+    handleCloseCurrentConversation();
+  };
+
   const handlePullSequence = () => {
     socketRef?.emit("sequenceItem");
   };
@@ -194,6 +206,7 @@ const useSocket = () => {
     handlePullMessage,
     handlePullMoreMessage,
     handlePullSequence,
+    handleLeaveConversation,
     handleGetConversationById,
   };
 };
