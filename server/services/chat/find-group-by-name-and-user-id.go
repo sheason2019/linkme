@@ -21,6 +21,7 @@ func FindGroupByNameAndUserId(name string, userId uint, offset int) ([]chatDao.C
 		Model(&convs).
 		Joins("JOIN member_daos ON member_daos.conversation_id = conversation_daos.id").
 		Where("member_daos.user_id = ?", userId).
+		Where("member_daos.removed is null").
 		Where("type like ?", "group").
 		Where("name like ?", "%"+name+"%").
 		Preload("Members").
