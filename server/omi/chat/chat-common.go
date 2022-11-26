@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月26日 21:29:3.
+* 生成时间：2022年11月26日 22:17:17.
  */
 package chat
 
@@ -73,6 +73,10 @@ type DeleteSequenceItemRequest struct {
 	ConvId int `form:"convId"`
 }
 
+type PostSequenceItemRequest struct {
+	UserId int `json:"userId"`
+	ConvId int `json:"convId"`
+}
 type GetUserEnterConversationLimitRequest struct {
 	UserId int `form:"userId"`
 	ConvId int `form:"convId"`

@@ -38,6 +38,13 @@ func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao
 		return nil, err
 	}
 
+	// 如果用户已被移出群组聊天
+	if member.Removed {
+		removedMessage := "您已被移出群聊"
+		item.UnreadCount = utils.ConvertNumberToIntPtr(1)
+		item.LastMessage = &removedMessage
+	}
+
 	// 拉取未读信息数量
 	var unreadCount int64
 	err = conn.

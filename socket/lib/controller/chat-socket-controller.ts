@@ -43,6 +43,8 @@ class ChatSocketController implements UnimpledChatSocketController {
       socketsId?.forEach((id) => {
         // 强制指定用户退出房间
         io.to(id).socketsLeave("conv::" + convId);
+        // 同步消息列表
+        io.to(id).emit("syncSequenceItem");
         SocketConvMap.set(id, undefined);
       });
     });

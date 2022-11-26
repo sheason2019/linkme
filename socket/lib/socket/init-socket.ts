@@ -23,7 +23,6 @@ const initSocket = (
       socket.disconnect();
       return;
     }
-    console.log("USER_LOGIN", res.UserId, res.Username);
     // 在Map中绑定用户和Socket的索引
     UserSocketsMap.bindSocketId(socket.id, { ...res, jwt });
     // 返回登录成功，前端在此时会结束初始化
@@ -69,9 +68,18 @@ const initSocket = (
       return;
     }
 
+    // 将会话加入用户的消息列表
+    const [err2] = await client.PostSequenceItem(user.UserId, convId);
+    if (err2) {
+      socket.emit("error", err2.message);
+      console.error(err);
+      return;
+    }
+
     // 将该Socket加入指定的Room
     socket.join("conv::" + convId);
     socket.emit("enterConversation", convId);
+    socket.emit("syncSequenceItem");
     SocketConvMap.set(socket.id, convId);
   });
   socket.on("postMessage", async (content, convId, mark) => {

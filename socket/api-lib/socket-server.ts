@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 19:25:24.
+ * 生成时间：2022年11月26日 22:20:5.
  */
 import { SequenceItem, Message, MessageMember } from "./chat-server";
 export interface UserConversationSequence {

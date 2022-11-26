@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 19:25:24.
+ * 生成时间：2022年11月26日 22:20:5.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -67,6 +67,8 @@ export interface UnimpledChatController {
   PutGroupName(payload: PutGroupNameRequest): Promise<void> | void;
   // 移除群组中的成员
   DeleteMembers(payload: DeleteMembersRequest): Promise<void> | void;
+  // 移除消息列表中的项
+  DeleteSequenceItem(payload: DeleteSequenceItemRequest): Promise<void> | void;
 }
 export const ChatControllerDefinition = {
   CREATE_PRIVATE_CONVERSATION_PATH: "Chat.CreatePrivateConversation",
@@ -75,6 +77,7 @@ export const ChatControllerDefinition = {
   GET_GROUP_PATH: "Chat.Group",
   PUT_GROUP_NAME_PATH: "Chat.GroupName",
   DELETE_MEMBERS_PATH: "Chat.Members",
+  DELETE_SEQUENCE_ITEM_PATH: "Chat.SequenceItem",
 } as const;
 export interface CreatePrivateConversationRequest {
   userId: number;
@@ -97,9 +100,14 @@ export interface PutGroupNameRequest {
 export interface DeleteMembersRequest {
   membersId: number[];
 }
+export interface DeleteSequenceItemRequest {
+  convId: number;
+}
 export interface UnimpledChatRpcController {
   // 获取消息列表信息
   GetSequenceItem(): Promise<SequenceItem[]> | SequenceItem[];
+  // 添加消息列表中的项
+  PostSequenceItem(payload: PostSequenceItemRequest): Promise<void> | void;
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(
     payload: GetUserEnterConversationLimitRequest
@@ -118,12 +126,17 @@ export interface UnimpledChatRpcController {
 }
 export const ChatRpcControllerDefinition = {
   GET_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
+  POST_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
   GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "ChatRpc.UserEnterConversationLimit",
   POST_USER_MESSAGE_PATH: "ChatRpc.UserMessage",
   GET_MESSAGES_PATH: "ChatRpc.Messages",
   CHECK_MESSAGE_PATH: "ChatRpc.CheckMessage",
 } as const;
 
+export interface PostSequenceItemRequest {
+  userId: number;
+  convId: number;
+}
 export interface GetUserEnterConversationLimitRequest {
   userId: number;
   convId: number;

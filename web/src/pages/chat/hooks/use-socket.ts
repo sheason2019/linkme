@@ -75,13 +75,14 @@ const useSocket = () => {
       handleSetLoadingSequence(false);
       handleSetSequence(sequence);
     });
+    socket.on("syncSequenceItem", () => {
+      socket.emit("sequenceItem");
+    });
     socket.on("error", (err) => {
       strHandler(err);
     });
     socket.on("postMessage", (msg, convId, mark) => {
       const chat = chatRef.current;
-      // 清除带有标记的Message
-      // 添加返回的Message
       if (convId === chat.currentConv?.Id) {
         handleClearMarkMessage(mark);
         handleUpdateMessage([msg]);
