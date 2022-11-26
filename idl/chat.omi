@@ -76,8 +76,8 @@ service Chat {
 service ChatRpc {
   // 获取消息列表信息
   repeated SequenceItem GetSequenceItem();
-  // 添加消息列表中的项
-  void PostSequenceItem(int userId, int convId);
+  // 添加消息列表中的项，返回值表示消息列表是否发生改变
+  boolean PostSequenceItem(int userId, int convId);
   // 获取用户进入会话的权限
   boolean GetUserEnterConversationLimit(int userId, int convId);
   // 用户发送消息

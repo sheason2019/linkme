@@ -164,6 +164,7 @@ const useSocket = () => {
     socketRef?.emit("enterConversation", convId);
     handleClearMessages();
     handlePullMessage(convId);
+    setChat((prev) => ({ ...prev, messages: [] }));
 
     await handleGetConversationById(convId);
   };

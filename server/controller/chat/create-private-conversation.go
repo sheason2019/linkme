@@ -6,11 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sheason2019/linkme/middleware"
 	"github.com/sheason2019/linkme/omi/chat"
-	"github.com/sheason2019/linkme/omi/socket"
-	rpcClient "github.com/sheason2019/linkme/rpc-client"
 	accountService "github.com/sheason2019/linkme/services/account"
 	chatService "github.com/sheason2019/linkme/services/chat"
-	"github.com/sheason2019/linkme/utils"
 )
 
 func (chatImpl) CreatePrivateConversation(ctx *gin.Context, userId int) int {
@@ -28,23 +25,6 @@ func (chatImpl) CreatePrivateConversation(ctx *gin.Context, userId int) int {
 	if err != nil {
 		panic("创建会话时出现未知错误")
 	}
-
-	err = chatService.PushConversationIntoSequence(conv.ID, currentUser)
-	if err != nil {
-		panic(err)
-	}
-
-	sequence, err := chatService.GetSequenceItem(int(currentUser.ID))
-	if err != nil {
-		panic(err)
-	}
-
-	sequences := make([]socket.UserConversationSequence, 1)
-	sequences[0] = socket.UserConversationSequence{
-		UserId:   utils.ConvertNumberToIntPtr(currentUser.ID),
-		Sequence: &sequence,
-	}
-	rpcClient.ChatSocketClient.PostUserSequence(sequences)
 
 	return int(conv.ID)
 }

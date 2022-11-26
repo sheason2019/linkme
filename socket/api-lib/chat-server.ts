@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 22:20:5.
+ * 生成时间：2022年11月26日 22:47:17.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -106,8 +106,10 @@ export interface DeleteSequenceItemRequest {
 export interface UnimpledChatRpcController {
   // 获取消息列表信息
   GetSequenceItem(): Promise<SequenceItem[]> | SequenceItem[];
-  // 添加消息列表中的项
-  PostSequenceItem(payload: PostSequenceItemRequest): Promise<void> | void;
+  // 添加消息列表中的项，返回值表示消息列表是否发生改变
+  PostSequenceItem(
+    payload: PostSequenceItemRequest
+  ): Promise<boolean> | boolean;
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(
     payload: GetUserEnterConversationLimitRequest

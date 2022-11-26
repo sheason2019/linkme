@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月26日 22:17:17.
+* 生成时间：2022年11月26日 22:38:57.
  */
 package chat
 
@@ -137,9 +137,9 @@ func (definition ChatRpcClient) GetSequenceItem() (result []SequenceItem) {
 	return
 }
 
-func (definition ChatRpcClient) PostSequenceItem(userId int, convId int) {
+func (definition ChatRpcClient) PostSequenceItem(userId int, convId int) (result bool) {
 	client := definition.GetRequestClient()
-	resp, err := client.R().SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).Post(definition.HOST + "/ChatRpc.SequenceItem")
+	resp, err := client.R().SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).SetResult(&result).Post(definition.HOST + "/ChatRpc.SequenceItem")
 	if err != nil {
 		panic(err)
 	}

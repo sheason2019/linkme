@@ -8,7 +8,7 @@ import (
 	chatService "github.com/sheason2019/linkme/services/chat"
 )
 
-func (chatRpcImpl) PostSequenceItem(ctx *gin.Context, userId, convId int) {
+func (chatRpcImpl) PostSequenceItem(ctx *gin.Context, userId, convId int) bool {
 	user, err := accountService.FindUserByUserId(userId)
 	if err != nil {
 		panic(err)
@@ -18,7 +18,9 @@ func (chatRpcImpl) PostSequenceItem(ctx *gin.Context, userId, convId int) {
 		panic("指定的用户不存在")
 	}
 
-	chatService.PushConversationIntoSequence(uint(convId), user)
+	chatService.PushConversationIntoSequence(uint(convId), user, false)
+
+	return true
 }
 
 func attachPostSequenceItem(r *gin.Engine) {

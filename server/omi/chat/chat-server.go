@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月26日 22:17:17.
+* 生成时间：2022年11月26日 22:38:57.
  */
 package chat
 
@@ -48,8 +48,8 @@ var ChatDefinition = &typeChatDefinition{
 type ChatRpc interface {
 	// 获取消息列表信息
 	GetSequenceItem(ctx *gin.Context) []SequenceItem
-	// 添加消息列表中的项
-	PostSequenceItem(ctx *gin.Context, userId int, convId int)
+	// 添加消息列表中的项，返回值表示消息列表是否发生改变
+	PostSequenceItem(ctx *gin.Context, userId int, convId int) bool
 	// 获取用户进入会话的权限
 	GetUserEnterConversationLimit(ctx *gin.Context, userId int, convId int) bool
 	// 用户发送消息

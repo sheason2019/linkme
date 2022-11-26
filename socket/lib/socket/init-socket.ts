@@ -69,7 +69,10 @@ const initSocket = (
     }
 
     // 将会话加入用户的消息列表
-    const [err2] = await client.PostSequenceItem(user.UserId, convId);
+    const [err2, hasChange] = await client.PostSequenceItem(
+      user.UserId,
+      convId
+    );
     if (err2) {
       socket.emit("error", err2.message);
       console.error(err);
@@ -79,7 +82,9 @@ const initSocket = (
     // 将该Socket加入指定的Room
     socket.join("conv::" + convId);
     socket.emit("enterConversation", convId);
-    socket.emit("syncSequenceItem");
+    if (hasChange) {
+      socket.emit("syncSequenceItem");
+    }
     SocketConvMap.set(socket.id, convId);
   });
   socket.on("postMessage", async (content, convId, mark) => {
