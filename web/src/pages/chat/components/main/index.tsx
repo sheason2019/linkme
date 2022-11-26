@@ -45,7 +45,7 @@ const Mobile = () => {
       </Stack>
       <Dialog
         fullScreen
-        open={!!chat.currentConv}
+        open={!!chat.currentConv && chat.currentConv.Id === chat.socketConvId}
         TransitionComponent={Transition}
         sx={{
           height: "100%",
