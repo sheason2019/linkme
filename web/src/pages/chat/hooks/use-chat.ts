@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 import {
   Conversation,
@@ -14,7 +13,14 @@ export interface ViewMessage extends Message {
   Mark?: string;
 }
 
+export enum OnlineStatus {
+  Offline = "离线",
+  Login = "登录中",
+  Online = "在线",
+}
+
 interface IChatState {
+  online: OnlineStatus;
   currentConv: Conversation | undefined;
   socketConvId: number | undefined;
   currentMemberId?: number;
@@ -28,6 +34,7 @@ interface IChatState {
 const chatState = atom<IChatState>({
   key: "chat/common",
   default: {
+    online: OnlineStatus.Offline,
     currentConv: undefined,
     socketConvId: undefined,
     loadingSequence: false,
@@ -85,10 +92,14 @@ const useChat = () => {
       hasMoreMessage: false,
     }));
   };
+  const handleSetOnline = (online: OnlineStatus) => {
+    setChat((prev) => ({ ...prev, online }));
+  };
 
   return {
     chat,
     setChat,
+    handleSetOnline,
     handleSetSequence,
     handleSetLoadingSequence,
     handleSetConversation,

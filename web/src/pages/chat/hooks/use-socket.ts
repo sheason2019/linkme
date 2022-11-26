@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import useChat, { ViewMessage } from "./use-chat";
+import useChat, { OnlineStatus, ViewMessage } from "./use-chat";
 import {
   ServerToClientEvents,
   ClientToServerEvents,
@@ -24,17 +24,18 @@ const useSocket = () => {
   const { userInfo } = useUserInfo();
   const {
     chat,
-    handleSetSequence,
-    handleSetLoadingSequence,
     setChat,
+    handleSetOnline,
+    handleSetSequence,
     handleSetConversation,
+    handleSetLoadingSequence,
     handleCloseCurrentConversation,
   } = useChat();
   const { handler, strHandler } = useErrorHandler();
   const {
-    handleUpdateMessage,
     handleGetMessages,
     handleClearMessages,
+    handleUpdateMessage,
     handleClearMarkMessage,
   } = useMessageUpdater();
   const { handleOpen } = useKickoutDialog();
@@ -51,6 +52,7 @@ const useSocket = () => {
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
     // 连接到Socket以后进行登录
     socket.on("connect", () => {
+      handleSetOnline(OnlineStatus.Login);
       const jwt = JwtProxy.getJWT();
       // 如果用户登录信息不存在，直接关闭Socket连接
       if (!jwt) {
@@ -61,11 +63,16 @@ const useSocket = () => {
       // 登录
       socket.emit("login", jwt);
     });
+    // 若连接断开，
+    socket.on("disconnect", () => {
+      handleSetOnline(OnlineStatus.Offline);
+    });
     // 完成登录后，执行下列初始化行为
     socket.on("login", (success) => {
       if (success) {
         handleSetLoadingSequence(true);
         socket.emit("sequenceItem");
+        handleSetOnline(OnlineStatus.Online);
       } else {
         strHandler("登录失败");
         socket.close();
