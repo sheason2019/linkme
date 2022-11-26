@@ -43,6 +43,7 @@ func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao
 		removedMessage := "您已被移出群聊"
 		item.UnreadCount = utils.ConvertNumberToIntPtr(1)
 		item.LastMessage = &removedMessage
+		return &item, nil
 	}
 
 	// 拉取未读信息数量
