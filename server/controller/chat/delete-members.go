@@ -35,6 +35,10 @@ func (chatImpl) DeleteMembers(ctx *gin.Context, membersId []int) {
 	}
 
 	for i, member := range members {
+		// 判断会话类型，私聊是不可以移除成员的
+		if member.Conversation.Type != chatDao.ConversationType_Group {
+			panic("仅群组可以移除成员")
+		}
 		if member.Conversation.OwnerId != currentUser.ID {
 			panic("没有权限执行此操作")
 		}
