@@ -18,7 +18,7 @@ func (chatRpcImpl) PostSequenceItem(ctx *gin.Context, userId, convId int) bool {
 		panic("指定的用户不存在")
 	}
 
-	chatService.PushConversationIntoSequence(uint(convId), user, false)
+	chatService.PushConversationIntoSequence(uint(convId), user.ID, false)
 
 	return true
 }

@@ -38,6 +38,7 @@ const useSocket = () => {
     handleUpdateMessage,
     handleClearMarkMessage,
   } = useMessageUpdater();
+
   const { handleOpen } = useKickoutDialog();
 
   // 这里使用chatRef是因为React的重渲染会导致socket定义的事件无法获取到最新上下文中的chat
@@ -99,7 +100,10 @@ const useSocket = () => {
     socket.on("messages", (convId, messages, hasMore) => {
       const chat = chatRef.current;
       if (convId === chat.currentConv?.Id) {
-        handleUpdateMessage(messages);
+        const { invited } = handleUpdateMessage(messages);
+        if (invited) {
+          handleGetConversationById(convId);
+        }
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
         socket.emit("checkedMessage", convId);
         if (hasMore === true || hasMore === false) {

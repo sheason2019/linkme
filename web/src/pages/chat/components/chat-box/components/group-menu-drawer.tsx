@@ -52,7 +52,7 @@ const GroupMenuDrawer = () => {
 
   return (
     <Drawer
-      sx={{ zIndex: 10001 }}
+      sx={{ zIndex: 1001 }}
       anchor="right"
       open={drawer.open}
       onClose={handleCloseDrawer}

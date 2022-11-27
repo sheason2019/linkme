@@ -37,7 +37,7 @@ const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
         : normalList.push(member);
     });
 
-    return [...ownerList, ...normalList];
+    return [...ownerList, ...normalList].filter((member) => !member.Removed);
   }, [chat.currentConv?.Members]);
 
   const [dialog, setDialog] = useState<IDeleteDialog>({

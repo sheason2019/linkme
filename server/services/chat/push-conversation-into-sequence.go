@@ -4,18 +4,17 @@ import (
 	"encoding/json"
 
 	"github.com/sheason2019/linkme/dao/chatDao"
-	"github.com/sheason2019/linkme/dao/userDao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/utils"
 )
 
 // 将会话写入用户的消息列表
 // setTop表示当用户列表中已经存在会话信息时，是否需要将指定的会话信息置顶
-func PushConversationIntoSequence(convId uint, user *userDao.UserDao, setTop bool) error {
+func PushConversationIntoSequence(convId uint, userId uint, setTop bool) error {
 	conn := db.GetConn()
 
 	sequenceDao := chatDao.SequenceDao{
-		UserId: user.ID,
+		UserId: userId,
 	}
 
 	err := conn.Where(&sequenceDao).Limit(1).Find(&sequenceDao).Error

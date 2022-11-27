@@ -1,8 +1,6 @@
 package chatController
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
@@ -14,7 +12,6 @@ import (
 
 // 删除会话成员
 func (chatImpl) DeleteMembers(ctx *gin.Context, membersId []int) {
-	fmt.Println(membersId)
 	if len(membersId) == 0 {
 		return
 	}
@@ -39,8 +36,13 @@ func (chatImpl) DeleteMembers(ctx *gin.Context, membersId []int) {
 		if member.Conversation.Type != chatDao.ConversationType_Group {
 			panic("仅群组可以移除成员")
 		}
+		// 只有群主可以执行移除操作
 		if member.Conversation.OwnerId != currentUser.ID {
 			panic("没有权限执行此操作")
+		}
+		// 不可以将群主移出群聊
+		if member.UserId == member.Conversation.OwnerId {
+			panic("群主不可以被移出群聊")
 		}
 		members[i].Removed = true
 	}

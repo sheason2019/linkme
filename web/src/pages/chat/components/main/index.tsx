@@ -51,7 +51,7 @@ const Mobile = () => {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          zIndex: 10000,
+          zIndex: 1000,
         }}
       >
         <ChatBox />

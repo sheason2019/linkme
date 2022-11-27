@@ -23,7 +23,9 @@ const GroupInviteMessage: FC<IMessage> = ({ message }) => {
     <Typography variant="body2" sx={{ textAlign: "center", color: "gray" }}>
       <UsernameSpan>{invitorName}</UsernameSpan>
       <span>邀请了</span>
-      <UsernameSpan>{invitedName}</UsernameSpan>
+      {invitedName.map((name, index) => (
+        <UsernameSpan key={index}>{name}</UsernameSpan>
+      ))}
       <span>加入群聊</span>
     </Typography>
   );

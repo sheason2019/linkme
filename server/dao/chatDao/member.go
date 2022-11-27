@@ -32,6 +32,7 @@ func (model MemberDao) ToIDL() chat.MessageMember {
 	member.UserId = utils.ConvertNumberToIntPtr(model.UserId)
 	member.AvatarUrl = model.User.Avatar
 	member.ConversationId = utils.ConvertNumberToIntPtr(model.ConversationId)
+	member.Removed = &model.Removed
 
 	if model.UserId == model.Conversation.OwnerId {
 		member.Type = &MemberType_Owner

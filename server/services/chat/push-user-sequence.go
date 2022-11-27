@@ -27,7 +27,7 @@ func PushUserSequence(reciverMembers []chatDao.MemberDao, convId uint) error {
 		wg.Add(1)
 		reciver := reciverMembers[index]
 		go func() {
-			PushConversationIntoSequence(convId, &reciver.User, true)
+			PushConversationIntoSequence(convId, reciver.UserId, true)
 			convs, err := GetConversationSequence(reciver.UserId)
 			if err != nil {
 				panic(err)

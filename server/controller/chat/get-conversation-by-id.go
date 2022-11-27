@@ -18,7 +18,19 @@ func (chatImpl) GetConversationById(ctx *gin.Context, convId int) chat.Conversat
 	}
 
 	// 将会话信息转换为IDL格式返回给用户
-	return convDao.ToIDL(currentUser.ID)
+	conv := convDao.ToIDL(currentUser.ID)
+
+	// 获取会话信息需要根据用户身份来实现不同的信息可见度
+	member, err := chatService.FindMember(convId, int(currentUser.ID))
+	if err != nil {
+		panic(err)
+	}
+	// 若用户不是群组内的成员，则不返回群组内的成员信息
+	if member == nil {
+		conv.Members = nil
+	}
+
+	return conv
 }
 
 func attachGetConversationById(r *gin.Engine) {

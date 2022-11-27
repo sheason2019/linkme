@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月26日 22:38:57.
+* 生成时间：2022年11月27日 16:42:3.
  */
 package chat
 
@@ -39,6 +39,7 @@ type MessageMember struct {
 	Type           *string
 	Name           *string
 	AvatarUrl      *string
+	Removed        *bool
 }
 type MessageResponse struct {
 	Messages *[]Message
@@ -71,6 +72,10 @@ type DeleteMembersRequest struct {
 }
 type DeleteSequenceItemRequest struct {
 	ConvId int `form:"convId"`
+}
+type PutMembersRequest struct {
+	ConvId  int   `json:"convId"`
+	UsersId []int `json:"usersId"`
 }
 
 type PostSequenceItemRequest struct {

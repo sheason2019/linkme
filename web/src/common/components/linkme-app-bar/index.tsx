@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { Button, IconButton, Toolbar, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useMemo } from "react";
@@ -38,7 +31,7 @@ const LinkmeAppBar = () => {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{ zIndex: 999 }}>
         <Toolbar sx={{ position: "relative" }}>
           <IconButton
             size="large"

@@ -44,6 +44,8 @@ struct MessageMember {
 
   string Name;
   string AvatarUrl;
+
+  boolean Removed;
 }
 
 struct MessageResponse {
@@ -71,6 +73,8 @@ service Chat {
   void DeleteMembers(repeated int membersId);
   // 移除消息列表中的项
   void DeleteSequenceItem(int convId);
+  // 为群组邀请新成员
+  void PutMembers(int convId, repeated int usersId);
 }
 
 service ChatRpc {

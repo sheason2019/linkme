@@ -47,7 +47,7 @@ const RemoveMemberDialog: FC<IRemoveMemberDialog> = ({
   return (
     <Dialog
       open={open}
-      sx={{ zIndex: 10020 }}
+      sx={{ zIndex: 1020 }}
       maxWidth="xs"
       fullWidth
       onClose={onClose}
