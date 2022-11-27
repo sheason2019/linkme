@@ -32,6 +32,22 @@ const useRegist = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleCheckRepeatUsername = async () => {
+    if (form.username.length === 0) return;
+
+    const client = getAccountClient();
+
+    const [err, res] = await client.GetUsernameExist(form.username);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    if (res) {
+      setErr((prev) => ({ ...prev, username: "用户名已被注册" }));
+    }
+  };
+
   const handleSubmit = async () => {
     const validate = validateRegist(form);
     if (Object.keys(validate).length !== 0) {
@@ -64,6 +80,7 @@ const useRegist = () => {
     setErr,
     handleSubmit,
     handleChange,
+    handleCheckRepeatUsername,
     loadingCryptoInfo,
     loading,
   };

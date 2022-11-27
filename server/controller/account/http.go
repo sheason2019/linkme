@@ -19,4 +19,6 @@ func BindAccountController(r *gin.Engine) {
 
 	attachPutAvatar(r)
 	attachPutSignature(r)
+
+	attachGetUsernameExist(r)
 }
