@@ -1,4 +1,5 @@
 import {
+  ConversationUpdateRequest,
   KickoutMemberRequest,
   PostMessagesRequest,
   PostUserSequenceRequest,
@@ -9,6 +10,12 @@ import { UserSocketsMap } from "../socket";
 import { SocketConvMap } from "../socket/socket-conv-map";
 
 class ChatSocketController implements UnimpledChatSocketController {
+  ConversationUpdate({
+    convId,
+  }: ConversationUpdateRequest): void | Promise<void> {
+    io.to("conv::" + convId).emit("syncSequenceItem");
+    io.to("conv::" + convId).emit("syncConversation");
+  }
   KickoutMember({ members }: KickoutMemberRequest): void | Promise<void> {
     // 定义下面两个Map把逻辑的时间复杂度控制在O(n)
 

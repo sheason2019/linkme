@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月27日 17:22:28.
+* 生成时间：2022年11月28日 22:55:51.
  */
 package chat
 
@@ -113,6 +113,18 @@ func (definition ChatClient) DeleteSequenceItem(convId int) {
 func (definition ChatClient) PutMembers(convId int, usersId []int) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetBody(&PutMembersRequest{ConvId: convId, UsersId: usersId}).SetBody(&PutMembersRequest{ConvId: convId, UsersId: usersId}).Put(definition.HOST + "/Chat.Members")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) PutMemberNickname(convId int, nickName string) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PutMemberNicknameRequest{ConvId: convId, NickName: nickName}).SetBody(&PutMemberNicknameRequest{ConvId: convId, NickName: nickName}).Put(definition.HOST + "/Chat.MemberNickname")
 	if err != nil {
 		panic(err)
 	}

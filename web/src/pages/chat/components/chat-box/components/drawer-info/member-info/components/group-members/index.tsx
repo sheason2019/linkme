@@ -67,7 +67,7 @@ const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
             </ListItemAvatar>
             <ListItemText>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography>{member.Name}</Typography>
+                <Typography>{member.Nickname ?? member.Username}</Typography>
                 {member.Type === "owner" && (
                   <Chip label="群主" size="small" color="primary" />
                 )}

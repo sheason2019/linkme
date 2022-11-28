@@ -18,4 +18,5 @@ func BindChatController(r *gin.Engine) {
 	attachDeleteMembers(r)
 	attachPutMembers(r)
 	attachDeleteSequenceItem(r)
+	attachPutMemberNickname(r)
 }

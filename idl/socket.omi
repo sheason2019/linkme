@@ -10,4 +10,6 @@ service ChatSocket {
   void PostMessages(int convId, repeated Message messages);
   // 删除成员
   void KickoutMember(repeated MessageMember members);
+  // 会话信息发生了变化，让正在会话中的成员重新同步会话信息
+  void ConversationUpdate(int convId);
 }

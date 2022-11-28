@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 22:47:16.
+ * 生成时间：2022年11月28日 22:20:51.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -41,6 +41,7 @@ export interface MessageMember {
   Type: string;
   Name: string;
   AvatarUrl: string;
+  Removed: boolean;
 }
 export interface MessageResponse {
   Messages: Message[];
@@ -92,6 +93,18 @@ export class ChatClient extends OmiClientBase {
     const url = "Chat.SequenceItem";
     const method = "Delete";
     return this.request<void>(url, method, { convId });
+  }
+  // 为群组邀请新成员
+  PutMembers(convId: number, usersId: number[]) {
+    const url = "Chat.Members";
+    const method = "Put";
+    return this.request<void>(url, method, { convId, usersId });
+  }
+  // 修改用户在群组中的昵称
+  PutMemberNickname(convId: number, nickName: string) {
+    const url = "Chat.MemberNickname";
+    const method = "Put";
+    return this.request<void>(url, method, { convId, nickName });
   }
 }
 export class ChatRpcClient extends OmiClientBase {

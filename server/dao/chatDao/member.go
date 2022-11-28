@@ -20,6 +20,8 @@ type MemberDao struct {
 	UserId uint
 	User   userDao.UserDao `gorm:"foreignKey:UserId"`
 
+	NickName *string
+
 	// 标识该用户是否已被移出群聊
 	Removed bool
 }
@@ -27,7 +29,8 @@ type MemberDao struct {
 func (model MemberDao) ToIDL() chat.MessageMember {
 	name := model.User.Username
 	member := chat.MessageMember{}
-	member.Name = &name
+	member.Username = &name
+	member.Nickname = model.NickName
 	member.MemberId = utils.ConvertNumberToIntPtr(model.ID)
 	member.UserId = utils.ConvertNumberToIntPtr(model.UserId)
 	member.AvatarUrl = model.User.Avatar

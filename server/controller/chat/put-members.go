@@ -29,6 +29,10 @@ func (chatImpl) PutMembers(ctx *gin.Context, convId int, usersId []int) {
 		panic(err)
 	}
 
+	if len(effectedMembers) == 0 {
+		panic("当前邀请的用户数量为0")
+	}
+
 	// 获取操作人的成员信息
 	member, err := chatService.FindMember(convId, int(currentUser.ID))
 	if err != nil {
@@ -54,6 +58,9 @@ func (chatImpl) PutMembers(ctx *gin.Context, convId int, usersId []int) {
 	if err != nil {
 		panic(err)
 	}
+
+	// 向Socket发出请求，让指定会话中的成员重新获取会话信息
+	rpcClient.ChatSocketClient.ConversationUpdate(convId)
 }
 
 func attachPutMembers(r *gin.Engine) {

@@ -36,15 +36,22 @@ struct Message {
 }
 
 struct MessageMember {
+  // 成员ID和群昵称
   int MemberId;
+  string Nickname;
+
+  // 成员相关的用户信息
   int UserId;
+  string Username;
+
+  // 成员所在的会话
   int ConversationId;
 
+  // 成员类型和头像SourceHash
   string Type;
-
-  string Name;
   string AvatarUrl;
 
+  // 成员是否被移出群聊
   boolean Removed;
 }
 
@@ -75,6 +82,8 @@ service Chat {
   void DeleteSequenceItem(int convId);
   // 为群组邀请新成员
   void PutMembers(int convId, repeated int usersId);
+  // 修改用户在群组中的昵称
+  void PutMemberNickname(int convId, string nickName);
 }
 
 service ChatRpc {

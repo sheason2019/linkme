@@ -59,7 +59,7 @@ const RemoveMemberDialog: FC<IRemoveMemberDialog> = ({
           <ListItemAvatar>
             <LinkmeAvatar sourceHash={member?.AvatarUrl} />
           </ListItemAvatar>
-          <ListItemText>{member?.Name}</ListItemText>
+          <ListItemText>{member?.Nickname ?? member?.Username}</ListItemText>
         </ListItem>
       </DialogContent>
       <DialogActions>

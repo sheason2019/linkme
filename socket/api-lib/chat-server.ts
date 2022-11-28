@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月26日 22:47:17.
+ * 生成时间：2022年11月28日 22:20:52.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -37,6 +37,7 @@ export interface MessageMember {
   Type: string;
   Name: string;
   AvatarUrl: string;
+  Removed: boolean;
 }
 export interface MessageResponse {
   Messages: Message[];
@@ -69,6 +70,10 @@ export interface UnimpledChatController {
   DeleteMembers(payload: DeleteMembersRequest): Promise<void> | void;
   // 移除消息列表中的项
   DeleteSequenceItem(payload: DeleteSequenceItemRequest): Promise<void> | void;
+  // 为群组邀请新成员
+  PutMembers(payload: PutMembersRequest): Promise<void> | void;
+  // 修改用户在群组中的昵称
+  PutMemberNickname(payload: PutMemberNicknameRequest): Promise<void> | void;
 }
 export const ChatControllerDefinition = {
   CREATE_PRIVATE_CONVERSATION_PATH: "Chat.CreatePrivateConversation",
@@ -78,6 +83,8 @@ export const ChatControllerDefinition = {
   PUT_GROUP_NAME_PATH: "Chat.GroupName",
   DELETE_MEMBERS_PATH: "Chat.Members",
   DELETE_SEQUENCE_ITEM_PATH: "Chat.SequenceItem",
+  PUT_MEMBERS_PATH: "Chat.Members",
+  PUT_MEMBER_NICKNAME_PATH: "Chat.MemberNickname",
 } as const;
 export interface CreatePrivateConversationRequest {
   userId: number;
@@ -102,6 +109,14 @@ export interface DeleteMembersRequest {
 }
 export interface DeleteSequenceItemRequest {
   convId: number;
+}
+export interface PutMembersRequest {
+  convId: number;
+  usersId: number[];
+}
+export interface PutMemberNicknameRequest {
+  convId: number;
+  nickName: string;
 }
 export interface UnimpledChatRpcController {
   // 获取消息列表信息

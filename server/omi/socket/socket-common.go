@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月27日 17:22:28.
+* 生成时间：2022年11月28日 22:55:51.
  */
 package socket
 
@@ -19,4 +19,7 @@ type PostMessagesRequest struct {
 }
 type KickoutMemberRequest struct {
 	Members []chat.MessageMember `json:"members"`
+}
+type ConversationUpdateRequest struct {
+	ConvId int `json:"convId"`
 }

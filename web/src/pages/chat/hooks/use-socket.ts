@@ -99,11 +99,10 @@ const useSocket = () => {
     });
     socket.on("messages", (convId, messages, hasMore) => {
       const chat = chatRef.current;
+
       if (convId === chat.currentConv?.Id) {
-        const { invited } = handleUpdateMessage(messages);
-        if (invited) {
-          handleGetConversationById(convId);
-        }
+        handleUpdateMessage(messages);
+
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
         socket.emit("checkedMessage", convId);
         if (hasMore === true || hasMore === false) {
@@ -126,6 +125,11 @@ const useSocket = () => {
     });
     socket.on("leaveConversation", () => {
       setChat((prev) => ({ ...prev, socketConvId: undefined }));
+    });
+    socket.on("syncConversation", () => {
+      const chat = chatRef.current;
+      console.log(chat);
+      chat.currentConv && handleGetConversationById(chat.currentConv.Id);
     });
 
     socket.connect();

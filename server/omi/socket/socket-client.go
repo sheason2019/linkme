@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月27日 17:22:28.
+* 生成时间：2022年11月28日 22:55:51.
  */
 package socket
 
@@ -51,6 +51,18 @@ func (definition ChatSocketClient) PostMessages(convId int, messages []chat.Mess
 func (definition ChatSocketClient) KickoutMember(members []chat.MessageMember) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetBody(&KickoutMemberRequest{Members: members}).Post(definition.HOST + "/ChatSocket.KickoutMember")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatSocketClient) ConversationUpdate(convId int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&ConversationUpdateRequest{ConvId: convId}).Post(definition.HOST + "/ChatSocket.ConversationUpdate")
 	if err != nil {
 		panic(err)
 	}

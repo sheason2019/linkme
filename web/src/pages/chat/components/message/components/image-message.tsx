@@ -50,7 +50,7 @@ const ImageMessage: FC<IMessage> = ({ message }) => {
         <Stack alignItems={isSelfMsg ? "end" : "start"} sx={{ mr: 1, ml: 0.5 }}>
           {isGroup && (
             <Typography variant="body2">
-              {chat.memberMap.get(message.MemberId)?.Name}
+              {member?.Nickname ?? member?.Username}
             </Typography>
           )}
           <Stack direction={isSelfMsg ? "row" : "row-reverse"}>

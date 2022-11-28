@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月27日 17:11:51.
+ * 生成时间：2022年11月28日 22:56:17.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -27,5 +27,11 @@ export class ChatSocketClient extends OmiClientBase {
     const url = "ChatSocket.KickoutMember";
     const method = "Post";
     return this.request<void>(url, method, { members });
+  }
+  // 会话信息发生了变化，让正在会话中的成员重新同步会话信息
+  ConversationUpdate(convId: number) {
+    const url = "ChatSocket.ConversationUpdate";
+    const method = "Post";
+    return this.request<void>(url, method, { convId });
   }
 }

@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月27日 17:22:28.
+* 生成时间：2022年11月28日 22:55:51.
  */
 package chat
 
@@ -33,13 +33,19 @@ type Message struct {
 	CurrentCheckedCount *int
 }
 type MessageMember struct {
-	MemberId       *int
-	UserId         *int
+	// 成员ID和群昵称
+	MemberId *int
+	Nickname *string
+	// 成员相关的用户信息
+	UserId   *int
+	Username *string
+	// 成员所在的会话
 	ConversationId *int
-	Type           *string
-	Name           *string
-	AvatarUrl      *string
-	Removed        *bool
+	// 成员类型和头像SourceHash
+	Type      *string
+	AvatarUrl *string
+	// 成员是否被移出群聊
+	Removed *bool
 }
 type MessageResponse struct {
 	Messages *[]Message
@@ -76,6 +82,10 @@ type DeleteSequenceItemRequest struct {
 type PutMembersRequest struct {
 	ConvId  int   `json:"convId"`
 	UsersId []int `json:"usersId"`
+}
+type PutMemberNicknameRequest struct {
+	ConvId   int    `json:"convId"`
+	NickName string `json:"nickName"`
 }
 
 type PostSequenceItemRequest struct {
