@@ -1,15 +1,23 @@
-import { Stack, Toolbar, Divider, Box, IconButton } from "@mui/material";
+import {
+  Stack,
+  Toolbar,
+  Divider,
+  Box,
+  IconButton,
+  Typography,
+} from "@mui/material";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import GroupIcon from "@mui/icons-material/Group";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+
 import useChat from "../../hooks/use-chat";
 import useEditor from "../../hooks/use-editor";
 import useSocket from "../../hooks/use-socket";
 import Messages from "../messages";
-
-import MenuIcon from "@mui/icons-material/Menu";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import GroupMenuDrawer, {
   useGroupMenuDrawer,
 } from "./components/group-menu-drawer";
-
 import MessageInput from "./components/message-input";
 
 const ChatBox = () => {
@@ -37,7 +45,20 @@ const ChatBox = () => {
           <IconButton sx={{ mr: 1 }} onClick={handleLeaveConversation}>
             <NavigateBeforeIcon />
           </IconButton>
-          <Box sx={{ flex: 1 }}>{chat.currentConv?.Name}</Box>
+          <Stack
+            direction="row"
+            sx={{ flex: 1 }}
+            spacing={1}
+            alignItems="center"
+          >
+            <Typography>{chat.currentConv?.Name}</Typography>
+            {isGroup && (
+              <Typography color="GrayText" fontSize="0.8rem">
+                <GroupIcon sx={{ width: "1rem", height: "1rem" }} />
+                {chat.currentConv?.MemberCount}
+              </Typography>
+            )}
+          </Stack>
           {isGroup && (
             <IconButton onClick={handleOpenDrawer}>
               <MenuIcon />

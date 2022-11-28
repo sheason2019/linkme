@@ -1,3 +1,4 @@
+import { FC, useMemo } from "react";
 import { TabPanel } from "@mui/lab";
 import {
   Box,
@@ -7,12 +8,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { FC, useMemo } from "react";
+import GroupIcon from "@mui/icons-material/Group";
+
 import { Conversation } from "../../../../../api-lib/chat-client";
 import LinkmeAvatar from "../../../linkme-avatar";
 import { SearchTabs } from "../../typings";
 import EmptyResult from "../empty-result";
-import GroupIcon from "@mui/icons-material/Group";
 import useSocket from "../../../../../pages/chat/hooks/use-socket";
 import { useSearchDialog } from "../search-dialog";
 
