@@ -5,6 +5,7 @@ import {
   ListItemText,
   Stack,
   Box,
+  Typography,
 } from "@mui/material";
 import { FC } from "react";
 import { SequenceItem } from "../../../../../../../../socket/api-lib/chat-client";
@@ -47,7 +48,14 @@ const SequenceItemComp: FC<ISequenceItem> = ({ item, openMenu }) => {
             direction="row"
             justifyContent="space-between"
           >
-            <Box sx={{ color: "gray" }}>{item.LastMessage}</Box>
+            <Typography
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              sx={{ color: "gray", width: "100%" }}
+            >
+              {item.LastMessage}
+            </Typography>
             <UnreadNum
               num={
                 chat.currentConv?.Id === item.ConversationId
