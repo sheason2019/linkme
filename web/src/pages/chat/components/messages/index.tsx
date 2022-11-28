@@ -108,15 +108,28 @@ const Messages = () => {
   }, [chat.messages, maxMessageId]);
 
   // 直接用原生方法来Focus指定的DOM，虽然有点Hack，但Ref的实现方式太绕了
-  const handleFocusMessage = (messageId: number) => {
+  const handleFocusMessage = (messageId: number, offset: number = 0) => {
     const domId = `message-${messageId}`;
 
     const el = document.getElementById(domId);
 
     if (!el) return;
 
-    containerRef.current?.scrollTo({ top: el.offsetTop });
+    containerRef.current?.scrollTo({ top: el.offsetTop + offset });
   };
+
+  // 拉取更多信息体验优化，需要停留在当前位置
+  const stayRef = useRef<number | null>(null);
+  const handleClickPullMoreMessage = () => {
+    stayRef.current = chat.messages[0].Id;
+    handlePullMoreMessage();
+  };
+  useEffect(() => {
+    if (stayRef.current) {
+      handleFocusMessage(stayRef.current, -48);
+      stayRef.current = null;
+    }
+  }, [chat.messages]);
 
   return (
     <Stack flex={1} sx={{ overflow: "hidden", position: "relative" }}>
@@ -132,7 +145,7 @@ const Messages = () => {
           <Stack alignItems="center">
             <CustomLink
               sx={{ fontSize: "0.8rem" }}
-              onClick={handlePullMoreMessage}
+              onClick={handleClickPullMoreMessage}
             >
               点击此处加载更多消息
             </CustomLink>
