@@ -25,11 +25,9 @@ const Messages = () => {
     focusBottomRef.current = true;
   }, [chat.currentConv?.Id]);
 
-  useEffect(() => {
-    if (focusBottomRef.current) {
-      handleToBottom(containerRef.current);
-    }
-  }, [chat.messages]);
+  if (focusBottomRef.current) {
+    handleToBottom(containerRef.current);
+  }
 
   // 当页面滚动到最底部时，将focusBottomRef设置为true，否则设置为false
   useEffect(() => {

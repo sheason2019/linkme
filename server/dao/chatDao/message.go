@@ -12,6 +12,11 @@ const MessageType_UserMessage = "user-message"
 // 邀请用户加入群聊
 const MessageType_GroupInvite = "group-invite"
 
+// 图像信息
+const MessageType_Image = "image"
+
+var UserMessageAllowType = []string{MessageType_Image, MessageType_UserMessage}
+
 type MessageDao struct {
 	gorm.Model
 

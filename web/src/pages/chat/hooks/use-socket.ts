@@ -134,7 +134,11 @@ const useSocket = () => {
     socketUserId = userInfo.user?.UserId;
   };
 
-  const handlePostMessage = (content: string, convId: number) => {
+  const handlePostMessage = (
+    content: string,
+    convId: number,
+    type: "user-message" | "image" = "user-message"
+  ) => {
     if (!content) {
       return;
     }
@@ -147,7 +151,7 @@ const useSocket = () => {
     const message: ViewMessage = {
       Content: content,
       Id: 0,
-      Type: "user-message",
+      Type: type,
       TimeStamp: Math.floor(new Date().getTime() / 1000),
       Mark: randomString(64),
 
@@ -160,7 +164,7 @@ const useSocket = () => {
     setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
     // 向Socket发送信息
-    socket.emit("postMessage", message.Content, convId, message.Mark!);
+    socket.emit("postMessage", message.Content, convId, message.Mark!, type);
   };
 
   const handlePullMessage = (convId: number) => {

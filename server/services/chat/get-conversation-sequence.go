@@ -19,7 +19,6 @@ func GetConversationSequence(userId uint) ([]chatDao.ConversationDao, error) {
 		Model(&chatDao.ConversationDao{}).
 		Where("id in ?", convSequence).
 		Preload("Owner").
-		Preload("Messages").
 		Preload("TargetUser_InPrivate").
 		Find(&convDaos).
 		Error

@@ -87,7 +87,7 @@ const initSocket = (
     }
     SocketConvMap.set(socket.id, convId);
   });
-  socket.on("postMessage", async (content, convId, mark) => {
+  socket.on("postMessage", async (content, convId, mark, type) => {
     const user = UserSocketsMap.getUserBySocketId(socket.id);
     if (!user) {
       socket.emit("error", "当前用户尚未登录");
@@ -96,7 +96,7 @@ const initSocket = (
 
     const message: Message = {
       Id: 0,
-      Type: "",
+      Type: type,
       Content: content,
       MemberId: 0,
       TimeStamp: 0,

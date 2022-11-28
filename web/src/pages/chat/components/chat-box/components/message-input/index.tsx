@@ -5,6 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 
 import Editor from "../../../editor";
 import { useCheckMobile } from "../../../../../../common/hooks/use-check-mobile";
+import InputToolbar from "../input-toolbar";
 
 interface IProps {
   onSend: () => any;
@@ -13,12 +14,14 @@ interface IProps {
 const MessageInput: FC<IProps> = ({ onSend }) => {
   const { isMobile } = useCheckMobile();
 
+  // 桌面端
   if (!isMobile) {
     return (
       <Stack
         sx={{ height: isMobile ? 140 : 280 }}
         divider={<Divider flexItem />}
       >
+        <InputToolbar />
         <Editor />
         <Box sx={{ py: 1, px: 2, textAlign: "right" }}>
           <Button onClick={onSend} variant="contained" endIcon={<SendIcon />}>

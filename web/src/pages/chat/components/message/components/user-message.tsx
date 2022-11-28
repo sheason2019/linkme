@@ -1,6 +1,7 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { IMessage } from "..";
+import LinkmeAvatar from "../../../../../common/components/linkme-avatar";
 import useChat from "../../../hooks/use-chat";
 import StatusCircle from "../../status-circle";
 
@@ -10,6 +11,10 @@ const UserMessage: FC<IMessage> = ({ message }) => {
   const isSelfMsg = message.MemberId === chat.currentMemberId;
 
   const isGroup = chat.currentConv?.Type === "group";
+
+  const member = useMemo(() => {
+    return chat.memberMap.get(message.MemberId);
+  }, [chat.currentConv?.Members]);
 
   return (
     <Stack
@@ -46,7 +51,7 @@ const UserMessage: FC<IMessage> = ({ message }) => {
         </Stack>
       </Stack>
       <Box sx={{ alignSelf: "start" }}>
-        <Avatar />
+        <LinkmeAvatar sourceHash={member?.AvatarUrl} />
       </Box>
     </Stack>
   );

@@ -1,6 +1,8 @@
 package chatService
 
 import (
+	"fmt"
+
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/omi/chat"
@@ -13,20 +15,40 @@ func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao
 
 	item.ConversationId = utils.ConvertNumberToIntPtr(conv.ID)
 	// 获取会话中的最后一条信息
-	var lastMessage *chatDao.MessageDao
-	if len(conv.Messages) > 0 {
-		lastMessage = &conv.Messages[len(conv.Messages)-1]
-	} else {
+	lastMessage := &chatDao.MessageDao{}
+
+	var count int64
+	conn.
+		Where("conversation_id = ?", conv.ID).
+		Preload("Member").
+		Preload("Member.User").
+		Order("created_at desc").
+		Limit(1).
+		Find(lastMessage).
+		Count(&count)
+
+	fmt.Println(lastMessage, count)
+	if count == 0 {
 		lastMessage = nil
+	}
+
+	// 发送消息的用户名
+	var senderName string
+	if conv.Type == chatDao.ConversationType_Group && lastMessage != nil {
+		senderName = lastMessage.Member.User.Username + "："
 	}
 
 	item.Name = conv.ToIDL(userId).Name
 	// 设置消息列表中消息相关的数据（最后信息、信息时间等）
 	if lastMessage != nil {
 		if lastMessage.Type == chatDao.MessageType_UserMessage {
-			item.LastMessage = &lastMessage.Content
+			msg := senderName + lastMessage.Content
+			item.LastMessage = &msg
 		} else if lastMessage.Type == chatDao.MessageType_GroupInvite {
 			msg := "会话成员变更"
+			item.LastMessage = &msg
+		} else if lastMessage.Type == chatDao.MessageType_Image {
+			msg := senderName + "[图片]"
 			item.LastMessage = &msg
 		}
 		item.LastUpdateTime = utils.ConvertNumberToIntPtr(lastMessage.CreatedAt.Unix())

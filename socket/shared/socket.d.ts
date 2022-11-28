@@ -16,7 +16,12 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   login: (jwt: string) => void;
   sequenceItem: () => void;
-  postMessage: (content: string, convId: number, mark: string) => void;
+  postMessage: (
+    content: string,
+    convId: number,
+    mark: string,
+    type: string
+  ) => void;
   messages: (convId: number, originMessageId?: number) => void;
   enterConversation: (convId: number) => void;
   checkedMessage: (convId: number) => void;
