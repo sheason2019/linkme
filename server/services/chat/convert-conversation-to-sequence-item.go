@@ -1,8 +1,6 @@
 package chatService
 
 import (
-	"fmt"
-
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/omi/chat"
@@ -27,7 +25,6 @@ func ConvertConversationToSequenceItem(userId uint, conv chatDao.ConversationDao
 		Find(lastMessage).
 		Count(&count)
 
-	fmt.Println(lastMessage, count)
 	if count == 0 {
 		lastMessage = nil
 	}
