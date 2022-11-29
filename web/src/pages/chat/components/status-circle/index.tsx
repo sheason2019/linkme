@@ -22,7 +22,7 @@ const StatusCircle: FC<Props> = (props) => {
     } else {
       postedCircle(ctx, props.target, props.current);
     }
-  }, [props]);
+  }, [props.current, props.target, props.loading]);
 
   const styles = useMemo(() => {
     return props.loading ? "animate-pulse" : "";

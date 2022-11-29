@@ -5,15 +5,19 @@ import {
   Divider,
   Menu,
   MenuItem,
+  Box,
+  Chip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import CreateGroupDialog from "../create-group-dialog";
 import useCreateGroupConversation from "../../hooks/use-create-group-conversation";
+import useChat, { OnlineStatus } from "../../hooks/use-chat";
 
 const ConversationSequenceToolbar = () => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const { chat } = useChat();
 
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -21,10 +25,28 @@ const ConversationSequenceToolbar = () => {
 
   const { handleOpenDialog } = useCreateGroupConversation();
 
+  const chipColor = useMemo(() => {
+    if (chat.online === OnlineStatus.Login) {
+      return "success";
+    }
+    if (chat.online === OnlineStatus.Offline) {
+      return "secondary";
+    }
+    return "primary";
+  }, [chat.online]);
+
   return (
     <>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar sx={{ display: "flex" }}>
         <Typography variant="body2">消息列表</Typography>
+        <Box sx={{ flex: 1, ml: 2 }}>
+          <Chip
+            sx={{ width: "4rem" }}
+            label={chat.online}
+            size="small"
+            color={chipColor}
+          />
+        </Box>
         <IconButton ref={buttonRef} onClick={handleOpen}>
           <AddIcon />
         </IconButton>

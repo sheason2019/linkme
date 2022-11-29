@@ -1,15 +1,23 @@
-import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { Box, Stack, Typography } from "@mui/material";
+import { FC, useMemo } from "react";
+
 import { IMessage } from "..";
+import LinkmeAvatar from "../../../../../common/components/linkme-avatar";
+import { useUserCard } from "../../../../../common/components/user-card";
 import useChat from "../../../hooks/use-chat";
 import StatusCircle from "../../status-circle";
 
 const UserMessage: FC<IMessage> = ({ message }) => {
   const { chat } = useChat();
+  const { handleOpen } = useUserCard();
 
   const isSelfMsg = message.MemberId === chat.currentMemberId;
 
   const isGroup = chat.currentConv?.Type === "group";
+
+  const member = useMemo(() => {
+    return chat.memberMap.get(message.MemberId);
+  }, [chat.currentConv?.Members]);
 
   return (
     <Stack
@@ -20,7 +28,7 @@ const UserMessage: FC<IMessage> = ({ message }) => {
       <Stack alignItems={isSelfMsg ? "end" : "start"} sx={{ mr: 1, ml: 0.5 }}>
         {isGroup && (
           <Typography variant="body2">
-            {chat.memberMap.get(message.MemberId)?.Name}
+            {member?.Nickname ?? member?.Username}
           </Typography>
         )}
         <Stack direction={isSelfMsg ? "row" : "row-reverse"}>
@@ -46,7 +54,12 @@ const UserMessage: FC<IMessage> = ({ message }) => {
         </Stack>
       </Stack>
       <Box sx={{ alignSelf: "start" }}>
-        <Avatar />
+        <LinkmeAvatar
+          onClick={(e) =>
+            handleOpen(e.currentTarget, member!.UserId, member!.Nickname)
+          }
+          sourceHash={member?.AvatarUrl}
+        />
       </Box>
     </Stack>
   );

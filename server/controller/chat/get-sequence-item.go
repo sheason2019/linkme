@@ -8,10 +8,7 @@ import (
 )
 
 func (chatRpcImpl) GetSequenceItem(ctx *gin.Context) []chat.SequenceItem {
-	currentUser := middleware.GetCurrentUser(ctx)
-	if currentUser == nil {
-		panic("当前用户尚未登录")
-	}
+	currentUser := middleware.MustGetCurrentUser(ctx)
 
 	sequence, err := chatService.GetSequenceItem(int(currentUser.ID))
 	if err != nil {

@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月22日 0:28:12.
+ * 生成时间：2022年11月28日 22:20:52.
  */
 // 聊天服务 IDL 定义
 export interface SequenceItem {
@@ -9,13 +9,15 @@ export interface SequenceItem {
   LastMessage: string;
   LastUpdateTime: number;
   UnreadCount: number;
-  AvatarUrl?: string;
+  Avatar?: string;
 }
 export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  MemberCount: number;
   Members: MessageMember[];
+  Avatar?: string;
 }
 export interface Message {
   Id: number;
@@ -31,11 +33,18 @@ export interface Message {
 export interface MessageMember {
   MemberId: number;
   UserId: number;
+  ConversationId: number;
+  Type: string;
   Name: string;
   AvatarUrl: string;
+  Removed: boolean;
 }
 export interface MessageResponse {
   Messages: Message[];
+  HasMore: boolean;
+}
+export interface GetGroupResponse {
+  Groups: Conversation[];
   HasMore: boolean;
 }
 export interface UnimpledChatController {
@@ -51,11 +60,31 @@ export interface UnimpledChatController {
   GetConversationById(
     payload: GetConversationByIdRequest
   ): Promise<Conversation> | Conversation;
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroup(
+    payload: GetGroupRequest
+  ): Promise<GetGroupResponse> | GetGroupResponse;
+  // 设置群组名称
+  PutGroupName(payload: PutGroupNameRequest): Promise<void> | void;
+  // 移除群组中的成员
+  DeleteMembers(payload: DeleteMembersRequest): Promise<void> | void;
+  // 移除消息列表中的项
+  DeleteSequenceItem(payload: DeleteSequenceItemRequest): Promise<void> | void;
+  // 为群组邀请新成员
+  PutMembers(payload: PutMembersRequest): Promise<void> | void;
+  // 修改用户在群组中的昵称
+  PutMemberNickname(payload: PutMemberNicknameRequest): Promise<void> | void;
 }
 export const ChatControllerDefinition = {
   CREATE_PRIVATE_CONVERSATION_PATH: "Chat.CreatePrivateConversation",
   CREATE_GROUP_CONVERSATION_PATH: "Chat.CreateGroupConversation",
   GET_CONVERSATION_BY_ID_PATH: "Chat.ConversationById",
+  GET_GROUP_PATH: "Chat.Group",
+  PUT_GROUP_NAME_PATH: "Chat.GroupName",
+  DELETE_MEMBERS_PATH: "Chat.Members",
+  DELETE_SEQUENCE_ITEM_PATH: "Chat.SequenceItem",
+  PUT_MEMBERS_PATH: "Chat.Members",
+  PUT_MEMBER_NICKNAME_PATH: "Chat.MemberNickname",
 } as const;
 export interface CreatePrivateConversationRequest {
   userId: number;
@@ -67,9 +96,35 @@ export interface CreateGroupConversationRequest {
 export interface GetConversationByIdRequest {
   convId: number;
 }
+export interface GetGroupRequest {
+  searchText: string;
+  offset: number;
+}
+export interface PutGroupNameRequest {
+  groupId: number;
+  name: string;
+}
+export interface DeleteMembersRequest {
+  membersId: number[];
+}
+export interface DeleteSequenceItemRequest {
+  convId: number;
+}
+export interface PutMembersRequest {
+  convId: number;
+  usersId: number[];
+}
+export interface PutMemberNicknameRequest {
+  convId: number;
+  nickName: string;
+}
 export interface UnimpledChatRpcController {
   // 获取消息列表信息
   GetSequenceItem(): Promise<SequenceItem[]> | SequenceItem[];
+  // 添加消息列表中的项，返回值表示消息列表是否发生改变
+  PostSequenceItem(
+    payload: PostSequenceItemRequest
+  ): Promise<boolean> | boolean;
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(
     payload: GetUserEnterConversationLimitRequest
@@ -88,12 +143,17 @@ export interface UnimpledChatRpcController {
 }
 export const ChatRpcControllerDefinition = {
   GET_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
+  POST_SEQUENCE_ITEM_PATH: "ChatRpc.SequenceItem",
   GET_USER_ENTER_CONVERSATION_LIMIT_PATH: "ChatRpc.UserEnterConversationLimit",
   POST_USER_MESSAGE_PATH: "ChatRpc.UserMessage",
   GET_MESSAGES_PATH: "ChatRpc.Messages",
   CHECK_MESSAGE_PATH: "ChatRpc.CheckMessage",
 } as const;
 
+export interface PostSequenceItemRequest {
+  userId: number;
+  convId: number;
+}
 export interface GetUserEnterConversationLimitRequest {
   userId: number;
   convId: number;

@@ -14,7 +14,11 @@ func (chatRpcImpl) GetUserEnterConversationLimit(ctx *gin.Context, userId, convI
 		panic(err)
 	}
 
-	return member != nil
+	if member == nil {
+		return false
+	}
+
+	return !member.Removed
 }
 
 func attachGetUserEnterConversationLimit(r *gin.Engine) {

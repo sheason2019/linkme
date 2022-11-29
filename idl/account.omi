@@ -5,6 +5,7 @@ struct User {
   string Password;
 
   optional string AvatarUrl;
+  optional string Signature;
 }
 
 struct GetCryptoInfoResponse {
@@ -31,4 +32,13 @@ service Account {
   User GetCurrentUser();
   // 根据用户名搜索用户信息，一次最多拉取25条
   GetUsersByUsernameResponse GetUsersByUsername(string username, int offset);
+  // 获取指定的用户信息
+  User GetUserByUserId(int userId);
+  // 检查用户名是否重复
+  boolean GetUsernameExist(string username);
+  // 下面这两接口先这样实现，如果未来用户相关的属性数量上去了，额外抽象出一个Profile结构体来整合这些数据
+  // 设置自己的头像信息，需要使用本地服务器上的文件
+  void PutAvatar(string imageHash);
+  // 设置个性签名
+  void PutSignature(string signature);
 }

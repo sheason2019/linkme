@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import LinkmeAvatar from "../../../common/components/linkme-avatar";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { APP_URLS } from "../../../router";
 import FormContainer from "../common/form-container";
@@ -32,7 +33,7 @@ const CurrentUser = () => {
         <Stack alignItems="center" spacing={2}>
           <Typography variant="h5">当前用户</Typography>
           <Stack alignItems="center" spacing={1}>
-            <Avatar sx={{ width: 88, height: 88 }} />
+            <LinkmeAvatar size={88} sourceHash={userInfo.user?.AvatarUrl} />
             <Box>{user.Username}</Box>
           </Stack>
           <Button variant="contained" color="error" onClick={handleOpen}>

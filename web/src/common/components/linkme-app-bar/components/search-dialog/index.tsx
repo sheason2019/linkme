@@ -1,4 +1,5 @@
 import {
+  Box,
   Dialog,
   DialogContent,
   IconButton,
@@ -9,30 +10,19 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { atom, useRecoilState } from "recoil";
-import { TabContext, TabPanel } from "@mui/lab";
+import { TabContext } from "@mui/lab";
 import { useEffect, useState } from "react";
-import EmptyResult from "../empty-result";
-import _ from "lodash";
-import { User } from "../../../../../api-lib/account-client";
-import { getAccountClient } from "../../../../../api-client";
 import useErrorHandler from "../../../../hooks/use-error-handler";
-import { OmiError } from "@omi-stack/omi-client/dist/typings";
 import UserTabPanel from "../user-tab-panel";
+import LoadingPanel from "../loading-panel";
+import {
+  debouncedFindGroupByName,
+  debouncedFindUserByUsername,
+} from "../../lambda";
+import { IDialogState, SearchTabs, ISearchData } from "../../typings";
 
-export enum SearchTabs {
-  Composite = "综合",
-  User = "用户",
-}
-
-interface IDialogState {
-  open: boolean;
-}
-
-interface ISearchData {
-  searchText: string;
-  users: User[];
-  hasMore: boolean;
-}
+import _ from "lodash";
+import GroupTabPanel from "../group-tab-panel";
 
 const searchDialogState = atom<IDialogState>({
   key: "common/search-dialog",
@@ -41,48 +31,16 @@ const searchDialogState = atom<IDialogState>({
   },
 });
 
-const debouncedFindUserByUsername = _.debounce(
-  async (
-    username: string,
-    offset: number,
-    setData: React.Dispatch<React.SetStateAction<ISearchData>>,
-    handler: (err: OmiError) => void,
-    setLoading: (loading: boolean) => any
-  ) => {
-    if (username.length === 0) return;
-
-    const client = getAccountClient();
-
-    setLoading(true);
-    const [err, res] = await client.GetUsersByUsername(username, offset);
-    setLoading(false);
-
-    if (err) {
-      handler(err);
-      return;
-    }
-    setData((prev) => ({
-      ...prev,
-      users: [...prev.users, ...res.Users],
-      hasMore: res.HasMore,
-    }));
-  },
-  1000,
-  {
-    trailing: true,
-  }
-);
-
 export const useSearchDialog = () => {
-  const [value, setValue] = useState<SearchTabs>(SearchTabs.User);
+  const [tab, setTab] = useState<SearchTabs>(SearchTabs.User);
   const [dialog, setDialog] = useRecoilState(searchDialogState);
   const handleOpen = () => setDialog({ open: true });
   const handleClose = () => setDialog({ open: false });
 
   return {
     dialog,
-    value,
-    setValue,
+    tab,
+    setTab,
     setDialog,
     handleOpen,
     handleClose,
@@ -91,11 +49,12 @@ export const useSearchDialog = () => {
 
 const SearchDialog = () => {
   const { handler } = useErrorHandler();
-  const { dialog, handleClose, value } = useSearchDialog();
+  const { dialog, handleClose, tab, setTab } = useSearchDialog();
 
   const [data, setData] = useState<ISearchData>({
     searchText: "",
     users: [],
+    groups: [],
     hasMore: false,
   });
   const [loading, setLoading] = useState(false);
@@ -104,25 +63,41 @@ const SearchDialog = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     // 设置搜索字符串
-    setData({ searchText: e.target.value, users: [], hasMore: false });
+    setData((prev) => ({
+      ...prev,
+      searchText: e.target.value,
+      hasMore: false,
+    }));
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      debouncedFindUserByUsername(
-        data.searchText,
-        data.users.length,
-        setData,
-        handler,
-        setLoading
-      );
+      setLoading(true);
+      if (tab === SearchTabs.User) {
+        debouncedFindUserByUsername(
+          data.searchText,
+          0,
+          setData,
+          handler,
+          setLoading
+        );
+      }
+      if (tab === SearchTabs.Group) {
+        debouncedFindGroupByName(
+          data.searchText,
+          0,
+          setData,
+          handler,
+          setLoading
+        );
+      }
     };
-    fetchData();
-  }, [data.searchText]);
+    if (data.searchText.length > 0) fetchData();
+  }, [data.searchText, tab]);
 
   return (
     <Dialog open={dialog.open} fullWidth onClose={handleClose}>
-      <TabContext value={value}>
+      <TabContext value={tab}>
         <DialogContent>
           <Stack direction="row" spacing={2}>
             <TextField
@@ -136,11 +111,21 @@ const SearchDialog = () => {
               <CloseIcon />
             </IconButton>
           </Stack>
-          <Tabs value={value}>
+          <Tabs value={tab} onChange={(_, tab) => setTab(tab)}>
             {/* <Tab value={SearchTabs.Composite} label="综合" /> */}
             <Tab value={SearchTabs.User} label="用户" />
+            <Tab value={SearchTabs.Group} label="群组" />
           </Tabs>
-          <UserTabPanel users={data.users} />
+          <Box sx={{ height: 280 }}>
+            {loading ? (
+              <LoadingPanel />
+            ) : (
+              <>
+                <UserTabPanel users={data.users} />
+                <GroupTabPanel groups={data.groups} />
+              </>
+            )}
+          </Box>
         </DialogContent>
       </TabContext>
     </Dialog>

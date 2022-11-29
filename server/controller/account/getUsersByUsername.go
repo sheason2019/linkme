@@ -9,10 +9,8 @@ import (
 
 func (accountImpl) GetUsersByUsername(ctx *gin.Context, username string, offset int) account.GetUsersByUsernameResponse {
 	// 若用户没有登录则不提供用户检索能力
-	currentUser := middleware.GetCurrentUser(ctx)
-	if currentUser == nil {
-		panic("当前用户尚未登录")
-	}
+	middleware.MustGetCurrentUser(ctx)
+
 	// 检索用户
 	usersDao, hasMore, err := accountService.FindUsersByUsername(username, offset)
 	if err != nil {

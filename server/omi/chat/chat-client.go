@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月20日 16:52:23.
+* 生成时间：2022年11月29日 14:42:47.
  */
 package chat
 
@@ -62,6 +62,78 @@ func (definition ChatClient) GetConversationById(convId int) (result Conversatio
 	return
 }
 
+func (definition ChatClient) GetGroup(searchText string, offset int) (result GetGroupResponse) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetQueryParam("searchText", fmt.Sprint(searchText)).SetQueryParam("offset", fmt.Sprint(offset)).SetResult(&result).Get(definition.HOST + "/Chat.Group")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) PutGroupName(groupId int, name string) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PutGroupNameRequest{GroupId: groupId, Name: name}).SetBody(&PutGroupNameRequest{GroupId: groupId, Name: name}).Put(definition.HOST + "/Chat.GroupName")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) DeleteMembers(membersId []int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetQueryParam("membersId", fmt.Sprint(membersId)).Delete(definition.HOST + "/Chat.Members")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) DeleteSequenceItem(convId int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetQueryParam("convId", fmt.Sprint(convId)).Delete(definition.HOST + "/Chat.SequenceItem")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) PutMembers(convId int, usersId []int) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PutMembersRequest{ConvId: convId, UsersId: usersId}).SetBody(&PutMembersRequest{ConvId: convId, UsersId: usersId}).Put(definition.HOST + "/Chat.Members")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatClient) PutMemberNickname(convId int, nickName string) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PutMemberNicknameRequest{ConvId: convId, NickName: nickName}).SetBody(&PutMemberNicknameRequest{ConvId: convId, NickName: nickName}).Put(definition.HOST + "/Chat.MemberNickname")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
 type ChatRpcClient struct {
 	Request *req.Client
 	HOST    string
@@ -80,6 +152,18 @@ func (definition ChatRpcClient) GetRequestClient() *req.Client {
 func (definition ChatRpcClient) GetSequenceItem() (result []SequenceItem) {
 	client := definition.GetRequestClient()
 	resp, err := client.R().SetResult(&result).Get(definition.HOST + "/ChatRpc.SequenceItem")
+	if err != nil {
+		panic(err)
+	}
+	if resp.IsError() {
+		panic("远程调用错误")
+	}
+	return
+}
+
+func (definition ChatRpcClient) PostSequenceItem(userId int, convId int) (result bool) {
+	client := definition.GetRequestClient()
+	resp, err := client.R().SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).SetBody(&PostSequenceItemRequest{UserId: userId, ConvId: convId}).SetResult(&result).Post(definition.HOST + "/ChatRpc.SequenceItem")
 	if err != nil {
 		panic(err)
 	}

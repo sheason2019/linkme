@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月22日 0:28:11.
+ * 生成时间：2022年11月28日 22:20:51.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -13,13 +13,15 @@ export interface SequenceItem {
   LastMessage: string;
   LastUpdateTime: number;
   UnreadCount: number;
-  AvatarUrl?: string;
+  Avatar?: string;
 }
 export interface Conversation {
   Id: number;
   Name: string;
   Type: string;
+  MemberCount: number;
   Members: MessageMember[];
+  Avatar?: string;
 }
 export interface Message {
   Id: number;
@@ -35,11 +37,18 @@ export interface Message {
 export interface MessageMember {
   MemberId: number;
   UserId: number;
+  ConversationId: number;
+  Type: string;
   Name: string;
   AvatarUrl: string;
+  Removed: boolean;
 }
 export interface MessageResponse {
   Messages: Message[];
+  HasMore: boolean;
+}
+export interface GetGroupResponse {
+  Groups: Conversation[];
   HasMore: boolean;
 }
 export class ChatClient extends OmiClientBase {
@@ -61,6 +70,42 @@ export class ChatClient extends OmiClientBase {
     const method = "Get";
     return this.request<Conversation>(url, method, { convId });
   }
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroup(searchText: string, offset: number) {
+    const url = "Chat.Group";
+    const method = "Get";
+    return this.request<GetGroupResponse>(url, method, { searchText, offset });
+  }
+  // 设置群组名称
+  PutGroupName(groupId: number, name: string) {
+    const url = "Chat.GroupName";
+    const method = "Put";
+    return this.request<void>(url, method, { groupId, name });
+  }
+  // 移除群组中的成员
+  DeleteMembers(membersId: number[]) {
+    const url = "Chat.Members";
+    const method = "Delete";
+    return this.request<void>(url, method, { membersId });
+  }
+  // 移除消息列表中的项
+  DeleteSequenceItem(convId: number) {
+    const url = "Chat.SequenceItem";
+    const method = "Delete";
+    return this.request<void>(url, method, { convId });
+  }
+  // 为群组邀请新成员
+  PutMembers(convId: number, usersId: number[]) {
+    const url = "Chat.Members";
+    const method = "Put";
+    return this.request<void>(url, method, { convId, usersId });
+  }
+  // 修改用户在群组中的昵称
+  PutMemberNickname(convId: number, nickName: string) {
+    const url = "Chat.MemberNickname";
+    const method = "Put";
+    return this.request<void>(url, method, { convId, nickName });
+  }
 }
 export class ChatRpcClient extends OmiClientBase {
   // 获取消息列表信息
@@ -68,6 +113,12 @@ export class ChatRpcClient extends OmiClientBase {
     const url = "ChatRpc.SequenceItem";
     const method = "Get";
     return this.request<SequenceItem[]>(url, method, {});
+  }
+  // 添加消息列表中的项，返回值表示消息列表是否发生改变
+  PostSequenceItem(userId: number, convId: number) {
+    const url = "ChatRpc.SequenceItem";
+    const method = "Post";
+    return this.request<boolean>(url, method, { userId, convId });
   }
   // 获取用户进入会话的权限
   GetUserEnterConversationLimit(userId: number, convId: number) {

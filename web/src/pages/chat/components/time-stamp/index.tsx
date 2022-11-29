@@ -1,20 +1,22 @@
 import { FC, useMemo } from "react";
 
 interface Props {
-  timeStamp: number;
+  timeStamp?: number;
 }
 
 const HOUR = 60 * 60;
 
 // 将整型时间戳转换为时间展示的组件
 const TimeStamp: FC<Props> = ({ timeStamp }) => {
+  if (!timeStamp) return null;
+
   const timeStr = useMemo(() => {
     const todayStamp = Math.floor(
       new Date(new Date().setHours(0, 0, 0, 0)).getTime() / 1000
     );
     const yesterdayStamp = todayStamp - 24 * HOUR;
 
-    const thisTimeStamp = timeStamp ?? Math.floor(new Date().getTime() / 1000);
+    const thisTimeStamp = timeStamp;
 
     const time = new Date(thisTimeStamp * 1000);
 

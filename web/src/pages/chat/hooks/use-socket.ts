@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import useChat, { ViewMessage } from "./use-chat";
+import useChat, { OnlineStatus, ViewMessage } from "./use-chat";
 import {
   ServerToClientEvents,
   ClientToServerEvents,
@@ -12,36 +12,48 @@ import { useNavigate } from "react-router-dom";
 import { getChatClient } from "../../../api-client";
 import { APP_URLS } from "../../../router";
 import useMessageUpdater from "./use-message-updater";
+import { useKickoutDialog } from "../components/kickout-dialog";
+import useUserInfo from "../../../common/hooks/use-user-info";
 
 let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
+let socketUserId: number | undefined;
 
 const useSocket = () => {
   const navigate = useNavigate();
 
+  const { userInfo } = useUserInfo();
   const {
     chat,
-    handleSetSequence,
-    handleSetLoadingSequence,
     setChat,
+    handleSetOnline,
+    handleSetSequence,
     handleSetConversation,
+    handleSetLoadingSequence,
+    handleCloseCurrentConversation,
   } = useChat();
   const { handler, strHandler } = useErrorHandler();
   const {
-    handleUpdateMessage,
     handleGetMessages,
     handleClearMessages,
+    handleUpdateMessage,
     handleClearMarkMessage,
   } = useMessageUpdater();
 
+  const { handleOpen } = useKickoutDialog();
+
+  // 这里使用chatRef是因为React的重渲染会导致socket定义的事件无法获取到最新上下文中的chat
   const chatRef = useRef(chat);
   useEffect(() => {
     chatRef.current = chat;
   }, [chat]);
 
   const initSocket = () => {
+    if (!!socketRef) return;
+
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
     // 连接到Socket以后进行登录
     socket.on("connect", () => {
+      handleSetOnline(OnlineStatus.Login);
       const jwt = JwtProxy.getJWT();
       // 如果用户登录信息不存在，直接关闭Socket连接
       if (!jwt) {
@@ -52,11 +64,16 @@ const useSocket = () => {
       // 登录
       socket.emit("login", jwt);
     });
+    // 若连接断开，
+    socket.on("disconnect", () => {
+      handleSetOnline(OnlineStatus.Offline);
+    });
     // 完成登录后，执行下列初始化行为
     socket.on("login", (success) => {
       if (success) {
         handleSetLoadingSequence(true);
         socket.emit("sequenceItem");
+        handleSetOnline(OnlineStatus.Online);
       } else {
         strHandler("登录失败");
         socket.close();
@@ -66,13 +83,14 @@ const useSocket = () => {
       handleSetLoadingSequence(false);
       handleSetSequence(sequence);
     });
+    socket.on("syncSequenceItem", () => {
+      socket.emit("sequenceItem");
+    });
     socket.on("error", (err) => {
       strHandler(err);
     });
     socket.on("postMessage", (msg, convId, mark) => {
       const chat = chatRef.current;
-      // 清除带有标记的Message
-      // 添加返回的Message
       if (convId === chat.currentConv?.Id) {
         handleClearMarkMessage(mark);
         handleUpdateMessage([msg]);
@@ -81,8 +99,10 @@ const useSocket = () => {
     });
     socket.on("messages", (convId, messages, hasMore) => {
       const chat = chatRef.current;
+
       if (convId === chat.currentConv?.Id) {
         handleUpdateMessage(messages);
+
         setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
         socket.emit("checkedMessage", convId);
         if (hasMore === true || hasMore === false) {
@@ -90,13 +110,39 @@ const useSocket = () => {
         }
       }
     });
+    socket.on("kickout", (membersId, convId, isCurrent) => {
+      const chat = chatRef.current;
+
+      if (membersId.indexOf(chat.currentMemberId!) !== -1 || isCurrent) {
+        handleOpen(convId);
+        return;
+      }
+
+      handleGetConversationById(convId);
+    });
+    socket.on("enterConversation", (convId) => {
+      setChat((prev) => ({ ...prev, socketConvId: convId }));
+    });
+    socket.on("leaveConversation", () => {
+      setChat((prev) => ({ ...prev, socketConvId: undefined }));
+    });
+    socket.on("syncConversation", () => {
+      const chat = chatRef.current;
+      console.log(chat);
+      chat.currentConv && handleGetConversationById(chat.currentConv.Id);
+    });
 
     socket.connect();
 
     socketRef = socket;
+    socketUserId = userInfo.user?.UserId;
   };
 
-  const handlePostMessage = (content: string, convId: number) => {
+  const handlePostMessage = (
+    content: string,
+    convId: number,
+    type: "user-message" | "image" = "user-message"
+  ) => {
     if (!content) {
       return;
     }
@@ -109,7 +155,7 @@ const useSocket = () => {
     const message: ViewMessage = {
       Content: content,
       Id: 0,
-      Type: "user-message",
+      Type: type,
       TimeStamp: Math.floor(new Date().getTime() / 1000),
       Mark: randomString(64),
 
@@ -122,7 +168,7 @@ const useSocket = () => {
     setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
 
     // 向Socket发送信息
-    socket.emit("postMessage", message.Content, convId, message.Mark!);
+    socket.emit("postMessage", message.Content, convId, message.Mark!, type);
   };
 
   const handlePullMessage = (convId: number) => {
@@ -134,12 +180,16 @@ const useSocket = () => {
 
   const handleToConversation = async (convId: number) => {
     navigate(APP_URLS.CHAT_URL);
-    const client = getChatClient();
     socketRef?.emit("enterConversation", convId);
     handleClearMessages();
     handlePullMessage(convId);
-    setChat((prev) => ({ ...prev, messages: handleGetMessages() }));
+    setChat((prev) => ({ ...prev, messages: [] }));
 
+    await handleGetConversationById(convId);
+  };
+
+  const handleGetConversationById = async (convId: number) => {
+    const client = getChatClient();
     const [err, res] = await client.GetConversationById(convId);
     if (err) {
       handler(err);
@@ -149,9 +199,49 @@ const useSocket = () => {
     handleSetConversation(res);
   };
 
+  const handleLeaveConversation = () => {
+    socketRef?.emit("leaveConversation");
+    handleCloseCurrentConversation();
+  };
+
+  const handlePullSequence = () => {
+    socketRef?.emit("sequenceItem");
+  };
+
+  const handleDeleteSequence = async (convId: number) => {
+    const client = getChatClient();
+    const [err] = await client.DeleteSequenceItem(convId);
+
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    handlePullSequence();
+  };
+
+  const handleCreatePrivateConversation = async (userId: number) => {
+    const client = getChatClient();
+    const [err, res] = await client.CreatePrivateConversation(userId);
+
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    // 创建私聊后前往指定的会话页面
+    handleToConversation(res);
+  };
+
   useEffect(() => {
-    if (!socketRef) initSocket();
-  }, []);
+    if (!userInfo.user?.UserId) return;
+
+    if (!socketRef) {
+      initSocket();
+    } else if (userInfo.user.UserId !== socketUserId) {
+      initSocket();
+    }
+  }, [userInfo.user?.UserId]);
 
   return {
     socket: socketRef,
@@ -159,6 +249,11 @@ const useSocket = () => {
     handleToConversation,
     handlePullMessage,
     handlePullMoreMessage,
+    handlePullSequence,
+    handleLeaveConversation,
+    handleGetConversationById,
+    handleDeleteSequence,
+    handleCreatePrivateConversation,
   };
 };
 

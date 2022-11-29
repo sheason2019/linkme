@@ -1,6 +1,8 @@
 package chatService
 
 import (
+	"errors"
+
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/omi/chat"
@@ -14,10 +16,22 @@ func CreateUserMessage(message chat.Message, convId uint, member *chatDao.Member
 
 	err := conn.Transaction(func(tx *gorm.DB) error {
 		// 根据参数设置消息的内容
-		daoMessage.Type = chatDao.MessageType_UserMessage
+		daoMessage.Type = *message.Type
 		daoMessage.Content = *message.Content
 		daoMessage.Member = *member
 		daoMessage.ConversationId = convId
+
+		// 验证消息类型是否正确
+		allow := false
+		for _, v := range chatDao.UserMessageAllowType {
+			if v == daoMessage.Type {
+				allow = true
+				break
+			}
+		}
+		if !allow {
+			return errors.New("不被允许的消息类型:" + daoMessage.Type)
+		}
 
 		// 创建消息
 		err := tx.Create(&daoMessage).Error

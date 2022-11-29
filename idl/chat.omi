@@ -6,7 +6,7 @@ struct SequenceItem {
   int LastUpdateTime;
   int UnreadCount;
 
-  optional string AvatarUrl;
+  optional string Avatar;
 }
 
 struct Conversation {
@@ -15,7 +15,10 @@ struct Conversation {
 
   string Type;
 
+  int MemberCount;
   repeated MessageMember Members;
+
+  optional string Avatar;
 }
 
 struct Message {
@@ -33,15 +36,32 @@ struct Message {
 }
 
 struct MessageMember {
+  // 成员ID和群昵称
   int MemberId;
-  int UserId;
+  string Nickname;
 
-  string Name;
+  // 成员相关的用户信息
+  int UserId;
+  string Username;
+
+  // 成员所在的会话
+  int ConversationId;
+
+  // 成员类型和头像SourceHash
+  string Type;
   string AvatarUrl;
+
+  // 成员是否被移出群聊
+  boolean Removed;
 }
 
 struct MessageResponse {
   repeated Message Messages;
+  boolean HasMore;
+}
+
+struct GetGroupResponse {
+  repeated Conversation Groups;
   boolean HasMore;
 }
 
@@ -52,11 +72,25 @@ service Chat {
   int CreateGroupConversation(repeated int userIds, string groupName);
   // 获取会话信息
   Conversation GetConversationById(int convId);
+  // 搜索群组信息，目前只能搜索已加入的群组，在群组可见度功能上线后，这里要同步更改成所有可搜索到的群组
+  GetGroupResponse GetGroup(string searchText, int offset);
+  // 设置群组名称
+  void PutGroupName(int groupId, string name);
+  // 移除群组中的成员
+  void DeleteMembers(repeated int membersId);
+  // 移除消息列表中的项
+  void DeleteSequenceItem(int convId);
+  // 为群组邀请新成员
+  void PutMembers(int convId, repeated int usersId);
+  // 修改用户在群组中的昵称
+  void PutMemberNickname(int convId, string nickName);
 }
 
 service ChatRpc {
   // 获取消息列表信息
   repeated SequenceItem GetSequenceItem();
+  // 添加消息列表中的项，返回值表示消息列表是否发生改变
+  boolean PostSequenceItem(int userId, int convId);
   // 获取用户进入会话的权限
   boolean GetUserEnterConversationLimit(int userId, int convId);
   // 用户发送消息

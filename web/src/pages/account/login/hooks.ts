@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
-import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { APP_URLS } from "../../../router";
@@ -16,12 +15,6 @@ const useLogin = () => {
 
   const { userInfo, setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
-  // 设置标题
-  const { setAppBar } = useAppBar();
-
-  useEffect(() => {
-    setAppBar((prev) => ({ ...prev, title: "用户登录" }));
-  }, []);
 
   // 预登陆逻辑
   useEffect(() => {

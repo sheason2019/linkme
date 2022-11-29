@@ -16,14 +16,18 @@ const GroupInviteMessage: FC<IMessage> = ({ message }) => {
 
   const invited: number[] = JSON.parse(message.Content);
 
-  const invitorName = chat.memberMap.get(message.MemberId)?.Name;
-  const invitedName = invited.map((item) => chat.memberMap.get(item)?.Name);
+  const invitor = chat.memberMap.get(message.MemberId);
+  const invitedMembers = invited.map((item) => chat.memberMap.get(item));
 
   return (
     <Typography variant="body2" sx={{ textAlign: "center", color: "gray" }}>
-      <UsernameSpan>{invitorName}</UsernameSpan>
+      <UsernameSpan>{invitor?.Nickname ?? invitor?.Username}</UsernameSpan>
       <span>邀请了</span>
-      <UsernameSpan>{invitedName}</UsernameSpan>
+      {invitedMembers.map((member, index) => (
+        <UsernameSpan key={index}>
+          {member?.Nickname ?? member?.Username}
+        </UsernameSpan>
+      ))}
       <span>加入群聊</span>
     </Typography>
   );

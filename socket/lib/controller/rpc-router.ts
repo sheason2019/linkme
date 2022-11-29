@@ -10,7 +10,9 @@ const initRpcRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
   const rpcRouter = new Router({
     prefix: "/",
   });
+  // 内部通信鉴权
   rpcRouter.use(rpcGuard);
+
   rpcRouter.post(
     ChatSocketControllerDefinition.POST_USER_SEQUENCE_PATH,
     (ctx, next) => {
@@ -23,6 +25,22 @@ const initRpcRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
     ChatSocketControllerDefinition.POST_MESSAGES_PATH,
     (ctx, next) => {
       chatSocketController.PostMessages(ctx.request.body as any);
+      ctx.status = 200;
+      next();
+    }
+  );
+  rpcRouter.post(
+    ChatSocketControllerDefinition.KICKOUT_MEMBER_PATH,
+    (ctx, next) => {
+      chatSocketController.KickoutMember(ctx.request.body as any);
+      ctx.status = 200;
+      next();
+    }
+  );
+  rpcRouter.post(
+    ChatSocketControllerDefinition.CONVERSATION_UPDATE_PATH,
+    (ctx, next) => {
+      chatSocketController.ConversationUpdate(ctx.request.body as any);
       ctx.status = 200;
       next();
     }

@@ -12,7 +12,8 @@ type UserDao struct {
 	Password string
 	Salt     string
 
-	Avatar *string
+	Avatar    *string
+	Signature *string
 }
 
 func GenerateUserDaoFromIdl(user account.User) UserDao {
@@ -31,6 +32,7 @@ func (model UserDao) ToIdl() account.User {
 	user.Username = &model.Username
 	user.Password = &model.Password
 	user.AvatarUrl = model.Avatar
+	user.Signature = model.Signature
 
 	return user
 }

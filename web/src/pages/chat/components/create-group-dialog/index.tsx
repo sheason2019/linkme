@@ -18,10 +18,10 @@ import _ from "lodash";
 import useErrorHandler from "../../../../common/hooks/use-error-handler";
 import { getAccountClient } from "../../../../api-client";
 import { OmiError } from "@omi-stack/omi-client/dist/typings";
-import UserSelector from "./components/user-selector";
+import UserOption from "./components/user-option";
 import useUserInfo from "../../../../common/hooks/use-user-info";
 
-const handleSearchUser = _.debounce(
+export const handleSearchUser = _.debounce(
   async (
     searchWord: string,
     setOptions: React.Dispatch<React.SetStateAction<User[]>>,
@@ -36,7 +36,7 @@ const handleSearchUser = _.debounce(
 
     setOptions(res.Users);
   },
-  1000,
+  750,
   {
     trailing: true,
   }
@@ -103,7 +103,7 @@ const CreateGroupDialog = () => {
                   options={options}
                   renderOption={(props, option: User) => (
                     <Box component="li" key={option.UserId} {...props}>
-                      <UserSelector user={option} />
+                      <UserOption user={option} />
                     </Box>
                   )}
                   getOptionLabel={(option: User) => option.Username}
@@ -143,7 +143,7 @@ const CreateGroupDialog = () => {
                         }}
                         key={user.UserId}
                       >
-                        <UserSelector
+                        <UserOption
                           onClose={() => handleRemoveGroupMember(user.UserId)}
                           user={user}
                         />

@@ -7,10 +7,18 @@ import { useCheckMobile } from "../../../common/hooks/use-check-mobile";
 import { APP_URLS } from "../../../router";
 import FormContainer from "../common/form-container";
 import useRegist from "./hooks";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const Regist = () => {
-  const { form, err, handleSubmit, handleChange, loading, loadingCryptoInfo } =
-    useRegist();
+  const {
+    form,
+    err,
+    handleSubmit,
+    handleChange,
+    handleCheckRepeatUsername,
+    loading,
+    loadingCryptoInfo,
+  } = useRegist();
 
   const { isMobile } = useCheckMobile();
   const navigate = useNavigate();
@@ -34,6 +42,8 @@ const Regist = () => {
           name="username"
           value={form.username}
           onChange={handleChange}
+          onBlur={handleCheckRepeatUsername}
+          error={!!err.username}
           helperText={<RedColorSpan>{err.username}</RedColorSpan>}
         />
         <TextField

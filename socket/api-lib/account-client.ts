@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月22日 0:28:12.
+ * 生成时间：2022年11月28日 22:20:52.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client/dist/commonjs";
@@ -11,6 +11,7 @@ export interface User {
   Username: string;
   Password: string;
   AvatarUrl?: string;
+  Signature?: string;
 }
 export interface GetCryptoInfoResponse {
   RsaPubKey: string;
@@ -56,5 +57,24 @@ export class AccountClient extends OmiClientBase {
       username,
       offset,
     });
+  }
+  // 检查用户名是否重复
+  GetUsernameExist(username: string) {
+    const url = "Account.UsernameExist";
+    const method = "Get";
+    return this.request<boolean>(url, method, { username });
+  }
+  // 下面这两接口先这样实现，如果未来用户相关的属性数量上去了，额外抽象出一个Profile结构体来整合这些数据
+  // 设置自己的头像信息，需要使用本地服务器上的文件
+  PutAvatar(imageHash: string) {
+    const url = "Account.Avatar";
+    const method = "Put";
+    return this.request<void>(url, method, { imageHash });
+  }
+  // 设置个性签名
+  PutSignature(signature: string) {
+    const url = "Account.Signature";
+    const method = "Put";
+    return this.request<void>(url, method, { signature });
   }
 }

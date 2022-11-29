@@ -20,6 +20,9 @@ type ConversationDao struct {
 
 	Name string
 
+	// 群聊头像
+	Avatar *string
+
 	// 指定会话的所有者，在群聊中，这通常用来指代群主，在私聊中，这用来表示首先创建会话的用户
 	Owner   userDao.UserDao `gorm:"foreignKey:OwnerId"`
 	OwnerId uint
@@ -41,24 +44,25 @@ func (model ConversationDao) ToIDL(currentUserId uint) chat.Conversation {
 	if model.Type == ConversationType_Private {
 		if currentUserId == model.OwnerId {
 			conv.Name = &model.TargetUser_InPrivate.Username
+			conv.Avatar = model.TargetUser_InPrivate.Avatar
 		} else {
 			conv.Name = &model.Owner.Username
+			conv.Avatar = model.Owner.Avatar
 		}
 	} else {
 		conv.Name = &model.Name
+		conv.Avatar = model.Avatar
 	}
 	conv.Type = &model.Type
 
 	members := make([]chat.MessageMember, len(model.Members))
 	for i, v := range model.Members {
-		name := v.User.Username
-		member := chat.MessageMember{}
-		member.Name = &name
-		member.MemberId = utils.ConvertNumberToIntPtr(v.ID)
-		member.UserId = utils.ConvertNumberToIntPtr(v.UserId)
-		members[i] = member
+		v.Conversation = model
+		members[i] = v.ToIDL()
 	}
 	conv.Members = &members
+
+	conv.MemberCount = utils.ConvertNumberToIntPtr(len(model.Members))
 
 	return conv
 }

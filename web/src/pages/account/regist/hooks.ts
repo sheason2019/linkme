@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccountClient } from "../../../api-client";
 import { User } from "../../../api-lib/account-client";
-import { useAppBar } from "../../../common/hooks/use-app-bar";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
 import useUserInfo from "../../../common/hooks/use-user-info";
 import { APP_URLS } from "../../../router";
@@ -16,12 +15,6 @@ const useRegist = () => {
   // 登录注册相关的Hook
   const { setJwt } = useUserInfo();
   const { cryptoInfo, encryptPassword, loadingCryptoInfo } = useCryptoInfo();
-
-  // 修改AppBar标题内容
-  const { setAppBar } = useAppBar();
-  useEffect(() => {
-    setAppBar((prev) => ({ ...prev, title: "用户注册" }));
-  }, []);
 
   // 表单内容
   const [form, setForm] = useState<RegistInfo>({
@@ -37,6 +30,22 @@ const useRegist = () => {
   ) => {
     setErr((prev) => ({ ...prev, [e.target.name]: undefined }));
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCheckRepeatUsername = async () => {
+    if (form.username.length === 0) return;
+
+    const client = getAccountClient();
+
+    const [err, res] = await client.GetUsernameExist(form.username);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    if (res) {
+      setErr((prev) => ({ ...prev, username: "用户名已被注册" }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -71,6 +80,7 @@ const useRegist = () => {
     setErr,
     handleSubmit,
     handleChange,
+    handleCheckRepeatUsername,
     loadingCryptoInfo,
     loading,
   };

@@ -1,20 +1,24 @@
 import { TabPanel } from "@mui/lab";
 import {
-  Avatar,
+  Box,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { FC, useMemo } from "react";
 import { getChatClient } from "../../../../../api-client";
 import { User } from "../../../../../api-lib/account-client";
 import useErrorHandler from "../../../../hooks/use-error-handler";
 import EmptyResult from "../empty-result";
-import { SearchTabs, useSearchDialog } from "../search-dialog";
+import { useSearchDialog } from "../search-dialog";
 import ChatIcon from "@mui/icons-material/Chat";
 import useSocket from "../../../../../pages/chat/hooks/use-socket";
+import LinkmeAvatar from "../../../linkme-avatar";
+import { useCheckMobile } from "../../../../hooks/use-check-mobile";
+import { SearchTabs } from "../../typings";
 
 interface IUserTabPanel {
   users: User[];
@@ -46,32 +50,33 @@ interface IUserListItem {
 }
 
 const UserListItem: FC<IUserListItem> = ({ user }) => {
-  const { handler } = useErrorHandler();
   const { handleClose } = useSearchDialog();
-  const { handleToConversation } = useSocket();
+  const { handleCreatePrivateConversation } = useSocket();
 
-  const handleCreatePrivateConversation = async () => {
-    const client = getChatClient();
-    const [err, res] = await client.CreatePrivateConversation(user.UserId);
+  const { isMobile } = useCheckMobile();
 
-    if (err) {
-      handler(err);
-      return;
-    }
+  const handleOnClick = async () => {
+    await handleCreatePrivateConversation(user.UserId);
 
-    // 创建私聊后前往指定的会话页面
-    handleToConversation(res);
-    // 随后关闭搜索模态框
     handleClose();
   };
 
   return (
     <ListItem>
       <ListItemAvatar>
-        <Avatar />
+        <LinkmeAvatar sourceHash={user.AvatarUrl} />
       </ListItemAvatar>
-      <ListItemText>{user.Username}</ListItemText>
-      <IconButton onClick={handleCreatePrivateConversation}>
+      <Box flex={1} height="2.5rem">
+        <Stack direction="row" alignItems="center" spacing={1.5}>
+          <Typography fontWeight="bold">{user.Username}</Typography>
+          {!isMobile && user.Signature && (
+            <Typography color="GrayText" fontSize="0.8rem">
+              {user.Signature}
+            </Typography>
+          )}
+        </Stack>
+      </Box>
+      <IconButton onClick={handleOnClick}>
         <ChatIcon />
       </IconButton>
     </ListItem>

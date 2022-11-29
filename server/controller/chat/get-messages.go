@@ -12,7 +12,7 @@ func (chatRpcImpl) GetMessages(ctx *gin.Context, userId, convId int, originMessa
 	if err != nil {
 		panic(err)
 	}
-	if member == nil {
+	if member == nil || member.Removed {
 		panic("用户不是指定会话的成员")
 	}
 

@@ -1,8 +1,6 @@
 package chatService
 
 import (
-	"encoding/json"
-
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
 )
@@ -10,29 +8,7 @@ import (
 func GetConversationSequence(userId uint) ([]chatDao.ConversationDao, error) {
 	conn := db.GetConn()
 
-	sequenceDao := chatDao.SequenceDao{}
-	sequenceDao.UserId = userId
-
-	// 先判断数据库中是否存有该用户的消息列表信息
-	var count int64
-	err := conn.Model(&sequenceDao).Where(&sequenceDao).Count(&count).Error
-	if err != nil {
-		return nil, err
-	}
-	// 若没有则直接返回空数组
-	if count == 0 {
-		return make([]chatDao.ConversationDao, 0), nil
-	}
-
-	err = conn.Model(&sequenceDao).Where(&sequenceDao).Limit(1).Find(&sequenceDao).Error
-
-	if err != nil {
-		return nil, err
-	}
-
-	// 获取会话队列信息，其值为一个uint类型的数组
-	convSequence := make([]uint, 0)
-	err = json.Unmarshal([]byte(sequenceDao.Sequence), &convSequence)
+	convSequence, _, err := GetSequence(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +19,6 @@ func GetConversationSequence(userId uint) ([]chatDao.ConversationDao, error) {
 		Model(&chatDao.ConversationDao{}).
 		Where("id in ?", convSequence).
 		Preload("Owner").
-		Preload("Messages").
 		Preload("TargetUser_InPrivate").
 		Find(&convDaos).
 		Error

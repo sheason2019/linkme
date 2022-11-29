@@ -3,6 +3,10 @@
 
 import { ViewMessage } from "./use-chat";
 
+export interface IUpdateMessage {
+  invited: boolean;
+}
+
 let map: Map<number | string, ViewMessage> = new Map();
 
 const useMessageUpdater = () => {
@@ -11,9 +15,18 @@ const useMessageUpdater = () => {
   };
 
   const handleUpdateMessage = (msgArr: ViewMessage[]) => {
+    const result: IUpdateMessage = {
+      invited: false,
+    };
+
     msgArr.forEach((msg) => {
+      if (msg.Type === "group-invite") {
+        result.invited = true;
+      }
       map.set(msg.Id === 0 && msg.Mark ? msg.Mark : msg.Id, msg);
     });
+
+    return result;
   };
 
   const handleGetMessages = (): ViewMessage[] => {

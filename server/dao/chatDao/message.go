@@ -1,8 +1,6 @@
 package chatDao
 
 import (
-	"fmt"
-
 	"github.com/sheason2019/linkme/omi/chat"
 	"github.com/sheason2019/linkme/utils"
 	"gorm.io/gorm"
@@ -13,6 +11,11 @@ const MessageType_UserMessage = "user-message"
 
 // 邀请用户加入群聊
 const MessageType_GroupInvite = "group-invite"
+
+// 图像信息
+const MessageType_Image = "image"
+
+var UserMessageAllowType = []string{MessageType_Image, MessageType_UserMessage}
 
 type MessageDao struct {
 	gorm.Model
@@ -48,8 +51,6 @@ func (model MessageDao) ToIDL() chat.Message {
 	}
 	message.TargetCheckedCount = utils.ConvertNumberToIntPtr(len(model.MessageRecivers))
 	message.CurrentCheckedCount = &currentCheckedNum
-
-	fmt.Println(*message.TargetCheckedCount, *message.CurrentCheckedCount)
 
 	return message
 }

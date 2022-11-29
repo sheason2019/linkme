@@ -7,6 +7,7 @@ import {
   ServerToClientEvents,
 } from "../../shared/socket";
 import { getAccountClient, getChatRpcClient } from "../rpc/chat-rpc-client";
+import { SocketConvMap } from "./socket-conv-map";
 
 const initSocket = (
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
@@ -22,7 +23,6 @@ const initSocket = (
       socket.disconnect();
       return;
     }
-    console.log("USER_LOGIN", res.UserId, res.Username);
     // 在Map中绑定用户和Socket的索引
     UserSocketsMap.bindSocketId(socket.id, { ...res, jwt });
     // 返回登录成功，前端在此时会结束初始化
@@ -64,14 +64,30 @@ const initSocket = (
     }
 
     if (!res) {
-      socket.emit("error", "用户不是指定会话的成员");
+      socket.emit("kickout", [], convId, true);
+      return;
+    }
+
+    // 将会话加入用户的消息列表
+    const [err2, hasChange] = await client.PostSequenceItem(
+      user.UserId,
+      convId
+    );
+    if (err2) {
+      socket.emit("error", err2.message);
+      console.error(err);
       return;
     }
 
     // 将该Socket加入指定的Room
     socket.join("conv::" + convId);
+    socket.emit("enterConversation", convId);
+    if (hasChange) {
+      socket.emit("syncSequenceItem");
+    }
+    SocketConvMap.set(socket.id, convId);
   });
-  socket.on("postMessage", async (content, convId, mark) => {
+  socket.on("postMessage", async (content, convId, mark, type) => {
     const user = UserSocketsMap.getUserBySocketId(socket.id);
     if (!user) {
       socket.emit("error", "当前用户尚未登录");
@@ -80,7 +96,7 @@ const initSocket = (
 
     const message: Message = {
       Id: 0,
-      Type: "",
+      Type: type,
       Content: content,
       MemberId: 0,
       TimeStamp: 0,
@@ -155,6 +171,9 @@ const initSocket = (
       console.error(err);
       return;
     }
+  });
+  socket.on("leaveConversation", () => {
+    SocketConvMap.set(socket.id, undefined);
   });
 };
 
