@@ -1,10 +1,11 @@
-import { Avatar } from "@mui/material";
+import { Avatar, AvatarTypeMap } from "@mui/material";
+import { DefaultComponentProps } from "@mui/material/OverridableComponent";
 import { forwardRef } from "react";
 
-interface ILinkmeAvatar {
+interface ILinkmeAvatar
+  extends DefaultComponentProps<AvatarTypeMap<{}, "div">> {
   sourceHash?: string;
   size?: number;
-  onClick?: () => any;
 }
 
 const LinkmeAvatar = forwardRef<HTMLDivElement | null, ILinkmeAvatar>(

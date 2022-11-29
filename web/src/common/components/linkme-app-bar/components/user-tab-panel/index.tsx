@@ -1,6 +1,5 @@
 import { TabPanel } from "@mui/lab";
 import {
-  Avatar,
   Box,
   IconButton,
   List,
@@ -51,24 +50,14 @@ interface IUserListItem {
 }
 
 const UserListItem: FC<IUserListItem> = ({ user }) => {
-  const { handler } = useErrorHandler();
   const { handleClose } = useSearchDialog();
-  const { handleToConversation } = useSocket();
+  const { handleCreatePrivateConversation } = useSocket();
 
   const { isMobile } = useCheckMobile();
 
-  const handleCreatePrivateConversation = async () => {
-    const client = getChatClient();
-    const [err, res] = await client.CreatePrivateConversation(user.UserId);
+  const handleOnClick = async () => {
+    await handleCreatePrivateConversation(user.UserId);
 
-    if (err) {
-      handler(err);
-      return;
-    }
-
-    // 创建私聊后前往指定的会话页面
-    handleToConversation(res);
-    // 随后关闭搜索模态框
     handleClose();
   };
 
@@ -87,7 +76,7 @@ const UserListItem: FC<IUserListItem> = ({ user }) => {
           )}
         </Stack>
       </Box>
-      <IconButton onClick={handleCreatePrivateConversation}>
+      <IconButton onClick={handleOnClick}>
         <ChatIcon />
       </IconButton>
     </ListItem>

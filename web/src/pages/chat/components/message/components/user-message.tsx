@@ -1,12 +1,15 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { FC, useMemo } from "react";
+
 import { IMessage } from "..";
 import LinkmeAvatar from "../../../../../common/components/linkme-avatar";
+import { useUserCard } from "../../../../../common/components/user-card";
 import useChat from "../../../hooks/use-chat";
 import StatusCircle from "../../status-circle";
 
 const UserMessage: FC<IMessage> = ({ message }) => {
   const { chat } = useChat();
+  const { handleOpen } = useUserCard();
 
   const isSelfMsg = message.MemberId === chat.currentMemberId;
 
@@ -51,7 +54,12 @@ const UserMessage: FC<IMessage> = ({ message }) => {
         </Stack>
       </Stack>
       <Box sx={{ alignSelf: "start" }}>
-        <LinkmeAvatar sourceHash={member?.AvatarUrl} />
+        <LinkmeAvatar
+          onClick={(e) =>
+            handleOpen(e.currentTarget, member!.UserId, member!.Nickname)
+          }
+          sourceHash={member?.AvatarUrl}
+        />
       </Box>
     </Stack>
   );

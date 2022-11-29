@@ -1,6 +1,6 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年11月28日 22:56:17.
+ * 生成时间：2022年11月29日 14:44:45.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -57,6 +57,12 @@ export class AccountClient extends OmiClientBase {
       username,
       offset,
     });
+  }
+  // 获取指定的用户信息
+  GetUserByUserId(userId: number) {
+    const url = "Account.UserByUserId";
+    const method = "Get";
+    return this.request<User>(url, method, { userId });
   }
   // 检查用户名是否重复
   GetUsernameExist(username: string) {

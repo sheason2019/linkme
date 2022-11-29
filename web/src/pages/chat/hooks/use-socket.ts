@@ -220,6 +220,19 @@ const useSocket = () => {
     handlePullSequence();
   };
 
+  const handleCreatePrivateConversation = async (userId: number) => {
+    const client = getChatClient();
+    const [err, res] = await client.CreatePrivateConversation(userId);
+
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    // 创建私聊后前往指定的会话页面
+    handleToConversation(res);
+  };
+
   useEffect(() => {
     if (!userInfo.user?.UserId) return;
 
@@ -240,6 +253,7 @@ const useSocket = () => {
     handleLeaveConversation,
     handleGetConversationById,
     handleDeleteSequence,
+    handleCreatePrivateConversation,
   };
 };
 

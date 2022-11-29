@@ -7,6 +7,7 @@ import {
   Typography,
   Chip,
   Stack,
+  ListItemButton,
 } from "@mui/material";
 import LinkmeAvatar from "../../../../../../../../../common/components/linkme-avatar";
 import useChat from "../../../../../../../hooks/use-chat";
@@ -15,6 +16,7 @@ import { FC, useMemo, useState } from "react";
 import { WithOwner } from "../../../base-info";
 import { MessageMember } from "../../../../../../../../../api-lib/chat-client";
 import RemoveMemberDialog from "../remove-member-dialog";
+import { useUserCard } from "../../../../../../../../../common/components/user-card";
 
 interface IDeleteDialog {
   open: boolean;
@@ -22,6 +24,8 @@ interface IDeleteDialog {
 }
 
 const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
+  const { handleOpen } = useUserCard();
+
   const { chat } = useChat();
 
   // 成员展示顺序这块儿得有些讲究，目前先按身份优先展示群主用户，后续可能需要按26个字母的顺序进行编排
@@ -61,7 +65,12 @@ const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
     <>
       <List sx={{ borderRadius: 2, background: "#ECECEC" }}>
         {memberList.map((member) => (
-          <ListItem key={member.MemberId}>
+          <ListItemButton
+            key={member.MemberId}
+            onClick={(e) =>
+              handleOpen(e.currentTarget, member.UserId, member.Nickname)
+            }
+          >
             <ListItemAvatar>
               <LinkmeAvatar sourceHash={member.AvatarUrl} />
             </ListItemAvatar>
@@ -74,11 +83,16 @@ const GroupMembers: FC<WithOwner> = ({ isOwner }) => {
               </Stack>
             </ListItemText>
             {isOwner && member.MemberId !== chat.currentMemberId && (
-              <IconButton onClick={() => handleDelete(member)}>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(member);
+                }}
+              >
                 <CloseIcon />
               </IconButton>
             )}
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
       <RemoveMemberDialog

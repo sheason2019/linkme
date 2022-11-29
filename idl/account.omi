@@ -32,6 +32,8 @@ service Account {
   User GetCurrentUser();
   // 根据用户名搜索用户信息，一次最多拉取25条
   GetUsersByUsernameResponse GetUsersByUsername(string username, int offset);
+  // 获取指定的用户信息
+  User GetUserByUserId(int userId);
   // 检查用户名是否重复
   boolean GetUsernameExist(string username);
   // 下面这两接口先这样实现，如果未来用户相关的属性数量上去了，额外抽象出一个Profile结构体来整合这些数据

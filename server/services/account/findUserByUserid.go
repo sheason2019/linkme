@@ -9,9 +9,26 @@ func FindUserByUserId(userId int) (*userDao.UserDao, error) {
 	conn := db.GetConn()
 
 	user := userDao.UserDao{}
-	user.ID = uint(userId)
+	var count int64
 
-	err := conn.Where(&user).Limit(1).Find(&user).Error
+	err := conn.
+		Model(&user).
+		Where("id = ?", userId).
+		Limit(1).
+		Count(&count).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return nil, nil
+	}
+
+	err = conn.
+		Where("id = ?", userId).
+		Limit(1).
+		Find(&user).
+		Error
 	if err != nil {
 		return nil, err
 	}

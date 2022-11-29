@@ -1,6 +1,6 @@
 /**
 * 本文件由Omi.js自动生成，谨慎改动！
-* 生成时间：2022年11月28日 22:55:51.
+* 生成时间：2022年11月29日 14:42:47.
  */
 package account
 
@@ -19,6 +19,8 @@ type Account interface {
 	GetCurrentUser(ctx *gin.Context) User
 	// 根据用户名搜索用户信息，一次最多拉取25条
 	GetUsersByUsername(ctx *gin.Context, username string, offset int) GetUsersByUsernameResponse
+	// 获取指定的用户信息
+	GetUserByUserId(ctx *gin.Context, userId int) User
 	// 检查用户名是否重复
 	GetUsernameExist(ctx *gin.Context, username string) bool
 	// 下面这两接口先这样实现，如果未来用户相关的属性数量上去了，额外抽象出一个Profile结构体来整合这些数据
@@ -33,6 +35,7 @@ type typeAccountDefinition struct {
 	REGIST_PATH                string
 	GET_CURRENT_USER_PATH      string
 	GET_USERS_BY_USERNAME_PATH string
+	GET_USER_BY_USER_ID_PATH   string
 	GET_USERNAME_EXIST_PATH    string
 	PUT_AVATAR_PATH            string
 	PUT_SIGNATURE_PATH         string
@@ -44,6 +47,7 @@ var AccountDefinition = &typeAccountDefinition{
 	REGIST_PATH:                "/Account.Regist",
 	GET_CURRENT_USER_PATH:      "/Account.CurrentUser",
 	GET_USERS_BY_USERNAME_PATH: "/Account.UsersByUsername",
+	GET_USER_BY_USER_ID_PATH:   "/Account.UserByUserId",
 	GET_USERNAME_EXIST_PATH:    "/Account.UsernameExist",
 	PUT_AVATAR_PATH:            "/Account.Avatar",
 	PUT_SIGNATURE_PATH:         "/Account.Signature",
