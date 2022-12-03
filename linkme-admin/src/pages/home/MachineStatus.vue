@@ -45,7 +45,7 @@ const createData = (msm: MachineStatusMessage): echarts.GaugeSeriesOption['data'
   const data = msm.data;
   return [
     {
-      value: data.memUsed / data.memSize,
+      value: (data.memUsed / data.memSize) * 100,
       name: '内存占用（MB）',
       title: {
         offsetCenter: ['0%', '-36%']
@@ -57,7 +57,7 @@ const createData = (msm: MachineStatusMessage): echarts.GaugeSeriesOption['data'
       }
     },
     {
-      value: data.diskUsed / data.diskSize,
+      value: (data.diskUsed / data.diskSize) * 100,
       name: '磁盘占用（GB）',
       title: {
         offsetCenter: ['0%', '-6%']

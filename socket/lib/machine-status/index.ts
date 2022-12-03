@@ -52,7 +52,7 @@ export function getMemInfo() {
   // 内存总量和空余内存
   return {
     totalMem: os.totalmem(),
-    freeMem: os.totalmem(),
+    freeMem: os.freemem(),
   };
 }
 
