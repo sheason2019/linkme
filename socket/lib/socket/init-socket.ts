@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Socket } from "socket.io";
 import { UserSocketsMap } from ".";
 import { Message } from "../../api-lib/chat-client";

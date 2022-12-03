@@ -10,6 +10,7 @@ import initRpcRouter from "./lib/controller/rpc-router";
 import logger from "./lib/middleware/logger";
 import { initServerHost } from "./lib/rpc/chat-rpc-client";
 import exceptionMiddleware from "./lib/middleware/exception-middleware";
+import initAdminSocket from "./lib/socket/admin-socket";
 
 export const isProduct = process.argv.indexOf("-product") !== -1;
 
@@ -34,4 +35,5 @@ server.listen(3000, () => {
   console.log("Service started on port 3000, isProduct::", isProduct);
 });
 
-io.on("connection", initSocket);
+io.of("/").on("connection", initSocket);
+io.of("/admin").on("connection", initAdminSocket);
