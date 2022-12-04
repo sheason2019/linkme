@@ -132,7 +132,13 @@ const Messages = () => {
   }, [chat.messages]);
 
   return (
-    <Stack flex={1} sx={{ overflow: "hidden", position: "relative" }}>
+    <Stack
+      flex={1}
+      sx={{
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
       <Stack
         ref={containerRef}
         p={1}
