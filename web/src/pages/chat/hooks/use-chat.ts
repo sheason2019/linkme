@@ -50,18 +50,20 @@ interface IChatState {
   hasMoreMessage: boolean;
 }
 
+const DEFAULT_CHAT_STATE: IChatState = {
+  online: OnlineStatus.Offline,
+  currentConv: undefined,
+  socketConvId: undefined,
+  loadingSequence: false,
+  sequence: [],
+  messages: [],
+  memberMap: new Map(),
+  hasMoreMessage: false,
+};
+
 const chatState = atom<IChatState>({
   key: "chat/common",
-  default: {
-    online: OnlineStatus.Offline,
-    currentConv: undefined,
-    socketConvId: undefined,
-    loadingSequence: false,
-    sequence: [],
-    messages: [],
-    memberMap: new Map(),
-    hasMoreMessage: false,
-  },
+  default: DEFAULT_CHAT_STATE,
 });
 
 const useChat = () => {
@@ -115,13 +117,18 @@ const useChat = () => {
     setChat((prev) => ({ ...prev, online }));
   };
 
+  const handleResetChatState = () => {
+    setChat(DEFAULT_CHAT_STATE);
+  };
+
   return {
     chat,
     setChat,
     handleSetOnline,
     handleSetSequence,
-    handleSetLoadingSequence,
+    handleResetChatState,
     handleSetConversation,
+    handleSetLoadingSequence,
     handleCloseCurrentConversation,
   };
 };

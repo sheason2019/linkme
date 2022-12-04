@@ -13,20 +13,18 @@ import { getChatClient } from "../../../api-client";
 import { APP_URLS } from "../../../router";
 import useMessageUpdater from "./use-message-updater";
 import { useKickoutDialog } from "../components/kickout-dialog";
-import useUserInfo from "../../../common/hooks/use-user-info";
 
 let socketRef: Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
-let socketUserId: number | undefined;
 
 const useSocket = () => {
   const navigate = useNavigate();
 
-  const { userInfo } = useUserInfo();
   const {
     chat,
     setChat,
     handleSetOnline,
     handleSetSequence,
+    handleResetChatState,
     handleSetConversation,
     handleSetLoadingSequence,
     handleCloseCurrentConversation,
@@ -48,7 +46,10 @@ const useSocket = () => {
   }, [chat]);
 
   const initSocket = () => {
-    if (!!socketRef) return;
+    // 如果连接已存在，就断开连接并重新登录
+    if (!!socketRef) {
+      socketRef.disconnect();
+    }
 
     const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
     // 连接到Socket以后进行登录
@@ -124,18 +125,16 @@ const useSocket = () => {
       setChat((prev) => ({ ...prev, socketConvId: convId }));
     });
     socket.on("leaveConversation", () => {
-      setChat((prev) => ({ ...prev, socketConvId: undefined }));
+      setChat((prev) => ({ ...prev, messages: [], socketConvId: undefined }));
     });
     socket.on("syncConversation", () => {
       const chat = chatRef.current;
-      console.log(chat);
       chat.currentConv && handleGetConversationById(chat.currentConv.Id);
     });
 
     socket.connect();
 
     socketRef = socket;
-    socketUserId = userInfo.user?.UserId;
   };
 
   const handlePostMessage = (
@@ -182,8 +181,9 @@ const useSocket = () => {
     navigate(APP_URLS.CHAT_URL);
     socketRef?.emit("enterConversation", convId);
     handleClearMessages();
-    handlePullMessage(convId);
     setChat((prev) => ({ ...prev, messages: [] }));
+
+    handlePullMessage(convId);
 
     await handleGetConversationById(convId);
   };
@@ -233,16 +233,6 @@ const useSocket = () => {
     handleToConversation(res);
   };
 
-  useEffect(() => {
-    if (!userInfo.user?.UserId) return;
-
-    if (!socketRef) {
-      initSocket();
-    } else if (userInfo.user.UserId !== socketUserId) {
-      initSocket();
-    }
-  }, [userInfo.user?.UserId]);
-
   return {
     socket: socketRef,
     handlePostMessage,
@@ -254,6 +244,8 @@ const useSocket = () => {
     handleGetConversationById,
     handleDeleteSequence,
     handleCreatePrivateConversation,
+    handleResetChatState,
+    initSocket,
   };
 };
 
