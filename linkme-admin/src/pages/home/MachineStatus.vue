@@ -29,9 +29,9 @@ const DEFAULT_MSM: MachineStatusMessage = {
   type: 'machineStatus',
   data: {
     cpuPercent: 0,
-    memSize: 0,
+    memSize: 1,
     memUsed: 0,
-    diskSize: 0,
+    diskSize: 1,
     diskUsed: 0,
   }
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	accountController "github.com/sheason2019/linkme/controller/account"
+	adminController "github.com/sheason2019/linkme/controller/admin"
 	chatController "github.com/sheason2019/linkme/controller/chat"
 	uploadController "github.com/sheason2019/linkme/controller/upload"
 	"github.com/sheason2019/linkme/db"
@@ -30,11 +31,14 @@ func main() {
 	r.Use(middleware.PanicMiddleware)
 	// 使用获取用户身份的中间件
 	r.Use(middleware.UserMiddleware)
+	// 使用UV监测中间件
+	r.Use(middleware.UserViewMiddleware)
 
 	accountController.BindAccountController(r)
 	chatController.BindChatController(r)
 	chatController.BindChatRpcController(r)
 	uploadController.BindFileController(r)
+	adminController.BindAdminController(r)
 
 	r.Run()
 }

@@ -1,0 +1,15 @@
+struct SatisticsItem {
+  string Label;
+  int Count;
+}
+
+struct HomepageSatisticsGroup {
+  repeated SatisticsItem UserCounts;
+  repeated SatisticsItem ConversationCounts;
+  repeated SatisticsItem MessagesCounts;
+  repeated SatisticsItem UVCounts;
+}
+
+service Admin {
+  HomepageSatisticsGroup GetHomepageSatistics();
+}

@@ -1,31 +1,44 @@
 <script lang="ts" setup>
 import * as echarts from 'echarts';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { HomepageSatisticsGroup } from '../../api-lib/admin-client';
 
+const props = defineProps<{ group: HomepageSatisticsGroup }>()
 const container = ref<HTMLDivElement>();
+const chartRef = ref<echarts.ECharts>();
 
-watch(container, () => {
+// 组件挂载时初始化Echarts
+onMounted(() => {
+  const el = container.value;
+  if (!el) return;
+
+  chartRef.value = echarts.init(el);
+});
+
+// 当传入的数据发生变化时，更新图标的内容
+watch([container, props], () => {
+  const data = props.group?.MessagesCounts ?? [];
+
   const option: echarts.EChartsOption = {
     xAxis: {
       type: "category",
-      data: ["a", "b", "c"]
+      data: data.map(item => item.Label),
+      boundaryGap: false,
     },
     yAxis: {
       type: "value",
     },
     series: [
-      { data: [1, 2, 3], type: 'line' }
+      { data: data.map(item => item.Count), type: 'line' }
     ],
     title: {
       text: "消息数量"
     },
   };
 
-  const el = container.value;
-  if (!el) return;
+  const chart = chartRef.value;
 
-  const charts = echarts.init(el);
-  charts.setOption(option);
+  chart && chart.setOption(option);
 });
 </script>
 

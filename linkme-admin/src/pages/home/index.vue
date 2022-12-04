@@ -3,12 +3,27 @@ import ConversationCount from './ConversationCount.vue';
 import UserCount from './UserCount.vue';
 import MessageCount from "./MessageCount.vue";
 import PvCount from './PvCount.vue';
-import { shallowRef } from 'vue';
+import { onMounted, ref, shallowRef } from 'vue';
 import MachineStatus from './MachineStatus.vue';
+import { HomepageSatisticsGroup } from '../../api-lib/admin-client';
+import { getAdminClient } from '../../api-client/admin';
 
-const charts = shallowRef([UserCount, ConversationCount, MessageCount, PvCount])
+defineProps();
 
-defineProps()
+const charts = shallowRef([UserCount, ConversationCount, MessageCount, PvCount]);
+const data = ref<HomepageSatisticsGroup>();
+
+onMounted(async () => {
+  const client = getAdminClient();
+  const [err, res] = await client.GetHomepageSatistics();
+  if (err) {
+    console.error(err);
+    return;
+  }
+
+  data.value = res;
+});
+
 </script>
 
 <template>
@@ -20,10 +35,9 @@ defineProps()
   <h2>数据统计</h2>
   <el-row>
     <el-col :span="12" v-for="chart in charts">
-      <component :is="chart" />
+      <component :is="chart" :group="data" />
     </el-col>
   </el-row>
-  <div>内存 磁盘 CPU</div>
 </template>
 
 <style scoped>

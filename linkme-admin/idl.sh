@@ -1,0 +1,1 @@
+omi-codegen -o src/api-lib -l ts -t client ../idl/admin.omi
