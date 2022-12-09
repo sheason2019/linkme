@@ -1,7 +1,13 @@
-FROM ubuntu:20.04
+FROM golang:alpine
 
 WORKDIR /build
 
-ADD ./build/linkme-server ./linkme-server
+ADD . .
 
-ENTRYPOINT ["/build/linkme-server"]
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+
+RUN mkdir ./dist
+
+RUN go build -o ./dist/linkme-server -tags product .
+
+ENTRYPOINT ["/build/dist/linkme-server"]

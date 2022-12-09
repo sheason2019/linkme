@@ -3,6 +3,7 @@ services:
   postgres:
     image: "postgres:alpine"
     restart: always
+    privileged: true
     volumes:
       - /var/linkme/postgres:/var/lib/postgresql/data
   nginx:
@@ -16,11 +17,13 @@ services:
       - /var/linkme/web:/var/linkme/web
   linkme-server:
     image: "sheason/linkme-server:latest"
+    privileged: true
     volumes:
       - /var/linkme/:/var/linkme/
     restart: always
   linkme-socket:
     image: "sheason/linkme-socket:latest"
+    privileged: true
     volumes:
       - /var/linkme/:/var/linkme/
     restart: always
