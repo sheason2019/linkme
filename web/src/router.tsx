@@ -8,7 +8,8 @@ const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
 const UserSpace = lazy(() => import("./pages/account/space"));
-const TodoPage = lazy(() => import("./pages/todo"))
+const TodoPage = lazy(() => import("./pages/todo"));
+const TodoHomePage = lazy(() => import("./pages/todo/components/home"));
 
 // 首页
 const HomePage = lazy(() => import("./pages/homepage"));
@@ -63,9 +64,15 @@ export const router = createBrowserRouter([
         element: Suspenser(Chat),
       },
       {
-        path: "/todo",
+        path: "/:userid/todo",
         element: Suspenser(TodoPage),
-      }
+        children: [
+          {
+            path: "",
+            element: Suspenser(TodoHomePage),
+          },
+        ],
+      },
     ],
   },
 ]);
