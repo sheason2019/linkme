@@ -8,6 +8,7 @@ const Regist = lazy(() => import("./pages/account/regist"));
 const Login = lazy(() => import("./pages/account/login"));
 const CurrentUser = lazy(() => import("./pages/account/current-user"));
 const UserSpace = lazy(() => import("./pages/account/space"));
+const TodoPage = lazy(() => import("./pages/todo"))
 
 // 首页
 const HomePage = lazy(() => import("./pages/homepage"));
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
         path: "/chat",
         element: Suspenser(Chat),
       },
+      {
+        path: "/todo",
+        element: Suspenser(TodoPage),
+      }
     ],
   },
 ]);
