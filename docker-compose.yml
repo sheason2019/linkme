@@ -16,13 +16,15 @@ services:
       - /var/linkme/nginx:/etc/nginx/conf.d
       - /var/linkme/web:/var/linkme/web
   linkme-server:
-    image: "sheason/linkme-server:latest"
+    build:
+      context: ./server
     privileged: true
     volumes:
       - /var/linkme/:/var/linkme/
     restart: always
   linkme-socket:
-    image: "sheason/linkme-socket:latest"
+    build:
+      context: ./socket
     privileged: true
     volumes:
       - /var/linkme/:/var/linkme/
