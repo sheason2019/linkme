@@ -12,7 +12,7 @@ type SequenceDao struct {
 	UserId uint
 
 	// 存储Conv Id的字符串
-	Sequence string
+	Sequence []uint `gorm:"serializer:json"`
 	// 同上，但这个字段存储的是置顶队列
-	TopSequence string
+	TopSequence []uint `gorm:"serializer:json"`
 }

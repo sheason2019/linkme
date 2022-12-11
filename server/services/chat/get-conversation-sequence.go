@@ -8,10 +8,12 @@ import (
 func GetConversationSequence(userId uint) ([]chatDao.ConversationDao, error) {
 	conn := db.GetConn()
 
-	convSequence, _, err := GetSequence(userId)
+	conv, err := GetSequence(userId)
 	if err != nil {
 		return nil, err
 	}
+
+	convSequence := conv.Sequence
 
 	// 根据会话队列获取指定的会话信息
 	convDaos := make([]chatDao.ConversationDao, 0)

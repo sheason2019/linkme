@@ -1,8 +1,6 @@
 package chatService
 
 import (
-	"encoding/json"
-
 	"github.com/sheason2019/linkme/dao/chatDao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/utils"
@@ -22,8 +20,7 @@ func PushConversationIntoSequence(convId uint, userId uint, setTop bool) error {
 		return err
 	}
 
-	convSequence := make([]uint, 0)
-	err = json.Unmarshal([]byte(sequenceDao.Sequence), &convSequence)
+	convSequence := sequenceDao.Sequence
 	if err != nil {
 		// 解析ConversationSequence失败则表示用户尚未初始化消息列表
 		convSequence = []uint{convId}
@@ -39,12 +36,7 @@ func PushConversationIntoSequence(convId uint, userId uint, setTop bool) error {
 		convSequence = append([]uint{convId}, convSequence...)
 	}
 
-	// 将修改后的conv序列化为字符串
-	str, err := json.Marshal(convSequence)
-	if err != nil {
-		return err
-	}
-	sequenceDao.Sequence = string(str)
+	sequenceDao.Sequence = convSequence
 
 	err = conn.Save(&sequenceDao).Error
 	if err != nil {

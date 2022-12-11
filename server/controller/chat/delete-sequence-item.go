@@ -1,8 +1,6 @@
 package chatController
 
 import (
-	"encoding/json"
-
 	"github.com/gin-gonic/gin"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
@@ -16,21 +14,17 @@ func (chatImpl) DeleteSequenceItem(ctx *gin.Context, convId int) {
 
 	conn := db.GetConn()
 
-	sequence, sequenceDao, err := chatService.GetSequence(currentUser.ID)
+	sequenceDao, err := chatService.GetSequence(currentUser.ID)
 	if err != nil {
 		panic(err)
 	}
+	sequence := sequenceDao.Sequence
 
 	sequence = utils.Filter(sequence, func(item uint, index int) bool {
 		return item != uint(convId)
 	})
 
-	sequenceBytes, err := json.Marshal(sequence)
-	if err != nil {
-		panic(err)
-	}
-
-	sequenceDao.Sequence = string(sequenceBytes)
+	sequenceDao.Sequence = sequence
 	err = conn.Save(&sequenceDao).Error
 	if err != nil {
 		panic(err)

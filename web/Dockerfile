@@ -6,6 +6,8 @@ COPY . .
 
 WORKDIR /app/web
 
+RUN rm -rf node_modules
+
 RUN npm i --registry=http://registry.npmmirror.com
 
 RUN npm run build

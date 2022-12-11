@@ -1,0 +1,23 @@
+struct GroupInfo {
+  int GroupId;
+  string Name;
+  
+  repeated int TodoList;
+}
+
+struct TodoItem {
+  int Id;
+  string Content;
+
+  repeated int ReferenceList;
+  repeated int ContainedList;
+
+  // Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
+  int Status;
+}
+
+service Todo {
+  GroupInfo GetDefaultGroup();
+
+  repeated TodoItem GetTodoItemsByIdList(repeated int idList);
+}

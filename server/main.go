@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	accountController "github.com/sheason2019/linkme/controller/account"
 	chatController "github.com/sheason2019/linkme/controller/chat"
+	todoController "github.com/sheason2019/linkme/controller/todo"
 	uploadController "github.com/sheason2019/linkme/controller/upload"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
@@ -35,6 +36,7 @@ func main() {
 	chatController.BindChatController(r)
 	chatController.BindChatRpcController(r)
 	uploadController.BindFileController(r)
+	todoController.BindTodoController(r)
 
 	r.Run()
 }
