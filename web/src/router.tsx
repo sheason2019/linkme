@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
         element: Suspenser(Chat),
       },
       {
-        path: "/:userid/todo",
+        path: "/:username/todo",
         element: Suspenser(TodoPage),
         children: [
           {
@@ -91,6 +91,8 @@ export enum APP_URLS {
   USER_SPACE_URL = "/account/space",
 
   CHAT_URL = "/chat",
+
+  TODO_URL = "/todo",
 
   HOME_URL = "/",
 }

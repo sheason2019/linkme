@@ -1,6 +1,8 @@
 struct GroupInfo {
   int GroupId;
   string Name;
+
+  string Type;
   
   repeated int TodoList;
 }
@@ -17,7 +19,8 @@ struct TodoItem {
 }
 
 service Todo {
-  GroupInfo GetDefaultGroup();
+  GroupInfo GetDefaultGroup(string username);
+  GroupInfo GetGroupInfoById(int groupId);
 
   repeated TodoItem GetTodoItemsByIdList(repeated int idList);
 }

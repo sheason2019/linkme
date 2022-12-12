@@ -11,4 +11,5 @@ var controller todo.Todo = todoImpl{}
 
 func BindTodoController(r *gin.Engine) {
 	attachGetDefaultGroup(r)
+	attachGetGroupInfoById(r)
 }

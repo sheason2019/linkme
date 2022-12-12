@@ -6,10 +6,14 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import ChatIcon from "@mui/icons-material/Chat";
 import { atom, useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
+
+import ChatIcon from "@mui/icons-material/Chat";
+import ListIcon from "@mui/icons-material/List";
+
 import { APP_URLS } from "../../../router";
+import useUserInfo from "../../hooks/use-user-info";
 
 export interface INavigateDrawer {
   open: boolean;
@@ -49,6 +53,9 @@ const NavigateDrawer = () => {
   };
 
   const { drawer, handleCloseDrawer } = useNavigateDrawer();
+  const { userInfo } = useUserInfo();
+
+  
 
   return (
     <Drawer anchor="left" open={drawer.open} onClose={handleCloseDrawer}>
@@ -62,6 +69,15 @@ const NavigateDrawer = () => {
             <ListItemText
               onClick={() => handleToPage(APP_URLS.CHAT_URL)}
               primary="即时通讯"
+            />
+          </ListItemButton>
+          <ListItemButton>
+            <ListItemIcon>
+              <ListIcon />
+            </ListItemIcon>
+            <ListItemText
+              onClick={() => handleToPage(`/${userInfo.user?.Username}/todo`)}
+              primary="待办事项"
             />
           </ListItemButton>
         </List>

@@ -9,11 +9,10 @@ type TodoSeries struct {
 	gorm.Model
 	Name string
 
-	// 指定Series所包含的Group
-	Groups []TodoGroup
-
 	// Group的ID次序
-	GroupsIndex []uint `gorm:"serializer:json"`
+	Groups []uint `gorm:"serializer:json"`
+
+	Type string
 
 	// 系列的所有者
 	OwnerId uint

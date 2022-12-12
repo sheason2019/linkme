@@ -5,6 +5,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import { useNavigate } from "react-router-dom";
+import useUserInfo from "../../../../common/hooks/use-user-info";
+import useTodo from "../../hooks/use-todo";
+import { useEffect } from "react";
 
 const StyledListItem = styled(ListItemButton)`
   padding-top: 12px;
@@ -12,9 +16,29 @@ const StyledListItem = styled(ListItemButton)`
 `;
 
 const Navigator = () => {
+  const navigate = useNavigate();
+  const { userInfo } = useUserInfo();
+  const { todoState, fetchDefaultGroup } = useTodo();
+
+  const username = userInfo.user?.Username;
+
+  const handleToDefaultGroup = () => {
+    const { defaultGroupId } = todoState;
+    if (defaultGroupId === 0) return;
+
+    navigate(`/${username}/todo/group/${defaultGroupId}`);
+  };
+  const handleToTodoHome = () => {
+    navigate(`/${username}/todo`);
+  };
+
+  useEffect(() => {
+    fetchDefaultGroup();
+  }, []);
+
   return (
     <Paper sx={{ width: 280, fontSize: 14, py: 1 }}>
-      <StyledListItem>
+      <StyledListItem onClick={handleToTodoHome}>
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
@@ -26,7 +50,7 @@ const Navigator = () => {
         </ListItemIcon>
         <span>计划内</span>
       </StyledListItem>
-      <StyledListItem>
+      <StyledListItem onClick={handleToDefaultGroup}>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>

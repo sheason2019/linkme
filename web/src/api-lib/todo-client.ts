@@ -1,6 +1,5 @@
 /**
  * 本文件由Omi.js自动生成，谨慎改动！
- * 生成时间：2022年12月11日 19:47:11.
  */
 
 import { OmiClientBase } from "@omi-stack/omi-client";
@@ -9,6 +8,7 @@ import { AxiosRequestConfig } from "axios";
 export interface GroupInfo {
   GroupId: number;
   Name: string;
+  Type: string;
   TodoList: number[];
 }
 export interface TodoItem {
@@ -20,10 +20,15 @@ export interface TodoItem {
   Status: number;
 }
 export class TodoClient extends OmiClientBase {
-  GetDefaultGroup() {
+  GetDefaultGroup(username: string) {
     const url = "Todo.DefaultGroup";
     const method = "Get";
-    return this.request<GroupInfo>(url, method, {});
+    return this.request<GroupInfo>(url, method, { username });
+  }
+  GetGroupInfoById(groupId: number) {
+    const url = "Todo.GroupInfoById";
+    const method = "Get";
+    return this.request<GroupInfo>(url, method, { groupId });
   }
   GetTodoItemsByIdList(idList: number[]) {
     const url = "Todo.TodoItemsByIdList";

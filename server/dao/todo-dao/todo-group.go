@@ -8,10 +8,10 @@ import (
 )
 
 // 默认事项组
-const GroupType_Default = "default"
+const GroupOrSeriesType_Default = "default"
 
 // 用户自定义事项组
-const GroupType_Custom = "custom"
+const GroupOrSeriesType_Custom = "custom"
 
 type TodoGroup struct {
 	gorm.Model
@@ -19,14 +19,12 @@ type TodoGroup struct {
 	Type string
 	// 组名
 	Name string
-	// 组内拥有的任务事项
-	Contained []TodoItem
-	// 组内任务事项的排序
-	ContainedIndex []uint `gorm:"serializer:json"`
+	// 组内任务事项的引用数组
+	Contained []uint `gorm:"serializer:json"`
 
-	// 系列不一定存在
-	SeriesId *uint
-	Series   *TodoSeries `gorm:"foreignKey:SeriesId"`
+	// 系列一定存在
+	SeriesId uint
+	Series   TodoSeries `gorm:"foreignKey:SeriesId"`
 
 	// 边界的所有者
 	OwnerId uint
@@ -35,12 +33,14 @@ type TodoGroup struct {
 
 func (model TodoGroup) ToIdl() *todo.GroupInfo {
 	group := todo.GroupInfo{}
+	group.GroupId = utils.ConvertNumberToIntPtr(model.ID)
 	group.Name = &model.Name
 
-	todolist := utils.Map(model.ContainedIndex, func(item uint, index int) int {
+	todolist := utils.Map(model.Contained, func(item uint, index int) int {
 		return int(item)
 	})
 	group.TodoList = &todolist
+	group.Type = &model.Type
 
 	return &group
 }

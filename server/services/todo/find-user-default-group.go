@@ -9,13 +9,14 @@ import (
 // 则会为用户创建一个新的待办事项组并将其返回给用户
 func FindUserDefaultGroup(userId uint) (*todoDao.TodoGroup, error) {
 	conn := db.GetConn()
-	group := &todoDao.TodoGroup{}
+	group := todoDao.TodoGroup{}
 
 	// 首先查询用户的默认事项组是否存在
 	var count int64
 	err := conn.
+		Model(&group).
 		Where("owner_id = ?", userId).
-		Where("type = ?", todoDao.GroupType_Default).
+		Where("type = ?", todoDao.GroupOrSeriesType_Default).
 		Count(&count).
 		Error
 	if err != nil {
@@ -28,19 +29,19 @@ func FindUserDefaultGroup(userId uint) (*todoDao.TodoGroup, error) {
 		if err != nil {
 			return nil, err
 		}
-		group = newGroup
+		group = *newGroup
 	} else {
 		// 否则从数据库中读取用户的默认事项组
 		err := conn.
 			Where("owner_id = ?", userId).
-			Where("type = ?", todoDao.GroupType_Default).
+			Where("type = ?", todoDao.GroupOrSeriesType_Default).
 			Limit(1).
-			Find(group).
+			Find(&group).
 			Error
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return group, nil
+	return &group, nil
 }

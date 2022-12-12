@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/sheason2019/linkme/dao/chatDao"
+	todoDao "github.com/sheason2019/linkme/dao/todo-dao"
 	"github.com/sheason2019/linkme/dao/uploadDao"
 	"github.com/sheason2019/linkme/dao/userDao"
 	"gorm.io/driver/postgres"
@@ -58,5 +59,8 @@ func AutoMigrate() {
 		&chatDao.SequenceDao{},
 		&uploadDao.StoragedFile{},
 		&uploadDao.StoragedImage{},
+		&todoDao.TodoItem{},
+		&todoDao.TodoGroup{},
+		&todoDao.TodoSeries{},
 	)
 }
