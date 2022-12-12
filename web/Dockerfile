@@ -10,4 +10,4 @@ RUN rm -rf node_modules
 
 RUN npm i --registry=http://registry.npmmirror.com
 
-RUN npm run build
+CMD [ "npm", "run", "build" ]
