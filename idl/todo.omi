@@ -18,9 +18,22 @@ struct TodoItem {
   int Status;
 }
 
+struct PostTodoPayload {
+  // 当该字段不为0时，PostTodo逻辑将会创建指定Todo的引用，而不是创建新的Todo
+  int TodoId;
+  // Todo内容，仅TodoId为0时会调用该字段
+  string Content;
+  // 挂载位置 group 或 todo
+  string MountOn;
+  int MountId;
+}
+
 service Todo {
   GroupInfo GetDefaultGroup(string username);
   GroupInfo GetGroupInfoById(int groupId);
+
+  // 创建Todo
+  void PostTodo(PostTodoPayload req);
 
   repeated TodoItem GetTodoItemsByIdList(repeated int idList);
 }

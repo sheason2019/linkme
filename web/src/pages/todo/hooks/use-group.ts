@@ -32,6 +32,7 @@ const useGroup = () => {
   };
 
   return {
+    groupid,
     groupState,
     fetchGroup,
   };

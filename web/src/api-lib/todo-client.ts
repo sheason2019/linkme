@@ -19,6 +19,15 @@ export interface TodoItem {
   // Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
   Status: number;
 }
+export interface PostTodoPayload {
+  // 当该字段不为0时，PostTodo逻辑将会创建指定Todo的引用，而不是创建新的Todo
+  TodoId: number;
+  // Todo内容，仅TodoId为0时会调用该字段
+  Content: string;
+  // 挂载位置 group 或 todo
+  MountOn: string;
+  MountId: number;
+}
 export class TodoClient extends OmiClientBase {
   GetDefaultGroup(username: string) {
     const url = "Todo.DefaultGroup";
@@ -29,6 +38,12 @@ export class TodoClient extends OmiClientBase {
     const url = "Todo.GroupInfoById";
     const method = "Get";
     return this.request<GroupInfo>(url, method, { groupId });
+  }
+  // 创建Todo
+  PostTodo(req: PostTodoPayload) {
+    const url = "Todo.Todo";
+    const method = "Post";
+    return this.request<void>(url, method, { req });
   }
   GetTodoItemsByIdList(idList: number[]) {
     const url = "Todo.TodoItemsByIdList";

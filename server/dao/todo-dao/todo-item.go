@@ -1,6 +1,7 @@
 package todoDao
 
 import (
+	"github.com/sheason2019/linkme/dao/userDao"
 	"gorm.io/gorm"
 )
 
@@ -21,4 +22,7 @@ type TodoItem struct {
 
 	SeriesId uint
 	Series   TodoSeries `gorm:"foreignKey:SeriesId"`
+
+	OwnerId uint
+	Owner   userDao.UserDao `gorm:"foreignKey:OwnerId"`
 }
