@@ -9,7 +9,7 @@ import useGroup from "../../../../hooks/use-group";
 import useErrorHandler from "../../../../../../common/hooks/use-error-handler";
 
 const AddTodo = () => {
-  const { groupid } = useGroup();
+  const { groupid, fetchGroup } = useGroup();
   const { handler } = useErrorHandler();
   const [input, setInput] = useState("");
 
@@ -30,7 +30,9 @@ const AddTodo = () => {
       return;
     }
 
-    console.log(res);
+    // 清空输入框
+    setInput("");
+    await fetchGroup();
   };
 
   return (
