@@ -5,6 +5,7 @@ import { OmiError } from "@omi-stack/omi-client/dist/typings";
 import { getTodoClient } from "../../../api-client";
 import { TodoItem } from "../../../api-lib/todo-client";
 import useErrorHandler from "../../../common/hooks/use-error-handler";
+import { TodoItemStatus } from "../typings";
 
 // 使用一个全局Map来存储Todo信息
 interface ITodoStoreAtom {
@@ -58,8 +59,57 @@ const useTodoStore = () => {
     setTodoStore({ store });
   };
 
+  // 切换边界时清空TodoItem
   const handleClearTodoItems = () => {
-    setTodoStore({ store: [] });
+    setTodoStore({ store: {} });
+  };
+
+  const handleCompleteTodo = async (id: number) => {
+    const todo = todoStore.store[id];
+    if (!todo) return;
+
+    const item = {...todo}
+    item.Status = TodoItemStatus.Finished;
+    const client = getTodoClient();
+    const [err, _] = await client.PutTodo(item);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    fetchTodoItem(id);
+  };
+
+  const handleUncompleteTodo = async (id: number) => {
+    const todo = todoStore.store[id];
+    if (!todo) return;
+
+    const item = {...todo}
+    item.Status = TodoItemStatus.Waiting;
+    const client = getTodoClient();
+    const [err, _] = await client.PutTodo(item);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    fetchTodoItem(id);
+  };
+
+  const handleChangeTodoContent = async (id: number, content: string) => {
+    const todo = todoStore.store[id];
+    if (!todo) return;
+
+    const item = {...todo}
+    item.Content = content;
+    const client = getTodoClient();
+    const [err, _] = await client.PutTodo(item);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    fetchTodoItem(id);
   };
 
   return {
@@ -67,6 +117,10 @@ const useTodoStore = () => {
     setTodoStore,
 
     fetchTodoItem,
+
+    handleCompleteTodo,
+    handleUncompleteTodo,
+    handleChangeTodoContent,
   };
 };
 

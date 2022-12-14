@@ -39,8 +39,8 @@ const useTodoItemDetail = () => {
 
   const handleCloseDrawer = () => {
     setDetailState({
+      ...detailState,
       open: false,
-      itemId: 0,
     });
   };
 

@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Stack, InputBase, Box, Skeleton } from "@mui/material";
 
 import TodoItemCheckbox from "../../todo-item-checkbox";
@@ -9,19 +9,44 @@ interface IProps {
 }
 
 const StepItem: FC<IProps> = ({ todoId }) => {
-  const { todoStore, fetchTodoItem } = useTodoStore();
+  const { todoStore, fetchTodoItem, handleChangeTodoContent } = useTodoStore();
 
   const { store } = todoStore;
 
   const todoItem = store[todoId];
+
+  const [input, setInput] = useState("");
+  const resetInput = () => {
+    setInput(todoItem?.Content ?? "");
+  };
+
+  const handleOnBlur = () => {
+    const id = todoItem?.Id;
+    if (!id) return;
+
+    if (input !== todoItem?.Content) {
+      handleChangeTodoContent(id, input);
+    }
+  };
+
+  useEffect(() => {
+    resetInput();
+  }, [todoId, todoItem]);
 
   const contentRender = useMemo(() => {
     if (!todoItem) {
       fetchTodoItem(todoId);
       return <Skeleton variant="text" sx={{ fontSize: "1rem" }} />;
     }
-    return <InputBase sx={{ fontSize: "0.85rem" }} value={todoItem?.Content} />;
-  }, [todoItem]);
+    return (
+      <InputBase
+        sx={{ fontSize: "0.85rem" }}
+        onBlur={handleOnBlur}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+    );
+  }, [todoItem, input]);
 
   return (
     <Stack direction="row">

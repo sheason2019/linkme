@@ -15,4 +15,6 @@ func BindTodoController(r *gin.Engine) {
 	attachGetTodoItemsByIdList(r)
 
 	attachPostTodo(r)
+
+	attachPutTodo(r)
 }

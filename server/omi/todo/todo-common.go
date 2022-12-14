@@ -36,6 +36,9 @@ type GetGroupInfoByIdRequest struct {
 type PostTodoRequest struct {
 	Req PostTodoPayload `json:"req"`
 }
+type PutTodoRequest struct {
+	Todo TodoItem `json:"todo"`
+}
 type GetTodoItemsByIdListRequest struct {
 	IdList []int `form:"idList[]"`
 }
