@@ -74,7 +74,7 @@ func ResizeImage(img image.Image, pixels int, ext string) (*uploadDao.StoragedFi
 		resizedHeight = (imgHeight * pixels / imgWidth)
 	} else {
 		resizedHeight = pixels
-		resizedWidth = (imgWidth * pixels / imgWidth)
+		resizedWidth = (imgWidth * pixels / imgHeight)
 	}
 
 	resizedImg := imaging.Resize(img, resizedWidth, resizedHeight, imaging.Lanczos)
