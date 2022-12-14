@@ -2,6 +2,8 @@ package todoDao
 
 import (
 	"github.com/sheason2019/linkme/dao/userDao"
+	"github.com/sheason2019/linkme/omi/todo"
+	"github.com/sheason2019/linkme/utils"
 	"gorm.io/gorm"
 )
 
@@ -25,4 +27,21 @@ type TodoItem struct {
 
 	OwnerId uint
 	Owner   userDao.UserDao `gorm:"foreignKey:OwnerId"`
+}
+
+func (model TodoItem) ToIdl() todo.TodoItem {
+	todo := todo.TodoItem{}
+	todo.Id = utils.ConvertNumberToIntPtr(model.ID)
+	todo.Content = &model.Content
+	containedList := utils.Map(model.Contained, func(item uint, index int) int {
+		return int(item)
+	})
+	todo.ContainedList = &containedList
+	referenceList := utils.Map(model.References, func(item uint, index int) int {
+		return int(item)
+	})
+	todo.ReferenceList = &referenceList
+	todo.Status = &model.Status
+
+	return todo
 }

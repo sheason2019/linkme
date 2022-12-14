@@ -4,10 +4,11 @@
 package todo
 
 type GroupInfo struct {
-	GroupId  *int
-	Name     *string
-	Type     *string
-	TodoList *[]int
+	GroupId      *int
+	Name         *string
+	Type         *string
+	TodoList     *[]int
+	CommitedList *[]int
 }
 type TodoItem struct {
 	Id            *int
@@ -15,7 +16,7 @@ type TodoItem struct {
 	ReferenceList *[]int
 	ContainedList *[]int
 	// Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
-	Status *int
+	Status *string
 }
 type PostTodoPayload struct {
 	// 当该字段不为0时，PostTodo逻辑将会创建指定Todo的引用，而不是创建新的Todo

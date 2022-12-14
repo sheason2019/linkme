@@ -21,6 +21,8 @@ type TodoGroup struct {
 	Name string
 	// 组内任务事项的引用数组
 	Contained []uint `gorm:"serializer:json"`
+	// 组内已提交任务事项的引用数组
+	CommitedList []uint `gorm:"serializer:json"`
 
 	// 系列一定存在
 	SeriesId uint
@@ -39,7 +41,12 @@ func (model TodoGroup) ToIdl() *todo.GroupInfo {
 	todolist := utils.Map(model.Contained, func(item uint, index int) int {
 		return int(item)
 	})
+	commitedList := utils.Map(model.CommitedList, func(item uint, index int) int {
+		return int(item)
+	})
+
 	group.TodoList = &todolist
+	group.CommitedList = &commitedList
 	group.Type = &model.Type
 
 	return &group

@@ -3,6 +3,7 @@ import { Box, Container, Stack } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import useGroup from "../../hooks/use-group";
 import AddTodo from "./components/add-todo";
+import TodoList from "./components/todo-list";
 
 const Group = () => {
   const { groupState, fetchGroup } = useGroup();
@@ -27,6 +28,7 @@ const Group = () => {
       <Box sx={{ mt: 2 }}>
         <AddTodo />
       </Box>
+      <TodoList />
     </Container>
   );
 };

@@ -5,6 +5,7 @@ struct GroupInfo {
   string Type;
   
   repeated int TodoList;
+  repeated int CommitedList;
 }
 
 struct TodoItem {
@@ -15,7 +16,7 @@ struct TodoItem {
   repeated int ContainedList;
 
   // Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
-  int Status;
+  string Status;
 }
 
 struct PostTodoPayload {
