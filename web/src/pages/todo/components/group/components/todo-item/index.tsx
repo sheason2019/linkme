@@ -1,14 +1,15 @@
 import { Box, Card, Checkbox, Skeleton, Stack } from "@mui/material";
 import { FC, useMemo } from "react";
 import useTodoStore from "../../../../hooks/use-todo-store";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import CircleIcon from "@mui/icons-material/Circle";
+import TodoItemCheckbox from "../todo-item-checkbox";
+import useTodoItemDetail from "../todo-item-detail-drawer/hooks";
 
 interface ITodoItem {
   todoId: number;
 }
 
 const TodoItem: FC<ITodoItem> = ({ todoId }) => {
+  const { handleOpenDrawer } = useTodoItemDetail();
   const { todoStore, fetchTodoItem } = useTodoStore();
   const { store } = todoStore;
 
@@ -23,12 +24,9 @@ const TodoItem: FC<ITodoItem> = ({ todoId }) => {
   }, [todoItem]);
 
   return (
-    <Card>
+    <Card onClick={() => handleOpenDrawer(todoId)} sx={{ cursor: "pointer" }}>
       <Stack direction="row" alignItems="center">
-        <Checkbox
-          icon={<RadioButtonUncheckedIcon />}
-          checkedIcon={<CircleIcon />}
-        />
+        <TodoItemCheckbox todoItem={todoItem} />
         <Box sx={{ flex: 1, pr: 2, pl: 1 }}>{contentRender}</Box>
       </Stack>
     </Card>

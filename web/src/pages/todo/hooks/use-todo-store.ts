@@ -8,7 +8,7 @@ import useErrorHandler from "../../../common/hooks/use-error-handler";
 
 // 使用一个全局Map来存储Todo信息
 interface ITodoStoreAtom {
-  store: Record<number, TodoItem>;
+  store: Record<number, TodoItem | undefined>;
 }
 
 const todoStoreAtom = atom<ITodoStoreAtom>({
@@ -33,6 +33,7 @@ const patchTodoItem = _.debounce(
       return;
     }
 
+    patchList = [];
     setter(res);
   },
   300,

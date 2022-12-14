@@ -36,5 +36,7 @@ service Todo {
   // 创建Todo
   void PostTodo(PostTodoPayload req);
 
+  // 修改Todo状态
+
   repeated TodoItem GetTodoItemsByIdList(repeated int idList);
 }

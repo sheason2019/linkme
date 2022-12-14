@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useMemo } from "react";
 import useGroup from "../../../../hooks/use-group";
 import TodoItem from "../todo-item";
@@ -13,11 +13,11 @@ const TodoList = () => {
   }, [groupState]);
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Stack sx={{ mt: 2 }} spacing={1}>
       {todoList.map((item) => (
         <TodoItem key={item} todoId={item} />
       ))}
-    </Box>
+    </Stack>
   );
 };
 
