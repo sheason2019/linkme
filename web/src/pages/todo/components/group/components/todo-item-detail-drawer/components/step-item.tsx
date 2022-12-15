@@ -3,13 +3,17 @@ import { Stack, InputBase, Box, Skeleton } from "@mui/material";
 
 import TodoItemCheckbox from "../../todo-item-checkbox";
 import useTodoStore from "../../../../../hooks/use-todo-store";
+import useTodoItemDetail from "../hooks";
+import useTodoMenu from "../../todo-menu/hooks";
 
 interface IProps {
   todoId: number;
 }
 
 const StepItem: FC<IProps> = ({ todoId }) => {
+  const { todoItem: parentTodoItem } = useTodoItemDetail();
   const { todoStore, fetchTodoItem, handleChangeTodoContent } = useTodoStore();
+  const { handleOpenMenu } = useTodoMenu();
 
   const { store } = todoStore;
 
@@ -27,6 +31,13 @@ const StepItem: FC<IProps> = ({ todoId }) => {
     if (input !== todoItem?.Content) {
       handleChangeTodoContent(id, input);
     }
+  };
+
+  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+
+    const position = { top: e.clientY, left: e.clientX };
+    handleOpenMenu(todoId, position, "todo", parentTodoItem?.Id ?? 0);
   };
 
   useEffect(() => {
@@ -49,7 +60,7 @@ const StepItem: FC<IProps> = ({ todoId }) => {
   }, [todoItem, input]);
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" component={Box} onContextMenu={handleContextMenu}>
       <TodoItemCheckbox size="small" todoItem={todoItem} />
       {contentRender}
     </Stack>

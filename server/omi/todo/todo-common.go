@@ -39,6 +39,11 @@ type PostTodoRequest struct {
 type PutTodoRequest struct {
 	Todo TodoItem `json:"todo"`
 }
+type DeleteTodoRequest struct {
+	TodoId  int    `form:"todoId"`
+	MountOn string `form:"mountOn"`
+	MountId int    `form:"mountId"`
+}
 type GetTodoItemsByIdListRequest struct {
 	IdList []int `form:"idList[]"`
 }

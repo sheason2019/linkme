@@ -35,9 +35,10 @@ service Todo {
 
   // 创建Todo
   void PostTodo(PostTodoPayload req);
-
   // 修改Todo
   void PutTodo(TodoItem todo);
+  // 删除TODO
+  void DeleteTodo(int todoId, string mountOn, int mountId);
 
   repeated TodoItem GetTodoItemsByIdList(repeated int idList);
 }

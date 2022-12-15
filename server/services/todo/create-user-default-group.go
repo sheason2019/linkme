@@ -13,8 +13,7 @@ var lockMap = make(map[uint]bool)
 // 为用户创建默认系列和默认事项组
 func CreateUserDefaultGroup(userId uint) (*todoDao.TodoGroup, error) {
 	// 使用乐观锁避免重复创建用户默认事项组
-	creating, _ := lockMap[userId]
-	if creating {
+	if creating := lockMap[userId]; creating {
 		return nil, errors.New("重复创建用户默认事项组")
 	}
 

@@ -14,6 +14,8 @@ type Todo interface {
 	PostTodo(ctx *gin.Context, req PostTodoPayload)
 	// 修改Todo
 	PutTodo(ctx *gin.Context, todo TodoItem)
+	// 删除TODO
+	DeleteTodo(ctx *gin.Context, todoId int, mountOn string, mountId int)
 	GetTodoItemsByIdList(ctx *gin.Context, idList []int) []TodoItem
 }
 type typeTodoDefinition struct {
@@ -21,6 +23,7 @@ type typeTodoDefinition struct {
 	GET_GROUP_INFO_BY_ID_PATH      string
 	POST_TODO_PATH                 string
 	PUT_TODO_PATH                  string
+	DELETE_TODO_PATH               string
 	GET_TODO_ITEMS_BY_ID_LIST_PATH string
 }
 
@@ -29,5 +32,6 @@ var TodoDefinition = &typeTodoDefinition{
 	GET_GROUP_INFO_BY_ID_PATH:      "/Todo.GroupInfoById",
 	POST_TODO_PATH:                 "/Todo.Todo",
 	PUT_TODO_PATH:                  "/Todo.Todo",
+	DELETE_TODO_PATH:               "/Todo.Todo",
 	GET_TODO_ITEMS_BY_ID_LIST_PATH: "/Todo.TodoItemsByIdList",
 }
