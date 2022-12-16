@@ -28,7 +28,10 @@ const TodoItemCheckbox: FC<ITodoItemCheckbox> = ({
     return todoItem.Status !== TodoItemStatus.Waiting;
   }, [todoItem]);
 
-  const handleOnChange = () => {
+  const handleOnChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     const id = todoItem?.Id;
     if (!id) return;
 

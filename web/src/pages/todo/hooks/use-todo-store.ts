@@ -68,8 +68,9 @@ const useTodoStore = () => {
     const todo = todoStore.store[id];
     if (!todo) return;
 
-    const item = {...todo}
+    const item = { ...todo };
     item.Status = TodoItemStatus.Finished;
+    handleSetTodoItems([item]);
     const client = getTodoClient();
     const [err, _] = await client.PutTodo(item);
     if (err) {
@@ -84,8 +85,9 @@ const useTodoStore = () => {
     const todo = todoStore.store[id];
     if (!todo) return;
 
-    const item = {...todo}
+    const item = { ...todo };
     item.Status = TodoItemStatus.Waiting;
+    handleSetTodoItems([item]);
     const client = getTodoClient();
     const [err, _] = await client.PutTodo(item);
     if (err) {
@@ -100,8 +102,9 @@ const useTodoStore = () => {
     const todo = todoStore.store[id];
     if (!todo) return;
 
-    const item = {...todo}
+    const item = { ...todo };
     item.Content = content;
+    handleSetTodoItems([item]);
     const client = getTodoClient();
     const [err, _] = await client.PutTodo(item);
     if (err) {

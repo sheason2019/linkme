@@ -35,6 +35,8 @@ const useGroup = () => {
     groupid,
     groupState,
     fetchGroup,
+
+    setGroupState,
   };
 };
 
