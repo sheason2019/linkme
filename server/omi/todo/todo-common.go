@@ -44,6 +44,9 @@ type DeleteTodoRequest struct {
 	MountOn string `form:"mountOn"`
 	MountId int    `form:"mountId"`
 }
+type PutGroupRequest struct {
+	Group GroupInfo `json:"group"`
+}
 type GetTodoItemsByIdListRequest struct {
 	IdList []int `form:"idList[]"`
 }

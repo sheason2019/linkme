@@ -40,5 +40,8 @@ service Todo {
   // 删除TODO
   void DeleteTodo(int todoId, string mountOn, int mountId);
 
+  // 修改Group
+  void PutGroup(GroupInfo group);
+
   repeated TodoItem GetTodoItemsByIdList(repeated int idList);
 }

@@ -58,6 +58,12 @@ export class TodoClient extends OmiClientBase {
     const method = "Delete";
     return this.request<void>(url, method, { todoId, mountOn, mountId });
   }
+  // 修改Group
+  PutGroup(group: GroupInfo) {
+    const url = "Todo.Group";
+    const method = "Put";
+    return this.request<void>(url, method, { group });
+  }
   GetTodoItemsByIdList(idList: number[]) {
     const url = "Todo.TodoItemsByIdList";
     const method = "Get";
