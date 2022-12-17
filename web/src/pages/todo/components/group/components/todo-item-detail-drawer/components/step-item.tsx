@@ -51,8 +51,9 @@ const StepItem: FC<IProps> = ({ todoId }) => {
     }
     return (
       <InputBase
-        sx={{ fontSize: "0.85rem" }}
+        sx={{ fontSize: "0.85rem", flex: 1 }}
         onBlur={handleOnBlur}
+        multiline
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />

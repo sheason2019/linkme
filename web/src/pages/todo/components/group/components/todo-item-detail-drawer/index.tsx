@@ -75,6 +75,7 @@ const TodoItemDetailDrawer = () => {
             <Stack direction="row" spacing={1} sx={{ py: 0.5 }}>
               <TodoItemCheckbox todoItem={todoItem} />
               <InputBase
+                multiline
                 onBlur={handleOnBlur}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
