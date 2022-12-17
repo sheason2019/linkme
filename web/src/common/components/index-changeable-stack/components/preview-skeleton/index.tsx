@@ -7,16 +7,18 @@ interface IProps {
   from: number;
   width: number;
   height: number;
+  left: number;
   elList: Element[];
   handleSetPreviewEl: (el: Element | null) => any;
 }
 
 const PreviewSkeleton: FC<IProps> = ({
+  to,
+  from,
   show,
+  left,
   width,
   height,
-  from,
-  to,
   elList,
   handleSetPreviewEl,
 }) => {
@@ -52,6 +54,7 @@ const PreviewSkeleton: FC<IProps> = ({
         borderRadius: 1,
         width,
         height,
+        left,
         position: "absolute",
         background: "rgba(0, 0, 0, 0.05)",
       }}

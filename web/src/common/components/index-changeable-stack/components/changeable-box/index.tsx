@@ -15,8 +15,7 @@ interface IChangeableBox {
   handleSetDragTo: (to: number) => any;
   handleSetDragFrom: (from: number) => any;
   handleChangeIndex: (cb: () => any) => any;
-  handleSetDragWidth: (width: number) => any;
-  handleSetDragHeight: (height: number) => any;
+  handleSetDragSize: (width: number, height: number, left: number) => any;
   handleSetActiveIndex: (index: number) => any;
   handleUploadEl: (index: number, el: Element) => any;
 }
@@ -43,8 +42,7 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
   handleSetDragTo,
   handleSetDragFrom,
   handleChangeIndex,
-  handleSetDragWidth,
-  handleSetDragHeight,
+  handleSetDragSize,
   handleSetActiveIndex,
 }) => {
   // 可拖拽容器Ref
@@ -81,23 +79,24 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
     clickTimeStampRef.current = new Date().getTime();
     const width = e.currentTarget.offsetWidth;
     const height = e.currentTarget.offsetHeight;
+    const left = e.currentTarget.offsetLeft;
     const rect = e.currentTarget.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
 
-    handleAddListener(width, height, offsetX, offsetY);
+    handleAddListener(width, height, left, offsetX, offsetY);
   };
   const handleAddListener = (
     width: number,
     height: number,
+    left: number,
     offsetX: number,
     offsetY: number
   ) => {
     timerRef.current = setTimeout(() => {
-      handleSetDragWidth(width);
+      handleSetDragSize(width, height, left);
       handleSetDragTo(index);
       handleSetDragFrom(index);
-      handleSetDragHeight(height);
       handleSetActiveIndex(index);
       // 替换Listener
       handleClearListener();
@@ -109,24 +108,24 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
       const listener = (e: MouseEvent) => {
         const el = elRef.current;
         if (!el) return;
-        let clientY: number;
-        let clientX: number;
-        const data = mouseData(e);
-        clientY = data.clientY;
-        clientX = data.clientX;
+
+        const clientY = e.clientY;
+        const clientX = e.clientX;
 
         const { from, to, dragHeight } = databox.current;
+
+        const spacingNum = Number.isNaN(spacing) ? 0 : spacing;
 
         let i;
         for (i = 0; i < filtedElList.length; i++) {
           let offset = 0;
           if (from < to) {
             if (i >= from && i < to) {
-              offset = -dragHeight - 8 * spacing;
+              offset = -dragHeight - 8 * spacingNum;
             }
           } else {
             if (i < from && i >= to) {
-              offset = dragHeight + 8 * spacing;
+              offset = dragHeight + 8 * spacingNum;
             }
           }
 
@@ -179,13 +178,15 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
   }, [index, children, active, elRef]);
 
   const transformSize = useMemo(() => {
+    const spacingNum = Number.isNaN(spacing) ? 0 : spacing;
+
     if (from < to) {
       if (index > from && index <= to) {
-        return -dragHeight - 8 * spacing;
+        return -dragHeight - 8 * spacingNum;
       }
     } else {
       if (index < from && index >= to) {
-        return dragHeight + 8 * spacing;
+        return dragHeight + 8 * spacingNum;
       }
     }
     return 0;
@@ -196,9 +197,6 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
 
     return `translateY(${transformSize}px)`;
   }, [from, to, index, dragHeight, active]);
-
-  // MouseMove的时候要阻止点击事件
-  const mouseMovePreventer = useRef(false);
 
   return (
     <Stack sx={{ height: currentActive ? dragHeight : "auto" }}>
@@ -218,7 +216,6 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
           opacity: currentActive ? 0.75 : 1,
         }}
         onClickCapture={(e) => {
-          
           if (currentActive) {
             e.preventDefault();
             e.stopPropagation();

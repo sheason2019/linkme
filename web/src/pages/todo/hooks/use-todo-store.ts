@@ -121,6 +121,7 @@ const useTodoStore = () => {
 
     fetchTodoItem,
 
+    handleSetTodoItems,
     handleCompleteTodo,
     handleUncompleteTodo,
     handleChangeTodoContent,

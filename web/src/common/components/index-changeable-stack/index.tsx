@@ -10,10 +10,22 @@ interface IDragState {
   from: number;
   width: number;
   height: number;
+  left: number;
   activeIndex: number;
   elList: Element[];
   previewEl: Element | null;
 }
+
+const DEFAULT_DRAG_STATE: IDragState = {
+  to: 0,
+  from: 0,
+  width: 0,
+  height: 0,
+  left: 0,
+  activeIndex: -1,
+  elList: [],
+  previewEl: null,
+};
 
 interface IProps
   extends DefaultComponentProps<
@@ -29,17 +41,7 @@ interface IProps
 const IndexChangeableStack: FC<IProps> = (props) => {
   const { onIndexChange, ...extra } = props;
 
-  const [keypre, setKeypre] = useState(0);
-
-  const [dragState, setDragState] = useState<IDragState>({
-    to: 0,
-    from: 0,
-    width: 0,
-    height: 0,
-    activeIndex: -1,
-    elList: [],
-    previewEl: null,
-  });
+  const [dragState, setDragState] = useState<IDragState>(DEFAULT_DRAG_STATE);
 
   const handleUploadEl = (index: number, el: Element) => {
     setDragState((prev) => {
@@ -54,11 +56,8 @@ const IndexChangeableStack: FC<IProps> = (props) => {
   const handleSetDragTo = (to: number) => {
     setDragState((prev) => ({ ...prev, to }));
   };
-  const handleSetDragHeight = (height: number) => {
-    setDragState((prev) => ({ ...prev, height }));
-  };
-  const handleSetDragWidth = (width: number) => {
-    setDragState((prev) => ({ ...prev, width }));
+  const handleSetDragSize = (width: number, height: number, left: number) => {
+    setDragState((prev) => ({ ...prev, width, height, left }));
   };
   const handleSetActiveIndex = (index: number) => {
     setDragState((prev) => ({ ...prev, activeIndex: index }));
@@ -66,27 +65,19 @@ const IndexChangeableStack: FC<IProps> = (props) => {
   const handleSetPreviewEl = (el: Element | null) => {
     setDragState((prev) => ({ ...prev, previewEl: el }));
   };
-  const handleResetDragState = () => {
-    setDragState({
-      to: 0,
-      from: 0,
-      width: 0,
-      height: 0,
-      activeIndex: -1,
-      elList: [],
-      previewEl: null,
-    });
-  };
+  const handleResetDragState = () => setDragState(DEFAULT_DRAG_STATE);
 
   const handleChangeIndex = (cb: () => any) => {
     setTimeout(() => {
       onIndexChange(dragState.from, dragState.to);
       cb();
+
+      setTimeout(() => handleResetDragState(), 0);
     }, 500);
   };
-  
+
   const children = props.children;
-  
+
   const childrenArr: ReactNode[] = useMemo(() => {
     handleResetDragState();
     if (!children) return [];
@@ -100,10 +91,10 @@ const IndexChangeableStack: FC<IProps> = (props) => {
 
   return (
     <Box sx={{ position: "relative" }}>
-      <Stack spacing={1} {...extra}>
+      <Stack {...extra}>
         {childrenArr.map((Item, index) => (
           <ChangeableBox
-            key={`${keypre}-${index}`}
+            key={index}
             index={index}
             to={dragState.to}
             from={dragState.from}
@@ -117,8 +108,7 @@ const IndexChangeableStack: FC<IProps> = (props) => {
             handleSetDragTo={handleSetDragTo}
             handleSetDragFrom={handleSetDragFrom}
             handleChangeIndex={handleChangeIndex}
-            handleSetDragWidth={handleSetDragWidth}
-            handleSetDragHeight={handleSetDragHeight}
+            handleSetDragSize={handleSetDragSize}
             handleSetActiveIndex={handleSetActiveIndex}
           >
             {Item}
@@ -128,6 +118,7 @@ const IndexChangeableStack: FC<IProps> = (props) => {
       <PreviewSkeleton
         to={dragState.to}
         from={dragState.from}
+        left={dragState.left}
         width={dragState.width}
         height={dragState.height}
         elList={dragState.elList}

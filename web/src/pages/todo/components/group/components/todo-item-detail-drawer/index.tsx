@@ -7,6 +7,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { getTodoClient } from "../../../../../../api-client";
+import { TodoItem } from "../../../../../../api-lib/todo-client";
+import IndexChangeableStack from "../../../../../../common/components/index-changeable-stack";
+import useErrorHandler from "../../../../../../common/hooks/use-error-handler";
 import useTodoStore from "../../../../hooks/use-todo-store";
 import AddTodo from "../add-todo";
 import TodoItemCheckbox from "../todo-item-checkbox";
@@ -14,7 +18,9 @@ import StepItem from "./components/step-item";
 import useTodoItemDetail from "./hooks";
 
 const TodoItemDetailDrawer = () => {
-  const { fetchTodoItem, handleChangeTodoContent } = useTodoStore();
+  const { handler } = useErrorHandler();
+  const { fetchTodoItem, handleChangeTodoContent, handleSetTodoItems } =
+    useTodoStore();
   const { todoItem, detailState, handleCloseDrawer } = useTodoItemDetail();
 
   const { open } = detailState;
@@ -32,6 +38,25 @@ const TodoItemDetailDrawer = () => {
       handleChangeTodoContent(id, input);
     }
   };
+
+  const handleIndexChange = async (from: number, to: number) => {
+    const list = [...todoItem!.ContainedList];
+    const [item] = list.splice(from, 1);
+    list.splice(to, 0, item);
+
+    const todo: TodoItem = { ...todoItem!, ContainedList: list };
+    handleSetTodoItems([todo]);
+
+    const client = getTodoClient();
+    const [err] = await client.PutTodo(todo);
+    if (err) {
+      handler(err);
+      return;
+    }
+
+    fetchTodoItem(todoItem!.Id);
+  };
+
   useEffect(() => {
     resetInput();
   }, [open]);
@@ -56,20 +81,23 @@ const TodoItemDetailDrawer = () => {
               />
             </Stack>
             <Divider sx={{ mx: 1, my: 0.25 }} />
-            <Stack
-              sx={{ px: 1 }}
-              divider={<Divider sx={{ mx: 1, my: 0.25 }} />}
-            >
-              {todoItem?.ContainedList.map((id) => (
-                <StepItem key={id} todoId={id} />
-              ))}
-              <AddTodo
-                mountOn="todo"
-                mountId={todoItem?.Id ?? 0}
-                placeholder="添加步骤"
-                afterSubmit={async () => fetchTodoItem(todoItem?.Id ?? 0)}
-              />
-            </Stack>
+            {todoItem?.ContainedList && (
+              <IndexChangeableStack
+                sx={{ px: 1 }}
+                divider={<Divider sx={{ mx: 1 }} />}
+                onIndexChange={handleIndexChange}
+              >
+                {todoItem?.ContainedList.map((id) => (
+                  <StepItem key={id} todoId={id} />
+                ))}
+              </IndexChangeableStack>
+            )}
+            <AddTodo
+              mountOn="todo"
+              mountId={todoItem?.Id ?? 0}
+              placeholder="添加步骤"
+              afterSubmit={async () => fetchTodoItem(todoItem?.Id ?? 0)}
+            />
           </Stack>
         </Paper>
       </Stack>
