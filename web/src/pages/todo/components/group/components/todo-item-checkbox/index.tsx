@@ -4,36 +4,34 @@ import { Checkbox } from "@mui/material";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-import { TodoItem } from "../../../../../../api-lib/todo-client";
+import { TodoItem, TodoStep } from "../../../../../../api-lib/todo-client";
 import { TodoItemStatus } from "../../../../typings";
 import useTodoStore from "../../../../hooks/use-todo-store";
 
 interface ITodoItemCheckbox {
-  todoItem: TodoItem | undefined;
-  size?: "small" | "medium";
+  itemType: "todo" | "step";
+  item: TodoItem | TodoStep;
 }
 
-const TodoItemCheckbox: FC<ITodoItemCheckbox> = ({
-  todoItem,
-  size = "medium",
-}) => {
+const TodoItemCheckbox: FC<ITodoItemCheckbox> = ({ item, itemType }) => {
   const { handleCompleteTodo, handleUncompleteTodo } = useTodoStore();
 
   const checkFill =
-    todoItem?.Status === TodoItemStatus.Commited ? "gray" : undefined;
+    item?.Status === TodoItemStatus.Commited ? "gray" : undefined;
 
   const value = useMemo(() => {
-    if (!todoItem) return false;
+    if (!item) return false;
 
-    return todoItem.Status !== TodoItemStatus.Waiting;
-  }, [todoItem]);
+    return item.Status !== TodoItemStatus.Waiting;
+  }, [item]);
 
-  const handleOnChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleOnChange = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const id = todoItem?.Id;
-    if (!id) return;
+    const id = item.Id;
 
     if (value) {
       handleUncompleteTodo(id);
@@ -46,10 +44,14 @@ const TodoItemCheckbox: FC<ITodoItemCheckbox> = ({
     <Checkbox
       onClick={handleOnChange}
       checked={value}
-      icon={<RadioButtonUncheckedIcon fontSize={size} />}
+      icon={
+        <RadioButtonUncheckedIcon
+          fontSize={itemType === "step" ? "small" : "medium"}
+        />
+      }
       checkedIcon={
         <CheckCircleIcon
-          fontSize={size}
+          fontSize={itemType === "step" ? "small" : "medium"}
           sx={{
             fill: checkFill,
           }}

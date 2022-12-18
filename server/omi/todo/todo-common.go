@@ -11,21 +11,23 @@ type GroupInfo struct {
 	CommitedList *[]int
 }
 type TodoItem struct {
-	Id            *int
-	Content       *string
-	ReferenceList *[]int
-	ContainedList *[]int
+	Id      *int
+	Content *string
+	Steps   *[]TodoStep
 	// Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
 	Status *string
+}
+type TodoStep struct {
+	Id      *int
+	Content *string
+	Status  *string
 }
 type PostTodoPayload struct {
 	// 当该字段不为0时，PostTodo逻辑将会创建指定Todo的引用，而不是创建新的Todo
 	TodoId *int
 	// Todo内容，仅TodoId为0时会调用该字段
 	Content *string
-	// 挂载位置 group 或 todo
-	MountOn *string
-	MountId *int
+	GroupId *int
 }
 type GetDefaultGroupRequest struct {
 	Username string `form:"username"`
@@ -40,9 +42,18 @@ type PutTodoRequest struct {
 	Todo TodoItem `json:"todo"`
 }
 type DeleteTodoRequest struct {
-	TodoId  int    `form:"todoId"`
-	MountOn string `form:"mountOn"`
-	MountId int    `form:"mountId"`
+	TodoId  int `form:"todoId"`
+	GroupId int `form:"groupId"`
+}
+type PostTodoStepRequest struct {
+	Content string `json:"content"`
+	TodoId  int    `json:"todoId"`
+}
+type DeleteTodoStepRequest struct {
+	StepId int `form:"stepId"`
+}
+type PutTodoStepRequest struct {
+	Step TodoStep `json:"step"`
 }
 type PutGroupRequest struct {
 	Group GroupInfo `json:"group"`

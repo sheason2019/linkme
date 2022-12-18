@@ -1,10 +1,6 @@
 package db
 
 import (
-	"github.com/sheason2019/linkme/dao/chatDao"
-	todoDao "github.com/sheason2019/linkme/dao/todo-dao"
-	"github.com/sheason2019/linkme/dao/uploadDao"
-	"github.com/sheason2019/linkme/dao/userDao"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -47,20 +43,4 @@ func GetConn() *gorm.DB {
 	println("成功连接至数据库")
 	connSingleton = db
 	return db
-}
-
-func AutoMigrate() {
-	connSingleton.AutoMigrate(
-		&userDao.UserDao{},
-		&chatDao.ConversationDao{},
-		&chatDao.MemberDao{},
-		&chatDao.MessageDao{},
-		&chatDao.MessageReciver{},
-		&chatDao.SequenceDao{},
-		&uploadDao.StoragedFile{},
-		&uploadDao.StoragedImage{},
-		&todoDao.TodoItem{},
-		&todoDao.TodoGroup{},
-		&todoDao.TodoSeries{},
-	)
 }

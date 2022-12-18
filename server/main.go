@@ -6,6 +6,7 @@ import (
 	chatController "github.com/sheason2019/linkme/controller/chat"
 	todoController "github.com/sheason2019/linkme/controller/todo"
 	uploadController "github.com/sheason2019/linkme/controller/upload"
+	"github.com/sheason2019/linkme/dao"
 	"github.com/sheason2019/linkme/db"
 	"github.com/sheason2019/linkme/middleware"
 	"github.com/sheason2019/linkme/rpc"
@@ -19,7 +20,7 @@ func main() {
 	// 建立数据库连接
 	db.GetConn()
 	// 数据库自动迁移
-	db.AutoMigrate()
+	dao.AutoMigrate()
 	// 生成RSA密钥对文件
 	accountService.GenRsaFile()
 	// 生成RPC TOKEN

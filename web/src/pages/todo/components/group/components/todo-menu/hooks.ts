@@ -1,3 +1,4 @@
+import { OmiError } from "@omi-stack/omi-client/dist/typings";
 import { atom, useRecoilState } from "recoil";
 import { getTodoClient } from "../../../../../../api-client";
 import useErrorHandler from "../../../../../../common/hooks/use-error-handler";
@@ -6,7 +7,7 @@ import useTodoStore from "../../../../hooks/use-todo-store";
 
 interface ITodoMenuAtom {
   open: boolean;
-  todoId: number;
+  itemId: number;
   fromId: number;
   from: "group" | "todo";
 
@@ -19,7 +20,7 @@ interface ITodoMenuAtom {
 const todoMenuAtom = atom<ITodoMenuAtom>({
   key: "todo/todo-menu",
   default: {
-    todoId: 0,
+    itemId: 0,
     fromId: 0,
     open: false,
     from: "group",
@@ -34,7 +35,7 @@ const useTodoMenu = () => {
   const [todoMenuState, setTodoMenuState] = useRecoilState(todoMenuAtom);
 
   const handleOpenMenu = (
-    todoId: number,
+    itemId: number,
     position: { top: number; left: number },
     from: "group" | "todo",
     fromId: number
@@ -42,7 +43,7 @@ const useTodoMenu = () => {
     setTodoMenuState({
       from,
       fromId,
-      todoId,
+      itemId,
       position,
       open: true,
     });
@@ -57,11 +58,18 @@ const useTodoMenu = () => {
 
   const handleDeleteTodo = async () => {
     const client = getTodoClient();
-    const [err] = await client.DeleteTodo(
-      todoMenuState.todoId,
-      todoMenuState.from,
-      todoMenuState.fromId
-    );
+    let err: OmiError | null = null;
+    if (todoMenuState.from === "group") {
+      const [error] = await client.DeleteTodo(
+        todoMenuState.itemId,
+        todoMenuState.fromId
+      );
+      err = error;
+    } else {
+      // Delete Step
+      const [error] = await client.DeleteTodoStep(todoMenuState.itemId);
+      err = error;
+    }
 
     if (err) {
       handler(err);

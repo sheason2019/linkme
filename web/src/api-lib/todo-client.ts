@@ -15,9 +15,13 @@ export interface GroupInfo {
 export interface TodoItem {
   Id: number;
   Content: string;
-  ReferenceList: number[];
-  ContainedList: number[];
+  Steps: TodoStep[];
   // Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
+  Status: string;
+}
+export interface TodoStep {
+  Id: number;
+  Content: string;
   Status: string;
 }
 export interface PostTodoPayload {
@@ -25,9 +29,7 @@ export interface PostTodoPayload {
   TodoId: number;
   // Todo内容，仅TodoId为0时会调用该字段
   Content: string;
-  // 挂载位置 group 或 todo
-  MountOn: string;
-  MountId: number;
+  GroupId: number;
 }
 export class TodoClient extends OmiClientBase {
   GetDefaultGroup(username: string) {
@@ -53,10 +55,28 @@ export class TodoClient extends OmiClientBase {
     return this.request<void>(url, method, { todo });
   }
   // 删除TODO
-  DeleteTodo(todoId: number, mountOn: string, mountId: number) {
+  DeleteTodo(todoId: number, groupId: number) {
     const url = "Todo.Todo";
     const method = "Delete";
-    return this.request<void>(url, method, { todoId, mountOn, mountId });
+    return this.request<void>(url, method, { todoId, groupId });
+  }
+  // 创建步骤
+  PostTodoStep(content: string, todoId: number) {
+    const url = "Todo.TodoStep";
+    const method = "Post";
+    return this.request<void>(url, method, { content, todoId });
+  }
+  // 删除步骤
+  DeleteTodoStep(stepId: number) {
+    const url = "Todo.TodoStep";
+    const method = "Delete";
+    return this.request<void>(url, method, { stepId });
+  }
+  // 修改步骤
+  PutTodoStep(step: TodoStep) {
+    const url = "Todo.TodoStep";
+    const method = "Put";
+    return this.request<void>(url, method, { step });
   }
   // 修改Group
   PutGroup(group: GroupInfo) {

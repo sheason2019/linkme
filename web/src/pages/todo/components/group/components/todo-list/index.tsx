@@ -26,12 +26,12 @@ const TodoList = () => {
 
     const client = getTodoClient();
     const [err] = await client.PutGroup(group);
+    fetchGroup();
+
     if (err) {
       handler(err);
       return;
     }
-
-    fetchGroup();
   };
 
   return (

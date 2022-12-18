@@ -152,12 +152,14 @@ const ChangeableBox: FC<PropsWithChildren<IChangeableBox>> = ({
       clearTimeout(timerRef.current);
     }
 
-    handleChangeIndex(() => {
-      el.style.opacity = "";
-      el.style.transition = "";
-      el.style.top = "";
-      el.style.left = "";
-    });
+    if (active) {
+      handleChangeIndex(() => {
+        el.style.opacity = "";
+        el.style.transition = "";
+        el.style.top = "";
+        el.style.left = "";
+      });
+    }
 
     handleClearListener();
 

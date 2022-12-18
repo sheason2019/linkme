@@ -12,10 +12,16 @@ struct TodoItem {
   int Id;
   string Content;
 
-  repeated int ReferenceList;
-  repeated int ContainedList;
+  repeated TodoStep Steps;
 
   // Status是一个Int类型的Enum， 0: 未完成 1: 已完成 2: 已提交
+  string Status;
+}
+
+struct TodoStep {
+  int Id;
+  string Content;
+
   string Status;
 }
 
@@ -24,9 +30,7 @@ struct PostTodoPayload {
   int TodoId;
   // Todo内容，仅TodoId为0时会调用该字段
   string Content;
-  // 挂载位置 group 或 todo
-  string MountOn;
-  int MountId;
+  int GroupId;
 }
 
 service Todo {
@@ -38,7 +42,13 @@ service Todo {
   // 修改Todo
   void PutTodo(TodoItem todo);
   // 删除TODO
-  void DeleteTodo(int todoId, string mountOn, int mountId);
+  void DeleteTodo(int todoId, int groupId);
+  // 创建步骤
+  void PostTodoStep(string content, int todoId);
+  // 删除步骤
+  void DeleteTodoStep(int stepId);
+  // 修改步骤
+  void PutTodoStep(TodoStep step);
 
   // 修改Group
   void PutGroup(GroupInfo group);

@@ -40,11 +40,11 @@ const TodoItemDetailDrawer = () => {
   };
 
   const handleIndexChange = async (from: number, to: number) => {
-    const list = [...todoItem!.ContainedList];
+    const list = [...todoItem!.Steps];
     const [item] = list.splice(from, 1);
     list.splice(to, 0, item);
 
-    const todo: TodoItem = { ...todoItem!, ContainedList: list };
+    const todo: TodoItem = { ...todoItem!, Steps: list };
     handleSetTodoItems([todo]);
 
     const client = getTodoClient();
@@ -73,7 +73,7 @@ const TodoItemDetailDrawer = () => {
         <Paper sx={{ mt: 2, py: 0.5, px: 1 }} elevation={0}>
           <Stack>
             <Stack direction="row" spacing={1} sx={{ py: 0.5 }}>
-              <TodoItemCheckbox todoItem={todoItem} />
+              <TodoItemCheckbox itemType="todo" item={todoItem!} />
               <InputBase
                 multiline
                 onBlur={handleOnBlur}
@@ -82,14 +82,14 @@ const TodoItemDetailDrawer = () => {
               />
             </Stack>
             <Divider sx={{ mx: 1, my: 0.25 }} />
-            {todoItem?.ContainedList && (
+            {todoItem?.Steps && (
               <IndexChangeableStack
                 sx={{ px: 1 }}
                 divider={<Divider sx={{ mx: 1 }} />}
                 onIndexChange={handleIndexChange}
               >
-                {todoItem?.ContainedList.map((id) => (
-                  <StepItem key={id} todoId={id} />
+                {todoItem?.Steps.map((step) => (
+                  <StepItem key={step.Id} todoId={todoItem.Id} step={step} />
                 ))}
               </IndexChangeableStack>
             )}

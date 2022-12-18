@@ -1,35 +1,42 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { Stack, InputBase, Box, Skeleton } from "@mui/material";
+import { FC, useEffect, useState } from "react";
+import { Stack, InputBase, Box } from "@mui/material";
 
 import TodoItemCheckbox from "../../todo-item-checkbox";
+import { TodoStep } from "../../../../../../../api-lib/todo-client";
+import { getTodoClient } from "../../../../../../../api-client";
+import useErrorHandler from "../../../../../../../common/hooks/use-error-handler";
 import useTodoStore from "../../../../../hooks/use-todo-store";
-import useTodoItemDetail from "../hooks";
 import useTodoMenu from "../../todo-menu/hooks";
 
 interface IProps {
+  step: TodoStep;
   todoId: number;
 }
 
-const StepItem: FC<IProps> = ({ todoId }) => {
-  const { todoItem: parentTodoItem } = useTodoItemDetail();
-  const { todoStore, fetchTodoItem, handleChangeTodoContent } = useTodoStore();
+const StepItem: FC<IProps> = ({ step, todoId }) => {
   const { handleOpenMenu } = useTodoMenu();
-
-  const { store } = todoStore;
-
-  const todoItem = store[todoId];
-
+  const { fetchTodoItem } = useTodoStore();
+  const { handler } = useErrorHandler();
   const [input, setInput] = useState("");
   const resetInput = () => {
-    setInput(todoItem?.Content ?? "");
+    setInput(step.Content ?? "");
   };
 
-  const handleOnBlur = () => {
-    const id = todoItem?.Id;
+  const handleOnBlur = async () => {
+    const id = step.Id;
     if (!id) return;
 
-    if (input !== todoItem?.Content) {
-      handleChangeTodoContent(id, input);
+    if (input !== step?.Content) {
+      const client = getTodoClient();
+      const postStep = { ...step };
+      postStep.Content = input;
+      const [err] = await client.PutTodoStep(postStep);
+      fetchTodoItem(todoId);
+
+      if (err) {
+        handler(err);
+        return;
+      }
     }
   };
 
@@ -37,19 +44,16 @@ const StepItem: FC<IProps> = ({ todoId }) => {
     e.preventDefault();
 
     const position = { top: e.clientY, left: e.clientX };
-    handleOpenMenu(todoId, position, "todo", parentTodoItem?.Id ?? 0);
+    handleOpenMenu(step.Id, position, "todo", todoId ?? 0);
   };
 
   useEffect(() => {
     resetInput();
-  }, [todoId, todoItem]);
+  }, [step]);
 
-  const contentRender = useMemo(() => {
-    if (!todoItem) {
-      fetchTodoItem(todoId);
-      return <Skeleton variant="text" sx={{ fontSize: "1rem" }} />;
-    }
-    return (
+  return (
+    <Stack direction="row" component={Box} onContextMenu={handleContextMenu}>
+      <TodoItemCheckbox item={step} itemType="step" />
       <InputBase
         sx={{ fontSize: "0.85rem", flex: 1 }}
         onBlur={handleOnBlur}
@@ -57,13 +61,6 @@ const StepItem: FC<IProps> = ({ todoId }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
-    );
-  }, [todoItem, input]);
-
-  return (
-    <Stack direction="row" component={Box} onContextMenu={handleContextMenu}>
-      <TodoItemCheckbox size="small" todoItem={todoItem} />
-      {contentRender}
     </Stack>
   );
 };

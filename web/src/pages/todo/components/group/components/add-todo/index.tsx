@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
-import { Box, Card, IconButton, InputBase, Stack } from "@mui/material";
+import { IconButton, InputBase, Stack } from "@mui/material";
 
 import PlusIcon from "@mui/icons-material/Add";
 import SendIcon from "@mui/icons-material/Send";
 
 import { getTodoClient } from "../../../../../../api-client";
 import useErrorHandler from "../../../../../../common/hooks/use-error-handler";
+import { OmiError } from "@omi-stack/omi-client/dist/typings";
 
 interface IProps {
   placeholder?: string;
@@ -28,12 +29,19 @@ const AddTodo: FC<IProps> = ({
 
     const client = getTodoClient();
 
-    const [err, _] = await client.PostTodo({
-      Content: input,
-      TodoId: 0,
-      MountOn: mountOn,
-      MountId: mountId,
-    });
+    let err: OmiError | null = null;
+    if (mountOn === "group") {
+      const [error] = await client.PostTodo({
+        Content: input,
+        TodoId: 0,
+        GroupId: mountId,
+      });
+      err = error;
+    } else {
+      // 这里创建Step
+      const [error] = await client.PostTodoStep(input, mountId);
+      err = error;
+    }
 
     if (err) {
       handler(err);
